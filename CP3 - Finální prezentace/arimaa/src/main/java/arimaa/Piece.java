@@ -31,6 +31,25 @@ public class Piece {
         return state;
     }
 
+    public int getPieceWeight() {
+        switch(this.type) {
+            case RABBIT:
+                return 1;
+            case CAT:
+                return 2;
+            case DOG:
+                return 3;
+            case HORSE: 
+                return 4;
+            case CAMEL:
+                return 5;
+            case ELEPHANT:
+                return 6;
+            default:
+                throw new IllegalArgumentException("Unexpected value: " + this.type);
+        }
+    }
+
     public void setState(PieceState state) {
         this.state = state;
     }
