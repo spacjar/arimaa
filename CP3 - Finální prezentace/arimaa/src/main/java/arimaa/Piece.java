@@ -14,6 +14,11 @@ public class Piece {
         this.state = state;
     }
 
+    @Override
+    public String toString() {
+        return color.toString() + "-" + type.toString();
+    }
+
     public PieceType getType() {
         return type;
     }

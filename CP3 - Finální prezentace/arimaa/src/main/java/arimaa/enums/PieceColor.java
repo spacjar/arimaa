@@ -1,6 +1,16 @@
 package arimaa.enums;
 
 public enum PieceColor {
-    GOLDEN,
-    SILVER
+    GOLDEN {
+        @Override
+        public String toString() {
+            return "G";
+        }
+    },
+    SILVER {
+        @Override
+        public String toString() {
+            return "S";
+        }
+    }
 }
