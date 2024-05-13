@@ -10,7 +10,7 @@ public class Board {
 	private static final int ROW_SIZE = 8;
 	private static final int COL_SIZE = 8;
 
-    
+
 	public Board() {
         board = new Piece[ROW_SIZE][COL_SIZE];
 	}
@@ -62,13 +62,21 @@ public class Board {
         board[row][col] = null;
     }
 
-    // Validation
+
+    /**
+     * Checks if a specific position on the board is occupied by a piece.
+     *
+     * @param row the row index of the position
+     * @param col the column index of the position
+     * @return true if the position is occupied, false if not
+     */
     public boolean isOccupied(int row, int col) {
         if(getPieceAt(row, col) != null) {
             return true;
         }
         return false;
     }
+
 
     // Get all adjacent pieces to the piece
     public List<Piece> getAdjacentPieces(int row, int col) {
@@ -88,6 +96,7 @@ public class Board {
         return adjacentPieces;
     }
 
+
     // Checks if the piece has friendly adjacent pieces
     public boolean hasAdjacentFriendlyPieces(int row, int col) {
         Piece currentPiece = getPieceAt(row, col);
@@ -101,6 +110,7 @@ public class Board {
     
         return false;
     }
+
 
     // Checks if the piece is frozen
     public boolean isFrozen(int row, int col) {
@@ -117,6 +127,7 @@ public class Board {
         return false;
     }
 
+
     // Checks if the piece is in the trap field
     public boolean isInTrap(int row, int col) {
         // ? note(not important): Think of a way to make it dynamic. For example if I set the board to 16x16, than these sqaures will not be sufficient. However, due to the rules, this cannot happen.
@@ -126,6 +137,7 @@ public class Board {
         return false;
     }
 
+    
     // Conditional method for movement
     public void movePiece(int fromRow, int fromCol, int toRow, int toCol) {
         if (!isOccupied(fromRow, fromCol)) {
