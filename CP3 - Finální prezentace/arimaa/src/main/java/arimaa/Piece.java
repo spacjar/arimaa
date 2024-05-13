@@ -7,15 +7,11 @@ public class Piece {
     private PieceType type;
     private PieceColor color;
     private PieceState state;
-    private int row;
-    private int col;
 
-    public Piece(PieceType type, PieceColor color, PieceState state, int row, int col) {
+    public Piece(PieceType type, PieceColor color, PieceState state) {
         this.type = type;
         this.color = color;
         this.state = state;
-        this.row = row;
-        this.col = col;
     }
 
     public PieceType getType() {
@@ -32,22 +28,6 @@ public class Piece {
 
     public void setState(PieceState state) {
         this.state = state;
-    }
-
-    public int getRow() {
-        return row;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
-    }
-
-    public int getCol() {
-        return col;
-    }
-
-    public void setCol(int col) {
-        this.col = col;
     }
 }
 
