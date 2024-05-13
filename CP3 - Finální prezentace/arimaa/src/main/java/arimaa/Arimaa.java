@@ -19,8 +19,8 @@ public class Arimaa {
         isGameRunning = true;
         
         // Game init logic
-        board.placePiece(new Piece(PieceType.RABBIT, PieceColor.GOLDEN, PieceState.ALIVE), 0, 0);
-        board.placePiece(new Piece(PieceType.RABBIT, PieceColor.SILVER, PieceState.ALIVE), 7, 0);
+        board.setPiece(new Piece(PieceType.RABBIT, PieceColor.GOLDEN, PieceState.ALIVE), 0, 0);
+        board.setPiece(new Piece(PieceType.RABBIT, PieceColor.SILVER, PieceState.ALIVE), 7, 0);
 
         // Game logic
         while (isGameRunning) {
