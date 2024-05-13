@@ -44,12 +44,6 @@ public class Board {
         return false;
     }
 
-    public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol) {
-        // ! TD: More logic (move max 4 spaces);
-        return !isOccupied(toRow, toCol);
-    }
-
-
     // Get all adjacent pieces to the piece
     public List<Piece> getAdjacentPieces(int row, int col) {
         List<Piece> adjacentPieces = new ArrayList<>();
@@ -89,8 +83,7 @@ public class Board {
 
         for (Piece piece : adjacentPieces) {
             // ! TD: Add type to number (weight)
-            // if (piece != null && piece.getColor() != currentPiece.getColor() && piece.getType() != currentPiece.getType()) {
-            if (piece != null && piece.getColor() != currentPiece.getColor()) {
+            if (piece != null && piece.getColor() != currentPiece.getColor() && piece.getPieceWeight() > currentPiece.getPieceWeight()) {
                 return true;
             }
         }
@@ -122,7 +115,7 @@ public class Board {
         removePiece(fromRow, fromCol);
 
         // The !isFrozen() does not need to be here, since I check it above (but i am going to think about it)
-        if (isValidMove(fromRow, fromCol, toRow, toCol) && !isFrozen(fromCol, fromRow)) {
+        if (!isOccupied(toRow, toCol) && !isFrozen(fromCol, fromRow)) {
             setPiece(piece, toRow, toCol);
         } else {
             throw new IllegalArgumentException("Invalid move");
