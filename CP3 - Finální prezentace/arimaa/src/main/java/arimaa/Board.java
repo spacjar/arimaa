@@ -53,7 +53,7 @@ public class Board {
     }
 
 	public void printBoard() {
-		System.out.println("  A B C D E F G H");
+		System.out.println("-   A    B    C    D    E    F    G    H");
 
 		for (int row = 0; row < ROW_SIZE; row++) {
 			System.out.print((row + 1) + " ");
@@ -61,10 +61,9 @@ public class Board {
 			for (int col = 0; col < COL_SIZE; col++) {
 				Piece piece = board[row][col];
 				if (piece == null) {
-					System.out.print(". ");
+					System.out.print(" ... ");
 				} else {
-					System.out.print(piece.getColor().toString().charAt(0) + 
-					piece.getType().toString().charAt(0) + " ");
+					System.out.print(" " + piece.toString() + " ");
 				}
 			}
 
