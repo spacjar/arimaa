@@ -14,7 +14,6 @@ public class Board {
         board = new Piece[ROW_SIZE][COL_SIZE];
 	}
 
-    // Basic methods for movement
     public Piece getPieceAt(int row, int col) {
         if(row <= 0 && col <= 0 && row > ROW_SIZE && col > COL_SIZE) {
             throw new IndexOutOfBoundsException("The selected row or column exceeds board size.");
@@ -49,13 +48,13 @@ public class Board {
         List<Piece> adjacentPieces = new ArrayList<>();
         
         // ! TD: Shitty code - Refactor logic!!
-        if(row+1 > 0 && col > 0 && row+1 <= ROW_SIZE && col <= COL_SIZE) {
+        if(row+1 >= 0 && col >= 0 && row+1 < ROW_SIZE && col < COL_SIZE) {
             adjacentPieces.add(getPieceAt(row+1, col));
-        } else if(row-1 > 0 && col > 0 && row-1 <= ROW_SIZE && col <= COL_SIZE) {
+        } else if(row-1 >= 0 && col >= 0 && row-1 < ROW_SIZE && col < COL_SIZE) {
             adjacentPieces.add(getPieceAt(row-1, col));
-        } else if(row > 0 && col+1 > 0 && row <= ROW_SIZE && col+1 <= COL_SIZE) {
+        } else if(row >= 0 && col+1 >= 0 && row < ROW_SIZE && col+1 < COL_SIZE) {
             adjacentPieces.add(getPieceAt(row, col+1));
-        } else if(row > 0 && col-1 > 0 && row <= ROW_SIZE && col-1 <= COL_SIZE) {
+        } else if(row >= 0 && col-1 >= 0 && row < ROW_SIZE && col-1 < COL_SIZE) {
             adjacentPieces.add(getPieceAt(row, col-1));
         }
     
@@ -83,14 +82,13 @@ public class Board {
 
         for (Piece piece : adjacentPieces) {
             // ! TD: Add type to number (weight)
-            if (piece != null && piece.getColor() != currentPiece.getColor() && piece.getPieceWeight() > currentPiece.getPieceWeight()) {
+            if (piece != null && currentPiece != null && piece.getColor() != currentPiece.getColor() && piece.getPieceWeight() > currentPiece.getPieceWeight()) {
                 return true;
             }
         }
     
         return false;
     }
-
 
     // Checks if the piece is in the trap field
     public boolean isInTrap(int row, int col) {
