@@ -70,7 +70,23 @@ public class Board {
      * @return true if the position is occupied, false if not
      */
     public boolean isOccupied(int row, int col) {
-        if(getPieceAt(row, col) != null) {
+        if(getPieceAt(row, col) == null) {
+            return false;
+        }
+        return true;
+    }
+
+
+    /**
+     * Checks if a piece at the specified position is in a trap field.
+     *
+     * @param row the row index of the position to check
+     * @param col the column index of the position to check
+     * @return true if the piece is in a trap field, false if not
+     */
+    public boolean isInTrap(int row, int col) {
+        // ? note(not important): Think of a way to make it dynamic. For example if I set the board to 16x16, than these sqaures will not be sufficient. However, due to the rules, this cannot happen.
+        if ((row == 2 && col == 2) || (row == 2 && col == 5) || (row == 5 && col == 2) || (row == 5 && col == 5)) { 
             return true;
         }
         return false;
@@ -125,22 +141,6 @@ public class Board {
         return false;
     }
 
-    
-    /**
-     * Checks if a piece at the specified position is in a trap field.
-     *
-     * @param row the row index of the position to check
-     * @param col the column index of the position to check
-     * @return true if the piece is in a trap field, false if not
-     */
-    public boolean isInTrap(int row, int col) {
-        // ? note(not important): Think of a way to make it dynamic. For example if I set the board to 16x16, than these sqaures will not be sufficient. However, due to the rules, this cannot happen.
-        if ((row == 2 && col == 2) || (row == 2 && col == 5) || (row == 5 && col == 2) || (row == 5 && col == 5)) { 
-            return true;
-        }
-        return false;
-    }
-
 
     // Conditional method for movement
     public void movePiece(int fromRow, int fromCol, int toRow, int toCol) {
@@ -149,7 +149,7 @@ public class Board {
         }
 
         if (isFrozen(fromCol, fromRow)) {
-            throw new IllegalArgumentException("This piece is frozen");
+            throw new IllegalArgumentException("This piece is frozen.");
         }
 
         Piece piece = getPieceAt(fromRow, fromCol);
@@ -159,7 +159,7 @@ public class Board {
         if (!isOccupied(toRow, toCol) && !isFrozen(fromCol, fromRow)) {
             setPiece(piece, toRow, toCol);
         } else {
-            throw new IllegalArgumentException("Invalid move");
+            throw new IllegalArgumentException("Invalid move.");
         }
 
         if(isInTrap(toRow, toCol) && !hasAdjacentFriendlyPieces(toRow, toCol)) {
@@ -170,6 +170,9 @@ public class Board {
         if(isFrozen(toCol, toRow)) {
             piece.setState(PieceState.FROZEN);
         }
+
+        // ! TD: Check adjacent pieces (fromRow, fromCol), to see if they are still frozen etc.
+        // ! TD: Check adjacent pieces (toRow, toCol), to see if they become frozen etc.
     }
 
     // TD: PUSH ENEMY PIECE
