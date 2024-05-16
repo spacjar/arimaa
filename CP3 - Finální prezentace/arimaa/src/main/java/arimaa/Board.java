@@ -96,7 +96,8 @@ public class Board {
     public int checkPathCost(int fromRow, int fromCol, int toRow, int toCol) {
         // Logic that calculates how much fields are in the current step of the player
         // In my code, it should return 1, in the future, the steps can be more complicated than 1, but for now, it should be 1
-        return 0;
+
+        return 1;
     }
 
 
@@ -191,7 +192,7 @@ public class Board {
 
 
     // Conditional method for movement
-    public void movePiece(int fromRow, int fromCol, int toRow, int toCol) {
+    public void movePiece(int fromRow, int fromCol, int toRow, int toCol) throws IllegalArgumentException {
         if (!isOccupied(fromRow, fromCol)) {
             throw new IllegalArgumentException("There is no piece at the specified location.");
         }
@@ -240,7 +241,7 @@ public class Board {
 				if (piece == null) {
 					System.out.print(" ... ");
 				} else {
-					System.out.print(" " + piece.toString() + " ");
+					System.out.print(" " + piece.toString() + (piece.getState() == PieceState.FROZEN ? "FRZ" : "") + " ");
 				}
 			}
             
