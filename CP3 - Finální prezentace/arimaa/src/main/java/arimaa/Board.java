@@ -93,11 +93,26 @@ public class Board {
     }
 
 
-    public int checkPathCost(int fromRow, int fromCol, int toRow, int toCol) {
-        // Logic that calculates how much fields are in the current step of the player
-        // In my code, it should return 1, in the future, the steps can be more complicated than 1, but for now, it should be 1
+    /**
+     * Checks if a move is a one-step move from a given position to another position on the board.
+     *
+     * @param fromRow the row index of the starting position
+     * @param fromCol the column index of the starting position
+     * @param toRow the row index of the destination position
+     * @param toCol the column index of the destination position
+     * @return true if the move is a one-step move, false otherwise
+     */
+    public boolean isOneStep(int fromRow, int fromCol, int toRow, int toCol) {
+        // ? TD: In the furute, the code could calculate the distance the player will take - public int getPathCost(int fromRow, int fromCol, int toRow, int toCol) {
 
-        return 1;
+        if (fromRow == toRow && Math.abs(fromCol - toCol) == 1) {
+            return true;
+        }
+        if (fromCol == toCol && Math.abs(fromRow - toRow) == 1) {
+            return true;
+        }   
+            
+        return false;
     }
 
 
@@ -108,7 +123,6 @@ public class Board {
 
         return true;
     }
-
 
     
     /**
