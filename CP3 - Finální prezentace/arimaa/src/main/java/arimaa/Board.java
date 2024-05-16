@@ -93,6 +93,22 @@ public class Board {
     }
 
 
+    public int checkPathCost(int fromRow, int fromCol, int toRow, int toCol) {
+        // Logic that calculates how much fields are in the current step of the player
+        // In my code, it should return 1, in the future, the steps can be more complicated than 1, but for now, it should be 1
+        return 0;
+    }
+
+
+    public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol) {
+        // Check if the move is front, back, left, right (not to 45deg)
+        
+        // Check if the piece is rabbit (he cannot move backwards)
+
+        return true;
+    }
+
+
     // Get all adjacent pieces to the piece
     public List<Piece> getAdjacentPieces(int row, int col) {
         List<Piece> adjacentPieces = new ArrayList<>();
