@@ -110,6 +110,14 @@ public class Board {
 
 
     
+    /**
+     * Returns a list of adjacent pieces to the specified position on the board.
+     *
+     * @param row the row index of the position
+     * @param col the column index of the position
+     * @return a list of adjacent pieces
+     * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
+     */
     public List<Piece> getAdjacentPieces(int row, int col) throws IndexOutOfBoundsException {
         List<Piece> adjacentPieces = new ArrayList<>();
 
