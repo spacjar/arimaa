@@ -159,7 +159,7 @@ public class Board {
     
         for (Piece piece : adjacentPieces) {
             // ? TD: Think if I need the piece != null, since I check it in the getAdjacentPieces() method.
-            if (piece != null && piece.getColor() == currentPiece.getColor()) {
+            if (piece != null && currentPiece != null && piece.getColor() == currentPiece.getColor()) {
                 return true;
             }
         }
@@ -174,7 +174,8 @@ public class Board {
         List<Piece> adjacentPieces = getAdjacentPieces(row, col);
 
         for (Piece piece : adjacentPieces) {
-            if (piece != null && currentPiece != null && piece.getColor() != currentPiece.getColor() && piece.getPieceWeight() > currentPiece.getPieceWeight()) {
+            // ? TD: Think if I need the piece != null, since I check it in the getAdjacentPieces() method.
+            if (piece != null && currentPiece != null && currentPiece.getColor() != piece.getColor() && currentPiece.getPieceWeight() < piece.getPieceWeight()) {
                 return true;
             }
         }
