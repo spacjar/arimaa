@@ -168,7 +168,13 @@ public class Board {
     }
 
 
-    // Checks if the piece is frozen
+    /**
+     * Checks if a piece at the specified position is frozen.
+     *
+     * @param row the row index of the position
+     * @param col the column index of the position
+     * @return true if the piece is frozen, false otherwise
+     */
     public boolean isFrozen(int row, int col) {
         Piece currentPiece = getPieceAt(row, col);
         List<Piece> adjacentPieces = getAdjacentPieces(row, col);
