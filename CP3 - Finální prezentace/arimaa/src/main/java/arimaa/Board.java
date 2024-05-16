@@ -3,7 +3,9 @@ package arimaa;
 import java.util.ArrayList;
 import java.util.List;
 
+import arimaa.enums.PieceColor;
 import arimaa.enums.PieceState;
+import arimaa.enums.PieceType;
 
 public class Board {
     private Piece[][] board;
@@ -103,7 +105,7 @@ public class Board {
      * @return true if the move is a one-step move, false otherwise
      */
     public boolean isOneStep(int fromRow, int fromCol, int toRow, int toCol) {
-        // ? TD: In the furute, the code could calculate the distance the player will take - public int getPathCost(int fromRow, int fromCol, int toRow, int toCol) {
+        // ? TD: In the furute, the code could calculate the distance the player will take - public int getPathCost(int fromRow, int fromCol, int toRow, int toCol)
 
         if (fromRow == toRow && Math.abs(fromCol - toCol) == 1) {
             return true;
@@ -116,10 +118,32 @@ public class Board {
     }
 
 
+    /**
+     * Checks if a move from one position to another on the board is valid.
+     *
+     * @param fromRow the row index of the starting position
+     * @param fromCol the column index of the starting position
+     * @param toRow the row index of the destination position
+     * @param toCol the column index of the destination position
+     * @return true if the move is valid, false otherwise
+     */
     public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol) {
-        // Check if the move is front, back, left, right (not to 45deg)
-        
+        // Check if the move is one-step (front, back, left, right - not to diagonal (45deg))
+        if(!isOneStep(fromRow, fromCol, toRow, toCol)) {
+            return false;
+        }
+
         // Check if the piece is rabbit (he cannot move backwards)
+        Piece piece = getPieceAt(fromRow, fromCol);
+        // ! TD: Fix when a player can choose sides, now it is that the GOLDEN player always has to start at the [0] index of the array, and the SILVER player at the [7] index of the array
+        if (piece != null && piece.getType() == PieceType.RABBIT) {
+            if (piece.getColor() == PieceColor.GOLDEN && fromRow < toRow) {
+                return false;
+            }
+            if (piece.getColor() == PieceColor.SILVER && fromRow > toRow) {
+                return false;
+            }
+        }
 
         return true;
     }
