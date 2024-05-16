@@ -10,10 +10,9 @@ public class Board {
 	private static final int ROW_SIZE = 8;
 	private static final int COL_SIZE = 8;
 
-
 	public Board() {
         board = new Piece[ROW_SIZE][COL_SIZE];
-	}
+    }
 
 
     /**
@@ -24,7 +23,7 @@ public class Board {
      * @return the piece at the specified position
      * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
     */
-    public Piece getPieceAt(int row, int col) {
+    public Piece getPieceAt(int row, int col) throws IndexOutOfBoundsException {
         if(row <= 0 && col <= 0 && row > ROW_SIZE && col > COL_SIZE) {
             throw new IndexOutOfBoundsException("The selected row or column exceeds board size.");
         }
@@ -40,7 +39,7 @@ public class Board {
      * @param col the column index of the position
      * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
      */
-    public void setPiece(Piece piece, int row, int col) {
+    public void setPiece(Piece piece, int row, int col) throws IndexOutOfBoundsException {
         if(row <= 0 && col <= 0 && row > ROW_SIZE && col > COL_SIZE) {
             throw new IndexOutOfBoundsException("The selected row or column exceeds board size.");
         }
@@ -55,7 +54,7 @@ public class Board {
      * @param col the column index of the position
      * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
      */
-    public void removePiece(int row, int col) {
+    public void removePiece(int row, int col) throws IndexOutOfBoundsException {
         if(row <= 0 && col <= 0 && row > ROW_SIZE && col > COL_SIZE) {
             throw new IndexOutOfBoundsException("The selected row or column exceeds board size.");
         }
@@ -118,7 +117,6 @@ public class Board {
         List<Piece> adjacentPieces = getAdjacentPieces(row, col);
 
         for (Piece piece : adjacentPieces) {
-            // ! TD: Add type to number (weight)
             if (piece != null && currentPiece != null && piece.getColor() != currentPiece.getColor() && piece.getPieceWeight() > currentPiece.getPieceWeight()) {
                 return true;
             }
@@ -127,8 +125,14 @@ public class Board {
         return false;
     }
 
-
-    // Checks if the piece is in the trap field
+    
+    /**
+     * Checks if a piece at the specified position is in a trap field.
+     *
+     * @param row the row index of the position to check
+     * @param col the column index of the position to check
+     * @return true if the piece is in a trap field, false if not
+     */
     public boolean isInTrap(int row, int col) {
         // ? note(not important): Think of a way to make it dynamic. For example if I set the board to 16x16, than these sqaures will not be sufficient. However, due to the rules, this cannot happen.
         if ((row == 2 && col == 2) || (row == 2 && col == 5) || (row == 5 && col == 2) || (row == 5 && col == 5)) { 
@@ -137,7 +141,7 @@ public class Board {
         return false;
     }
 
-    
+
     // Conditional method for movement
     public void movePiece(int fromRow, int fromCol, int toRow, int toCol) {
         if (!isOccupied(fromRow, fromCol)) {
