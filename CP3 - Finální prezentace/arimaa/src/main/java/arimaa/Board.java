@@ -24,7 +24,7 @@ public class Board {
      * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
     */
     public Piece getPieceAt(int row, int col) throws IndexOutOfBoundsException {
-        if(row <= 0 && col <= 0 && row > ROW_SIZE && col > COL_SIZE) {
+        if(row < 0 || col < 0 || row >= ROW_SIZE || col >= COL_SIZE) {
             throw new IndexOutOfBoundsException("The selected row or column exceeds board size.");
         }
         return board[row][col];
@@ -40,7 +40,7 @@ public class Board {
      * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
      */
     public void setPiece(Piece piece, int row, int col) throws IndexOutOfBoundsException {
-        if(row <= 0 && col <= 0 && row > ROW_SIZE && col > COL_SIZE) {
+        if(row < 0 || col < 0 || row >= ROW_SIZE || col >= COL_SIZE) {
             throw new IndexOutOfBoundsException("The selected row or column exceeds board size.");
         }
         board[row][col] = piece;
@@ -55,7 +55,7 @@ public class Board {
      * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
      */
     public void removePiece(int row, int col) throws IndexOutOfBoundsException {
-        if(row <= 0 && col <= 0 && row > ROW_SIZE && col > COL_SIZE) {
+        if(row < 0 || col < 0 || row >= ROW_SIZE || col >= COL_SIZE) {
             throw new IndexOutOfBoundsException("The selected row or column exceeds board size.");
         }
         board[row][col] = null;
