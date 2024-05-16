@@ -109,26 +109,28 @@ public class Board {
     }
 
 
-    // Get all adjacent pieces to the piece
-    public List<Piece> getAdjacentPieces(int row, int col) {
+    
+    public List<Piece> getAdjacentPieces(int row, int col) throws IndexOutOfBoundsException {
         List<Piece> adjacentPieces = new ArrayList<>();
-        
-        // ! TD: Think if I want to add conditions that also check, when a person calls getAdjacentPieces on a non existing place on the board.
+
+        if(row < 0 || col < 0 || row >= ROW_SIZE || col >= COL_SIZE) {
+            throw new IndexOutOfBoundsException("The selected row or column exceeds board size.");
+        }
 
         // Check above
-        if(row+1 < ROW_SIZE) {
+        if(row+1 < ROW_SIZE && isOccupied(row+1, col)) {
             adjacentPieces.add(getPieceAt(row+1, col));
         }
         // Check below
-        if(row-1 >= 0) {
+        if(row-1 >= 0 && isOccupied(row-1, col)) {
             adjacentPieces.add(getPieceAt(row-1, col));
         }
         // Check right
-        if(col+1 < COL_SIZE) {
+        if(col+1 < COL_SIZE && isOccupied(row, col+1)) {
             adjacentPieces.add(getPieceAt(row, col+1));
         }
         // Check left
-        if(col-1 >= 0) {
+        if(col-1 >= 0 && isOccupied(row, col-1)) {
             adjacentPieces.add(getPieceAt(row, col-1));
         }
     
