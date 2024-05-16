@@ -22,7 +22,7 @@ public class Board {
      * @param col the column index of the position
      * @return the piece at the specified position
      * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
-    */
+     */
     public Piece getPieceAt(int row, int col) throws IndexOutOfBoundsException {
         if(row < 0 || col < 0 || row >= ROW_SIZE || col >= COL_SIZE) {
             throw new IndexOutOfBoundsException("The selected row or column exceeds board size.");
@@ -146,12 +146,19 @@ public class Board {
     }
 
 
-    // Checks if the piece has friendly adjacent pieces
+    /**
+     * Checks if there are adjacent friendly pieces to the piece at the specified position on the board.
+     *
+     * @param row the row index of the position
+     * @param col the column index of the position
+     * @return true if there are adjacent friendly pieces, false otherwise
+     */
     public boolean hasAdjacentFriendlyPieces(int row, int col) {
         Piece currentPiece = getPieceAt(row, col);
         List<Piece> adjacentPieces = getAdjacentPieces(row, col);
     
         for (Piece piece : adjacentPieces) {
+            // ? TD: Think if I need the piece != null, since I check it in the getAdjacentPieces() method.
             if (piece != null && piece.getColor() == currentPiece.getColor()) {
                 return true;
             }
