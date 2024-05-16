@@ -201,10 +201,9 @@ public class Board {
         }
 
         Piece piece = getPieceAt(fromRow, fromCol);
-        removePiece(fromRow, fromCol);
-
-        // The !isFrozen() does not need to be here, since I check it above (but i am going to think about it)
-        if (!isOccupied(toRow, toCol) && !isFrozen(fromCol, fromRow)) {
+        
+        if (!isOccupied(toRow, toCol)) {
+            removePiece(fromRow, fromCol);
             setPiece(piece, toRow, toCol);
         } else {
             throw new IllegalArgumentException("Invalid move.");
