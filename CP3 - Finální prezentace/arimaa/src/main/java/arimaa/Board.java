@@ -113,14 +113,22 @@ public class Board {
     public List<Piece> getAdjacentPieces(int row, int col) {
         List<Piece> adjacentPieces = new ArrayList<>();
         
-        // ! TD: Shitty code - Refactor logic!!
-        if(row+1 >= 0 && col >= 0 && row+1 < ROW_SIZE && col < COL_SIZE) {
+        // ! TD: Think if I want to add conditions that also check, when a person calls getAdjacentPieces on a non existing place on the board.
+
+        // Check above
+        if(row+1 < ROW_SIZE) {
             adjacentPieces.add(getPieceAt(row+1, col));
-        } else if(row-1 >= 0 && col >= 0 && row-1 < ROW_SIZE && col < COL_SIZE) {
+        }
+        // Check below
+        if(row-1 >= 0) {
             adjacentPieces.add(getPieceAt(row-1, col));
-        } else if(row >= 0 && col+1 >= 0 && row < ROW_SIZE && col+1 < COL_SIZE) {
+        }
+        // Check right
+        if(col+1 < COL_SIZE) {
             adjacentPieces.add(getPieceAt(row, col+1));
-        } else if(row >= 0 && col-1 >= 0 && row < ROW_SIZE && col-1 < COL_SIZE) {
+        }
+        // Check left
+        if(col-1 >= 0) {
             adjacentPieces.add(getPieceAt(row, col-1));
         }
     
