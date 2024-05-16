@@ -119,7 +119,7 @@ public class Board {
      * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
      */
     public List<Piece> getAdjacentPieces(int row, int col) throws IndexOutOfBoundsException {
-        List<Piece> adjacentPieces = new ArrayList<>();
+        List<Piece> adjacentPieces = new ArrayList<Piece>();
 
         if(row < 0 || col < 0 || row >= ROW_SIZE || col >= COL_SIZE) {
             throw new IndexOutOfBoundsException("The selected row or column exceeds board size.");
