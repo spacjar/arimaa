@@ -231,6 +231,7 @@ public class Board {
 
     // Conditional method for movement
     public void movePiece(int fromRow, int fromCol, int toRow, int toCol) throws IllegalArgumentException {
+        // Check before moving the piece
         if (!isOccupied(fromRow, fromCol)) {
             throw new IllegalArgumentException("There is no piece at the specified location.");
         }
@@ -243,6 +244,7 @@ public class Board {
             throw new IllegalArgumentException("This movement is invalid!");
         }
 
+        // Move the piece
         Piece piece = getPieceAt(fromRow, fromCol);
         
         if (!isOccupied(toRow, toCol)) {
@@ -252,6 +254,7 @@ public class Board {
             throw new IllegalArgumentException("Invalid move.");
         }
 
+        // Check after moving the piece
         if(isInTrap(toRow, toCol) && !hasAdjacentFriendlyPieces(toRow, toCol)) {
             piece.setState(PieceState.DEAD);
             removePiece(toRow, toCol);
