@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import arimaa.enums.PieceColor;
-import arimaa.enums.PieceState;
 import arimaa.enums.PieceType;
 
 public class Board {
