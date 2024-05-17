@@ -19,17 +19,27 @@ public class Arimaa {
         isGameRunning = true;
         
         // Game init logic
-        board.setPiece(new Piece(PieceType.RABBIT, PieceColor.GOLDEN, PieceState.ALIVE), 0, 0);
-        board.setPiece(new Piece(PieceType.RABBIT, PieceColor.SILVER, PieceState.ALIVE), 7, 0);
+        for(int i = 0; i <= 7; i++) {
+            board.setPiece(new Piece(PieceType.ELEPHANT, PieceColor.GOLDEN, PieceState.ALIVE), 0, i);
+        }
+
+        for(int i = 0; i <= 7; i++) {
+            board.setPiece(new Piece(PieceType.RABBIT, PieceColor.SILVER, PieceState.ALIVE), 7, i);
+        }
 
         // Game logic
         while (isGameRunning) {
             board.printBoard();
-            int fromRow = InputUtils.getIntFromInput("Select the row where is the piece you would like to move: ");
-            int fromCol = InputUtils.getIntFromInput("Select the column where is the piece you would like to move: ");
-            int toRow = InputUtils.getIntFromInput("Select the row where you would like to move the piece: ");
-            int toCol = InputUtils.getIntFromInput("Select the column where you would like to move the piece: ");
-            board.movePiece(fromRow, fromCol, toRow, toCol);  
+
+            try {
+                int fromRow = InputUtils.getIntFromInput("Select the row where is the piece you would like to move: ");
+                int fromCol = InputUtils.getIntFromInput("Select the column where is the piece you would like to move: ");
+                int toRow = InputUtils.getIntFromInput("Select the row where you would like to move the piece: ");
+                int toCol = InputUtils.getIntFromInput("Select the column where you would like to move the piece: ");
+                board.movePiece(fromRow, fromCol, toRow, toCol);  
+            } catch (Exception e) {
+                System.err.println("--- ERROR: " + e.getMessage());
+            }
         }
     }
 
