@@ -239,6 +239,10 @@ public class Board {
             throw new IllegalArgumentException("This piece is frozen.");
         }
 
+        if(!isValidMove(fromRow, fromCol, toRow, toCol)) {
+            throw new IllegalArgumentException("This movement is invalid!");
+        }
+
         Piece piece = getPieceAt(fromRow, fromCol);
         
         if (!isOccupied(toRow, toCol)) {
@@ -277,7 +281,7 @@ public class Board {
 			for (int col = 0; col < COL_SIZE; col++) {
 				Piece piece = board[row][col];
 				if (piece == null) {
-					System.out.print(" ... ");
+                    System.out.print(" ... ");
 				} else {
 					System.out.print(" " + piece.toString() + (piece.getState() == PieceState.FROZEN ? "FRZ" : "") + " ");
 				}
