@@ -8,7 +8,7 @@
 ## Game
 5. When the game starts, the golden player moves first.
 6. During the players turn the player is allowed to move their pieces exactly 4x times (4x steps).
-7. During your turn, you can distrubute the moves with up to 4x many pieces. The moves can be in any direction (that the pieces allow). (The player can move with any of his pieces.)
+7. During your turn, you can distribute the moves with up to 4x pieces. The moves can be in any direction (that the pieces allow). (The player can move with any of their pieces.)
 8. The player can use less than 4x moves but more than 0x (m > 0, m <= 4). The moves do not transfer to the next turn.
 9. Every piece can move to back, front, left and right. This does not apply to the rabbit, who can only move front, left and right.
 10. Every piece can move only to an empty square. They cannot share space with another piece (friendly or enemy).
@@ -44,22 +44,23 @@
 35. If you lose all your pieces, you lose the game.
 36. If both players lose all of their rabbits on the same turn, the player whose turn it was (and made that move) wins the game.
 ---
-37. The first player to move a rabbit to the other side of the board wins.
+37. The first player to move a rabbit to the other side of the board wins. 
 
-
-
-# Examples
+# Examples 
 **FR1 is FROZEN**
+```markdown
 ---------------
 |    |     |   |
 | EN | FR1 |   |
 |    |     |   |
 ---------------  
+```
 
 **FR1 is UNFROZEN**
+```markdown
 ---------------
 |    | FR2 |   |
 | EN | FR1 |   |
 |    |     |   |
 ---------------   
-
+```
