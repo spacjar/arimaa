@@ -9,10 +9,10 @@ import arimaa.enums.PieceType;
 
 public class Board {
     private Piece[][] board;
-	private static final int ROW_SIZE = 8;
-	private static final int COL_SIZE = 8;
+    private static final int ROW_SIZE = 8;
+    private static final int COL_SIZE = 8;
 
-	public Board() {
+    public Board() {
         board = new Piece[ROW_SIZE][COL_SIZE];
     }
 
@@ -119,21 +119,16 @@ public class Board {
 
 
     /**
-     * Checks if a move from one position to another on the board is valid.
+     * Checks if a move for a rabbit is valid.
      *
      * @param fromRow the row index of the starting position
      * @param fromCol the column index of the starting position
      * @param toRow the row index of the destination position
      * @param toCol the column index of the destination position
-     * @return true if the move is valid, false otherwise
+     * @return true if the rabbit move is valid, false otherwise
      */
-    public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol) {
-        // Check if the move is one-step (front, back, left, right - not to diagonal (45deg))
-        if(!isOneStep(fromRow, fromCol, toRow, toCol)) {
-            return false;
-        }
-
-        // Check if the piece is rabbit (he cannot move backwards)
+    // ! TD: Cleanup this method logic, the goal is to have the method return false by default, and true if it is really true!
+    public boolean isRabbitMoveValid(int fromRow, int fromCol, int toRow, int toCol) {
         Piece piece = getPieceAt(fromRow, fromCol);
         // ! TD: Fix when a player can choose sides, now it is that the GOLDEN player always has to start at the [0] index of the array, and the SILVER player at the [7] index of the array
         if (piece != null && piece.getType() == PieceType.RABBIT) {
@@ -146,6 +141,7 @@ public class Board {
         }
 
         return true;
+
     }
 
     
@@ -235,15 +231,19 @@ public class Board {
     public void movePiece(int fromRow, int fromCol, int toRow, int toCol) throws IllegalArgumentException {
         // Check before moving the piece
         if (!isOccupied(fromRow, fromCol)) {
-            throw new IllegalArgumentException("There is no piece at the specified location.");
+            throw new IllegalArgumentException("There is no piece at the specified location!");
         }
 
         if (isFrozen(fromRow, fromCol)) {
-            throw new IllegalArgumentException("This piece is frozen.");
+            throw new IllegalArgumentException("This piece is frozen!");
         }
 
-        if(!isValidMove(fromRow, fromCol, toRow, toCol)) {
-            throw new IllegalArgumentException("This movement is invalid!");
+        if(!isOneStep(fromRow, fromCol, toRow, toCol)) {
+            throw new IllegalArgumentException("This move is invalid, you can only move 1 space at a time!");
+        }
+
+        if(!isRabbitMoveValid(fromRow, fromCol, toRow, toCol)) {
+            throw new IllegalArgumentException("This move is invalid, a rabbit piece cannot move backwards!");
         }
 
         // Move the piece
