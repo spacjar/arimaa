@@ -14,11 +14,23 @@ public class Arimaa {
 
     Board board = new Board();
     boolean isGameRunning = false;
-    
+
+    // Golden player
+    Player goldenPlayer = new Player(PieceColor.GOLDEN);
+    int goldenPlayerMoves = 4;
+
+    // Silver player
+    Player silverPlayer = new Player(PieceColor.SILVER);
+    int silverPlayerMoves = 4;
+
+    // Current player
+    Player currentPlayer = goldenPlayer;
+
+
     public void startGame() {
         isGameRunning = true;
         
-        // Game init logic
+        // ---- Game init logic ----
         for(int i = 0; i <= 7; i++) {
             board.setPiece(new Piece(PieceType.ELEPHANT, PieceColor.GOLDEN, PieceState.ALIVE), 0, i);
         }
@@ -27,16 +39,48 @@ public class Arimaa {
             board.setPiece(new Piece(PieceType.RABBIT, PieceColor.SILVER, PieceState.ALIVE), 7, i);
         }
 
-        // Game logic
+        // ---- Game logic ----
         while (isGameRunning) {
             board.printBoard();
 
             try {
+                System.out.println("Current player: " + currentPlayer);
+                System.out.println("Golden player moves: " + goldenPlayerMoves);
+                System.out.println("Silver player moves: " + silverPlayerMoves);
+
                 int fromRow = InputUtils.getIntFromInput("Select the row where is the piece you would like to move: ");
                 int fromCol = InputUtils.getIntFromInput("Select the column where is the piece you would like to move: ");
+                
+                Piece piece = board.getPieceAt(fromRow, fromCol);
+
+                if (piece.getColor() != currentPlayer.getColor()) {
+                    System.err.println("You can only move your own pieces.");
+                    continue;
+                }
+        
                 int toRow = InputUtils.getIntFromInput("Select the row where you would like to move the piece: ");
                 int toCol = InputUtils.getIntFromInput("Select the column where you would like to move the piece: ");
-                board.movePiece(fromRow, fromCol, toRow, toCol);  
+
+                board.movePiece(fromRow, fromCol, toRow, toCol);
+        
+                // Decrement the current player's moves
+                if (currentPlayer == goldenPlayer) {
+                    goldenPlayerMoves--;
+                } else {
+                    silverPlayerMoves--;
+                }
+        
+                // If the current player has no moves left, switch to the other player and reset their moves
+                if ((currentPlayer == goldenPlayer && goldenPlayerMoves == 0) || (currentPlayer == silverPlayer && silverPlayerMoves == 0)) {
+                    currentPlayer = (currentPlayer == goldenPlayer) ? silverPlayer : goldenPlayer;
+                    if (currentPlayer == goldenPlayer) {
+                        goldenPlayerMoves = 4;
+                    } else {
+                        silverPlayerMoves = 4;
+                    }
+                }
+
+                // currentPlayer
             } catch (Exception e) {
                 System.err.println("--- ERROR: " + e.getMessage());
             }
