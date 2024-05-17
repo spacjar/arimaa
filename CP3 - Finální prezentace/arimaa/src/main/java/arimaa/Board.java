@@ -261,18 +261,10 @@ public class Board {
 
         // Check after moving the piece, if the piece is in a trap
         if(isInTrap(toRow, toCol) && !hasAdjacentFriendlyPieces(toRow, toCol)) {
-            piece.setState(PieceState.DEAD);
             removePiece(toRow, toCol);
             return;
         }
 
-        // ! TD: Think of better solution
-        // Check after moving the piece, if it is frozen
-        if(isFrozen(toRow, toCol)) {
-            piece.setState(PieceState.FROZEN);
-        } else {
-            piece.setState(PieceState.ALIVE);
-        }
 
         // ! TD: Check adjacent pieces (fromRow, fromCol), to see if they are still frozen etc.
         List<int[]> adjacentPeicePositionsFrom = getAdjacentPiecePositions(fromRow, fromCol);
@@ -281,18 +273,9 @@ public class Board {
             int positionFromRow = position[0];
             int positionFromCol = position[1];
 
-            Piece pieceFrom = getPieceAt(positionFromRow, positionFromCol);
             if(isInTrap(positionFromRow, positionFromCol) && !hasAdjacentFriendlyPieces(positionFromRow, positionFromCol)) {
-                pieceFrom.setState(PieceState.DEAD);
                 removePiece(positionFromRow, positionFromCol);
                 return;
-            }
-            
-            // ! TD: Think of better solution
-            if(isFrozen(positionFromRow, positionFromCol)) {
-                pieceFrom.setState(PieceState.FROZEN);
-            } else {
-                pieceFrom.setState(PieceState.ALIVE);
             }
         }
 
@@ -303,20 +286,10 @@ public class Board {
             int positionToRow = position[0];
             int positionToCol = position[1];
 
-            Piece pieceTo = getPieceAt(positionToRow, positionToCol);
             if(isInTrap(positionToRow, positionToCol) && !hasAdjacentFriendlyPieces(positionToRow, positionToCol)) {
-                pieceTo.setState(PieceState.DEAD);
                 removePiece(positionToRow, positionToCol);
                 return;
             }
-            
-            // ! TD: Think of better solution
-            if(isFrozen(positionToRow, positionToCol)) {
-                pieceTo.setState(PieceState.FROZEN);
-            } else {
-                pieceTo.setState(PieceState.ALIVE);
-            }
-            
         }
     }
 
@@ -342,7 +315,7 @@ public class Board {
                         System.out.print(" ... ");
                     }
 				} else {
-					System.out.print(" " + piece.toString() + (piece.getState() == PieceState.FROZEN ? "FRZ" : "") + " ");
+					System.out.print(" " + piece.toString() + (isFrozen(row, col) ? "FRZ" : "") + " ");
 				}
 			}
             

@@ -1,17 +1,14 @@
 package arimaa;
 import arimaa.enums.PieceColor;
 import arimaa.enums.PieceType;
-import arimaa.enums.PieceState;
 
 public class Piece {
     private PieceType type;
     private PieceColor color;
-    private PieceState state;
 
-    public Piece(PieceType type, PieceColor color, PieceState state) {
+    public Piece(PieceType type, PieceColor color) {
         this.type = type;
         this.color = color;
-        this.state = state;
     }
 
     @Override
@@ -25,10 +22,6 @@ public class Piece {
 
     public PieceColor getColor() {
         return color;
-    }
-
-    public PieceState getState() {
-        return state;
     }
 
     public int getPieceWeight() {
@@ -48,10 +41,6 @@ public class Piece {
             default:
                 throw new IllegalArgumentException("Unexpected value: " + this.type);
         }
-    }
-
-    public void setState(PieceState state) {
-        this.state = state;
     }
 }
 

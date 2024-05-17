@@ -1,6 +1,5 @@
 package arimaa;
 import arimaa.enums.PieceColor;
-import arimaa.enums.PieceState;
 import arimaa.enums.PieceType;
 
 import arimaa.utils.*;
@@ -32,11 +31,11 @@ public class Arimaa {
         
         // ---- Game init logic ----
         for(int i = 0; i <= 7; i++) {
-            board.setPiece(new Piece(PieceType.ELEPHANT, PieceColor.GOLDEN, PieceState.ALIVE), 0, i);
+            board.setPiece(new Piece(PieceType.ELEPHANT, PieceColor.GOLDEN), 0, i);
         }
 
         for(int i = 0; i <= 7; i++) {
-            board.setPiece(new Piece(PieceType.RABBIT, PieceColor.SILVER, PieceState.ALIVE), 7, i);
+            board.setPiece(new Piece(PieceType.RABBIT, PieceColor.SILVER), 7, i);
         }
 
         // ---- Game logic ----
