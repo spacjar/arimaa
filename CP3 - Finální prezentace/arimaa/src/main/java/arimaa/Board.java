@@ -238,7 +238,7 @@ public class Board {
             throw new IllegalArgumentException("There is no piece at the specified location.");
         }
 
-        if (isFrozen(fromCol, fromRow)) {
+        if (isFrozen(fromRow, fromCol)) {
             throw new IllegalArgumentException("This piece is frozen.");
         }
 
@@ -262,7 +262,7 @@ public class Board {
             removePiece(toRow, toCol);
         }
 
-        if(isFrozen(toCol, toRow)) {
+        if(isFrozen(toRow, toCol)) {
             piece.setState(PieceState.FROZEN);
         }
 
@@ -270,15 +270,36 @@ public class Board {
         List<int[]> adjacentPeicePositionsFrom = getAdjacentPiecePositions(fromRow, fromCol);
 
         for (int[] position : adjacentPeicePositionsFrom) {
-            Piece pieceFrom = getPieceAt(position[0], position[1]);
+            int positionFromRow = position[0];
+            int positionFromCol = position[1];
+
+            Piece pieceFrom = getPieceAt(positionFromRow, positionFromCol);
+            if(isInTrap(positionFromRow, positionFromCol) && !hasAdjacentFriendlyPieces(positionFromRow, positionFromCol)) {
+                pieceFrom.setState(PieceState.DEAD);
+                removePiece(positionFromRow, positionFromCol);
+            }
             
+            if(isFrozen(positionFromRow, positionFromCol)) {
+                pieceFrom.setState(PieceState.FROZEN);
+            }
         }
 
         // ! TD: Check adjacent pieces (toRow, toCol), to see if they become frozen etc.
         List<int[]> adjacentPeicePositionsTo = getAdjacentPiecePositions(toRow, toCol);
 
         for (int[] position : adjacentPeicePositionsTo) {
-            Piece pieceTo = getPieceAt(position[0], position[1]);
+            int positionToRow = position[0];
+            int positionToCol = position[1];
+
+            Piece pieceFrom = getPieceAt(positionToRow, positionToCol);
+            if(isInTrap(positionToRow, positionToCol) && !hasAdjacentFriendlyPieces(positionToRow, positionToCol)) {
+                pieceFrom.setState(PieceState.DEAD);
+                removePiece(positionToRow, positionToCol);
+            }
+            
+            if(isFrozen(positionToRow, positionToCol)) {
+                pieceFrom.setState(PieceState.FROZEN);
+            }
             
         }
     }
