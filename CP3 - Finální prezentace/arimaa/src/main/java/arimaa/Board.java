@@ -87,7 +87,7 @@ public class Board {
      * @return true if the piece is in a trap field, false if not
      */
     public boolean isInTrap(int row, int col) {
-        // ? note(not important): Think of a way to make it dynamic. For example if I set the board to 16x16, than these sqaures will not be sufficient. However, due to the rules, this cannot happen.
+        // ? TD: Think of a way to make it dynamic. For example if I set the board to 16x16, than these sqaures will not be sufficient. However, due to the rules, this cannot happen.
         if ((row == 2 && col == 2) || (row == 2 && col == 5) || (row == 5 && col == 2) || (row == 5 && col == 5)) { 
             return true;
         }
@@ -229,34 +229,37 @@ public class Board {
 
     // Conditional method for movement
     public void movePiece(int fromRow, int fromCol, int toRow, int toCol) throws IllegalArgumentException {
-        // Check before moving the piece
+        // Check if the piece exists
         if (!isOccupied(fromRow, fromCol)) {
             throw new IllegalArgumentException("There is no piece at the specified location!");
         }
 
+        // Check if the piece is frozen
         if (isFrozen(fromRow, fromCol)) {
             throw new IllegalArgumentException("This piece is frozen!");
         }
 
+        // Check if the move is one-step
         if(!isOneStep(fromRow, fromCol, toRow, toCol)) {
             throw new IllegalArgumentException("This move is invalid, you can only move 1 space at a time!");
         }
 
+        // Check if the peice is a rabbit trying to move backwards
         if(!isRabbitMoveValid(fromRow, fromCol, toRow, toCol)) {
             throw new IllegalArgumentException("This move is invalid, a rabbit piece cannot move backwards!");
         }
 
-        // Move the piece
         Piece piece = getPieceAt(fromRow, fromCol);
         
+        // Check if the new position is occupied and if not, move the piece
         if (!isOccupied(toRow, toCol)) {
             removePiece(fromRow, fromCol);
             setPiece(piece, toRow, toCol);
         } else {
-            throw new IllegalArgumentException("Invalid move.");
+            throw new IllegalArgumentException("There is already a piece at the new position!");
         }
 
-        // Check after moving the piece
+        // Check after moving the piece, if the piece is in a trap
         if(isInTrap(toRow, toCol) && !hasAdjacentFriendlyPieces(toRow, toCol)) {
             piece.setState(PieceState.DEAD);
             removePiece(toRow, toCol);
@@ -264,6 +267,7 @@ public class Board {
         }
 
         // ! TD: Think of better solution
+        // Check after moving the piece, if it is frozen
         if(isFrozen(toRow, toCol)) {
             piece.setState(PieceState.FROZEN);
         } else {
