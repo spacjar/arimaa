@@ -150,15 +150,15 @@ public class Board {
 
     
     /**
-     * Returns a list of adjacent pieces to the specified position on the board.
+     * Returns a list of positions of the adjacent pieces to the specified position on the board.
      *
      * @param row the row index of the position
      * @param col the column index of the position
-     * @return a list of adjacent pieces
+     * @return a list of positions of adjacent pieces
      * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
      */
-    public List<Piece> getAdjacentPieces(int row, int col) throws IndexOutOfBoundsException {
-        List<Piece> adjacentPieces = new ArrayList<Piece>();
+    public List<int[]> getAdjacentPiecePositions(int row, int col) throws IndexOutOfBoundsException {
+        List<int[]> adjacentPieces = new ArrayList<int[]>();
 
         if(row < 0 || col < 0 || row >= ROW_SIZE || col >= COL_SIZE) {
             throw new IndexOutOfBoundsException("The selected row or column exceeds board size.");
@@ -166,19 +166,19 @@ public class Board {
 
         // Check above
         if(row+1 < ROW_SIZE && isOccupied(row+1, col)) {
-            adjacentPieces.add(getPieceAt(row+1, col));
+            adjacentPieces.add(new int[]{row+1, col});
         }
         // Check below
         if(row-1 >= 0 && isOccupied(row-1, col)) {
-            adjacentPieces.add(getPieceAt(row-1, col));
+            adjacentPieces.add(new int[]{row-1, col});
         }
         // Check right
         if(col+1 < COL_SIZE && isOccupied(row, col+1)) {
-            adjacentPieces.add(getPieceAt(row, col+1));
+            adjacentPieces.add(new int[]{row, col+1});
         }
         // Check left
         if(col-1 >= 0 && isOccupied(row, col-1)) {
-            adjacentPieces.add(getPieceAt(row, col-1));
+            adjacentPieces.add(new int[]{row, col-1});
         }
     
         return adjacentPieces;
@@ -194,10 +194,11 @@ public class Board {
      */
     public boolean hasAdjacentFriendlyPieces(int row, int col) {
         Piece currentPiece = getPieceAt(row, col);
-        List<Piece> adjacentPieces = getAdjacentPieces(row, col);
+        List<int[]> adjacentPiecePositions = getAdjacentPiecePositions(row, col);
     
-        for (Piece piece : adjacentPieces) {
-            // ? TD: Think if I need the piece != null, since I check it in the getAdjacentPieces() method.
+        for (int[] position : adjacentPiecePositions) {
+            Piece piece = getPieceAt(position[0], position[1]);
+            // ? TD: Think if I need the piece != null, since I check it in the getAdjacentPiecePositions() method.
             if (piece != null && currentPiece != null && piece.getColor() == currentPiece.getColor()) {
                 return true;
             }
@@ -216,10 +217,11 @@ public class Board {
      */
     public boolean isFrozen(int row, int col) {
         Piece currentPiece = getPieceAt(row, col);
-        List<Piece> adjacentPieces = getAdjacentPieces(row, col);
+        List<int[]> adjacentPiecePositions = getAdjacentPiecePositions(row, col);
 
-        for (Piece piece : adjacentPieces) {
-            // ? TD: Think if I need the piece != null, since I check it in the getAdjacentPieces() method.
+        for (int[] position : adjacentPiecePositions) {
+            Piece piece = getPieceAt(position[0], position[1]);
+            // ? TD: Think if I need the piece != null, since I check it in the getAdjacentPiecePositions() method.
             if (piece != null && currentPiece != null && currentPiece.getColor() != piece.getColor() && currentPiece.getPieceWeight() < piece.getPieceWeight() && !hasAdjacentFriendlyPieces(row, col)) {
                 return true;
             }
@@ -265,7 +267,20 @@ public class Board {
         }
 
         // ! TD: Check adjacent pieces (fromRow, fromCol), to see if they are still frozen etc.
+        List<int[]> adjacentPeicePositionsFrom = getAdjacentPiecePositions(fromRow, fromCol);
+
+        for (int[] position : adjacentPeicePositionsFrom) {
+            Piece pieceFrom = getPieceAt(position[0], position[1]);
+            
+        }
+
         // ! TD: Check adjacent pieces (toRow, toCol), to see if they become frozen etc.
+        List<int[]> adjacentPeicePositionsTo = getAdjacentPiecePositions(toRow, toCol);
+
+        for (int[] position : adjacentPeicePositionsTo) {
+            Piece pieceTo = getPieceAt(position[0], position[1]);
+            
+        }
     }
 
     // TD: PUSH ENEMY PIECE
