@@ -258,13 +258,7 @@ public class Board {
             throw new IllegalArgumentException("There is already a piece at the new position!");
         }
 
-        // Check after moving the piece, if the piece is in a trap
-        if(isInTrap(toRow, toCol) && !hasAdjacentFriendlyPieces(toRow, toCol)) {
-            removePiece(toRow, toCol);
-            return;
-        }
-
-
+        // !!! TD: Check if the methods run if the piece is removed from trap (deleted)
         // ! TD: Check adjacent pieces (fromRow, fromCol), to see if they are still frozen etc.
         List<int[]> adjacentPeicePositionsFrom = getAdjacentPiecePositions(fromRow, fromCol);
 
@@ -276,6 +270,12 @@ public class Board {
                 removePiece(positionFromRow, positionFromCol);
                 return;
             }
+        }
+
+        // Check after moving the piece, if the piece is in a trap
+        if(isInTrap(toRow, toCol) && !hasAdjacentFriendlyPieces(toRow, toCol)) {
+            removePiece(toRow, toCol);
+            return;
         }
 
         // ! TD: Check adjacent pieces (toRow, toCol), to see if they become frozen etc.
