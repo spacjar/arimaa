@@ -281,7 +281,11 @@ public class Board {
 			for (int col = 0; col < COL_SIZE; col++) {
 				Piece piece = board[row][col];
 				if (piece == null) {
-                    System.out.print(" ... ");
+                    if(isInTrap(row, col)) {
+                        System.out.print(" xxx ");
+                    } else {
+                        System.out.print(" ... ");
+                    }
 				} else {
 					System.out.print(" " + piece.toString() + (piece.getState() == PieceState.FROZEN ? "FRZ" : "") + " ");
 				}
