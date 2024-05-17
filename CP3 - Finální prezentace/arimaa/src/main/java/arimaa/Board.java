@@ -258,10 +258,9 @@ public class Board {
             throw new IllegalArgumentException("There is already a piece at the new position!");
         }
 
-        // !!! TD: Check if the methods run if the piece is removed from trap (deleted)
-        // ! TD: Check adjacent pieces (fromRow, fromCol), to see if they are still frozen etc.
+        // After moving the piece, check if some conditions (for example being in a trap and not being protected anymore) didn't change for the adjacent pieces at the previous position 
         List<int[]> adjacentPeicePositionsFrom = getAdjacentPiecePositions(fromRow, fromCol);
-
+        
         for (int[] position : adjacentPeicePositionsFrom) {
             int positionFromRow = position[0];
             int positionFromCol = position[1];
@@ -278,7 +277,7 @@ public class Board {
             return;
         }
 
-        // ! TD: Check adjacent pieces (toRow, toCol), to see if they become frozen etc.
+        // After moving the piece, check if some conditions (for example being in a trap and not being protected anymore) didn't change for the adjacent pieces at the new position 
         List<int[]> adjacentPeicePositionsTo = getAdjacentPiecePositions(toRow, toCol);
 
         for (int[] position : adjacentPeicePositionsTo) {
