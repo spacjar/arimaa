@@ -220,7 +220,7 @@ public class Board {
 
         for (Piece piece : adjacentPieces) {
             // ? TD: Think if I need the piece != null, since I check it in the getAdjacentPieces() method.
-            if (piece != null && currentPiece != null && currentPiece.getColor() != piece.getColor() && currentPiece.getPieceWeight() < piece.getPieceWeight()) {
+            if (piece != null && currentPiece != null && currentPiece.getColor() != piece.getColor() && currentPiece.getPieceWeight() < piece.getPieceWeight() && !hasAdjacentFriendlyPieces(row, col)) {
                 return true;
             }
         }
