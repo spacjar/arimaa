@@ -69,8 +69,9 @@ public class Board {
      * @param row the row index of the position
      * @param col the column index of the position
      * @return true if the position is occupied, false if not
+     * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
      */
-    public boolean isOccupied(int row, int col) {
+    public boolean isOccupied(int row, int col) throws IndexOutOfBoundsException {
         if(getPieceAt(row, col) == null) {
             return false;
         }
@@ -125,9 +126,10 @@ public class Board {
      * @param toRow the row index of the destination position
      * @param toCol the column index of the destination position
      * @return true if the rabbit move is valid, false otherwise
+     * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
      */
     // ! TD: Cleanup this method logic, the goal is to have the method return false by default, and true if it is really true!
-    public boolean isRabbitMoveValid(int fromRow, int fromCol, int toRow, int toCol) {
+    public boolean isRabbitMoveValid(int fromRow, int fromCol, int toRow, int toCol) throws IndexOutOfBoundsException {
         Piece piece = getPieceAt(fromRow, fromCol);
         // ! TD: Fix when a player can choose sides, now it is that the GOLDEN player always has to start at the [0] index of the array, and the SILVER player at the [7] index of the array
         if (piece != null && piece.getType() == PieceType.RABBIT) {
@@ -186,8 +188,9 @@ public class Board {
      * @param row the row index of the position
      * @param col the column index of the position
      * @return true if there are adjacent friendly pieces, false otherwise
+     * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
      */
-    public boolean hasAdjacentFriendlyPieces(int row, int col) {
+    public boolean hasAdjacentFriendlyPieces(int row, int col) throws IndexOutOfBoundsException {
         Piece currentPiece = getPieceAt(row, col);
         List<int[]> adjacentPiecePositions = getAdjacentPiecePositions(row, col);
     
@@ -209,8 +212,9 @@ public class Board {
      * @param row the row index of the position
      * @param col the column index of the position
      * @return true if the piece is frozen, false otherwise
+     * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
      */
-    public boolean isFrozen(int row, int col) {
+    public boolean isFrozen(int row, int col) throws IndexOutOfBoundsException {
         Piece currentPiece = getPieceAt(row, col);
         List<int[]> adjacentPiecePositions = getAdjacentPiecePositions(row, col);
 
@@ -308,7 +312,16 @@ public class Board {
     // TD: CHECK IF THE GAME ENDED (WIN OR LOSE)
 
 
-	public void printBoard() {
+/**
+ * Prints the current state of the board.
+ * The board is displayed with rows and columns, and each cell is represented by its corresponding Piece or null value.
+ * If a cell is empty, it is displayed as "...".
+ * If a cell is a trap, it is displayed as "xxx".
+ * If a cell contains a piece, it is displayed as a Piece.
+ *
+ * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
+ */
+	public void printBoard() throws IndexOutOfBoundsException {
 		System.out.println("-   0    1    2    3    4    5    6    7");
 
 		for (int row = 0; row < ROW_SIZE; row++) {
