@@ -137,10 +137,10 @@ public class Board {
         Piece piece = getPieceAt(fromRow, fromCol);
         // ! TD: Fix when a player can choose sides, now it is that the GOLDEN player always has to start at the [0] index of the array, and the SILVER player at the [7] index of the array
         if (piece != null && piece.getType() == PieceType.RABBIT) {
-            if (piece.getColor() == PieceColor.GOLDEN && fromRow < toRow) {
+            if (piece.getColor() == PieceColor.GOLDEN && fromRow > toRow) {
                 return false;
             }
-            if (piece.getColor() == PieceColor.SILVER && fromRow > toRow) {
+            if (piece.getColor() == PieceColor.SILVER && fromRow < toRow) {
                 return false;
             }
         }
