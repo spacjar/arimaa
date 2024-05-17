@@ -226,8 +226,18 @@ public class Board {
     }
 
 
-    // Conditional method for movement
-    public void movePiece(int fromRow, int fromCol, int toRow, int toCol) throws IllegalArgumentException {
+    
+    /**
+     * Moves a piece from one position on the board to another while checking if the move is valid according to the game's rules.
+     * 
+     * @param fromRow the row index of the piece's current position
+     * @param fromCol the column index of the piece's current position
+     * @param toRow the row index of the piece's new position
+     * @param toCol the column index of the piece's new position
+     * @throws IllegalArgumentException if the piece doesn't exist at the specified location, if the piece is frozen, if the move is invalid (not one-step or rabbit moving backwards), or if there is already a piece at the new position
+     * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
+     */
+    public void movePiece(int fromRow, int fromCol, int toRow, int toCol) throws IllegalArgumentException, IndexOutOfBoundsException {
         // Check if the piece exists
         if (!isOccupied(fromRow, fromCol)) {
             throw new IllegalArgumentException("There is no piece at the specified location!");
