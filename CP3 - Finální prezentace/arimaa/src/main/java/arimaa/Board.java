@@ -260,11 +260,13 @@ public class Board {
         if(isInTrap(toRow, toCol) && !hasAdjacentFriendlyPieces(toRow, toCol)) {
             piece.setState(PieceState.DEAD);
             removePiece(toRow, toCol);
+            return;
         }
 
+        // ! TD: Think of better solution
         if(isFrozen(toRow, toCol)) {
             piece.setState(PieceState.FROZEN);
-        } else if (piece.getState() == PieceState.FROZEN) {
+        } else {
             piece.setState(PieceState.ALIVE);
         }
 
@@ -279,11 +281,13 @@ public class Board {
             if(isInTrap(positionFromRow, positionFromCol) && !hasAdjacentFriendlyPieces(positionFromRow, positionFromCol)) {
                 pieceFrom.setState(PieceState.DEAD);
                 removePiece(positionFromRow, positionFromCol);
+                return;
             }
             
+            // ! TD: Think of better solution
             if(isFrozen(positionFromRow, positionFromCol)) {
                 pieceFrom.setState(PieceState.FROZEN);
-            } else if (pieceFrom.getState() == PieceState.FROZEN) {
+            } else {
                 pieceFrom.setState(PieceState.ALIVE);
             }
         }
@@ -299,11 +303,13 @@ public class Board {
             if(isInTrap(positionToRow, positionToCol) && !hasAdjacentFriendlyPieces(positionToRow, positionToCol)) {
                 pieceTo.setState(PieceState.DEAD);
                 removePiece(positionToRow, positionToCol);
+                return;
             }
             
+            // ! TD: Think of better solution
             if(isFrozen(positionToRow, positionToCol)) {
                 pieceTo.setState(PieceState.FROZEN);
-            } else if (pieceTo.getState() == PieceState.FROZEN) {
+            } else {
                 pieceTo.setState(PieceState.ALIVE);
             }
             
