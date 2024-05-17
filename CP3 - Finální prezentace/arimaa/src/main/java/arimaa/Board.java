@@ -264,6 +264,8 @@ public class Board {
 
         if(isFrozen(toRow, toCol)) {
             piece.setState(PieceState.FROZEN);
+        } else if (piece.getState() == PieceState.FROZEN) {
+            piece.setState(PieceState.ALIVE);
         }
 
         // ! TD: Check adjacent pieces (fromRow, fromCol), to see if they are still frozen etc.
@@ -281,6 +283,8 @@ public class Board {
             
             if(isFrozen(positionFromRow, positionFromCol)) {
                 pieceFrom.setState(PieceState.FROZEN);
+            } else if (pieceFrom.getState() == PieceState.FROZEN) {
+                pieceFrom.setState(PieceState.ALIVE);
             }
         }
 
@@ -291,14 +295,16 @@ public class Board {
             int positionToRow = position[0];
             int positionToCol = position[1];
 
-            Piece pieceFrom = getPieceAt(positionToRow, positionToCol);
+            Piece pieceTo = getPieceAt(positionToRow, positionToCol);
             if(isInTrap(positionToRow, positionToCol) && !hasAdjacentFriendlyPieces(positionToRow, positionToCol)) {
-                pieceFrom.setState(PieceState.DEAD);
+                pieceTo.setState(PieceState.DEAD);
                 removePiece(positionToRow, positionToCol);
             }
             
             if(isFrozen(positionToRow, positionToCol)) {
-                pieceFrom.setState(PieceState.FROZEN);
+                pieceTo.setState(PieceState.FROZEN);
+            } else if (pieceTo.getState() == PieceState.FROZEN) {
+                pieceTo.setState(PieceState.ALIVE);
             }
             
         }
