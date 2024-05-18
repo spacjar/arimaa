@@ -310,6 +310,17 @@ public class Board {
     // ! TD: PULL ENEMY PIECE
 
     // ! TD: CHECK IF THE GAME ENDED (WIN OR LOSE)
+    public boolean isGameWon() {
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                if (isRabbitOnTheOtherSide(row, col)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     // 1. The first player to move a rabbit to the other side of the board wins.
     public boolean isRabbitOnTheOtherSide(int row, int col) throws IndexOutOfBoundsException {
         Piece piece = getPieceAt(row, col);
@@ -338,7 +349,7 @@ public class Board {
 
     // 35. If you lose all your pieces, you lose the game.
 
-    
+
     // 36. If both players lose all of their rabbits on the same turn, the player whose turn it was (and made that move) wins the game.
 
 
