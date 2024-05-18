@@ -229,7 +229,6 @@ public class Board {
         return false;
     }
 
-
     
     /**
      * Moves a piece from one position on the board to another while checking if the move is valid according to the game's rules.
@@ -305,14 +304,17 @@ public class Board {
         }
     }
 
+
     // ! TD: PUSH ENEMY PIECE
+
 
     // ! TD: PULL ENEMY PIECE
 
+
     // ! TD: CHECK IF THE GAME ENDED (WIN OR LOSE)
     public boolean isGameWon() {
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
+        for (int row = 0; row < ROW_SIZE; row++) {
+            for (int col = 0; col < COL_SIZE; col++) {
                 if (isRabbitOnTheOtherSide(row, col)) {
                     return true;
                 }
@@ -346,8 +348,25 @@ public class Board {
         return false;
     }
 
-    // 32. If you cannot move because all of your pieces are frozen, you lose the game.
 
+    /**
+     * Checks if every piece belonging to the current player is frozen on the board.
+     *
+     * @param currentPlayer the player whose pieces are being checked
+     * @return true if every piece belonging to the current player is frozen, false otherwise
+     * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
+     */
+    public boolean isEveryPieceFrozen(Player currentPlayer) throws IndexOutOfBoundsException {
+        for (int row = 0; row < ROW_SIZE; row++) {
+            for (int col = 0; col < COL_SIZE; col++) {
+                Piece piece = getPieceAt(row, col);
+                if (piece != null && piece.getColor() == currentPlayer.getColor() && !isFrozen(row, col)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     // 33. If you are unable to move, because you don't have a legal move, you lose the game.
 
@@ -355,7 +374,7 @@ public class Board {
     // 34. If you lose all your rabbits, you lose the game.
 
 
-    // 35. If you lose all your pieces, you lose the game.
+    // 35. If you lose all your pieces, you lose the game. (Redundant, because if he lost all pieces, he also lost all rabbits, so the isPlayerWithoutRabbits will check it)
 
 
     // 36. If both players lose all of their rabbits on the same turn, the player whose turn it was (and made that move) wins the game.
