@@ -9,6 +9,11 @@ public class Player {
         this.color = color;
     }
 
+    @Override
+    public String toString() {
+        return color + " Player";
+    }
+
     public PieceColor getColor() {
         return color;
     }
