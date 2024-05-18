@@ -411,25 +411,26 @@ public class Board {
      *
      * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
      */
-	public void printBoard() throws IndexOutOfBoundsException {
-		System.out.println("-   0    1    2    3    4    5    6    7");
+    public void printBoard() throws IndexOutOfBoundsException {
+	    System.out.println("-   0    1    2    3    4    5    6    7");
 
-		for (int row = 0; row < ROW_SIZE; row++) {
-			System.out.print((row) + " ");
+        for (int row = 0; row < ROW_SIZE; row++) {
+		    System.out.print((row) + " ");
 
-			for (int col = 0; col < COL_SIZE; col++) {
-				Piece piece = board[row][col];
-				if (piece == null) {
+            for (int col = 0; col < COL_SIZE; col++) {
+                Piece piece = board[row][col];
+				
+                if (piece == null) {
                     if(isInTrap(row, col)) {
                         System.out.print(" xxx ");
                     } else {
                         System.out.print(" ... ");
                     }
-				} else {
-					System.out.print(" " + piece.toString() + (isFrozen(row, col) ? "FRZ" : "") + " ");
-				}
-			}
-            
+                } else {
+                    System.out.print(" " + piece.toString() + (isFrozen(row, col) ? "FRZ" : "") + " ");
+                }
+            }
+
             System.out.println();
         }
     }
