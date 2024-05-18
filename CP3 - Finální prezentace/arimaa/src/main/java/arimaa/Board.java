@@ -16,6 +16,7 @@ public class Board {
     }
 
 
+    // -------------------- Core logic --------------------
     /**
      * Retrieves the piece at the specified position on the board.
      *
@@ -63,6 +64,8 @@ public class Board {
     }
 
 
+    
+    // -------------------- Board conditions and advanced logic --------------------
     /**
      * Checks if a specific position on the board is occupied by a piece.
      *
@@ -311,7 +314,8 @@ public class Board {
     // ! TD: PULL ENEMY PIECE
 
 
-    // ! TD: CHECK IF THE GAME ENDED (WIN OR LOSE)
+
+    // -------------------- Game end conditions  --------------------
     /**
      * Checks if the game is won by the current player.
      *
@@ -435,6 +439,7 @@ public class Board {
     }
 
     
+    // -------------------- Board utils  --------------------
     /**
      * Prints the current state of the board.
      * The board is displayed with rows and columns, and each cell is represented by its corresponding Piece or null value.
