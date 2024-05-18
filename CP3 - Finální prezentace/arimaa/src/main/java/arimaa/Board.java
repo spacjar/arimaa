@@ -312,17 +312,16 @@ public class Board {
 
 
     // ! TD: CHECK IF THE GAME ENDED (WIN OR LOSE)
-    public boolean isGameWon(Player currentPlayer) {
+    public boolean isGameWon(Player currentPlayer) throws IndexOutOfBoundsException {
         if(isRabbitOnTheOtherSide(currentPlayer)) {
             return true;
         }
 
-
         return false;
     }
 
-    public boolean isGameLost(Player currentPlayer) {
-        if(isEveryPieceFrozen(currentPlayer)) {
+    public boolean isGameLost(Player currentPlayer) throws IndexOutOfBoundsException {
+        if(isEveryPieceFrozen(currentPlayer) || isPlayerUnableToMove(currentPlayer) || isPlayerWithoutAllRabbits(currentPlayer)) {
             return true;
         }
 
