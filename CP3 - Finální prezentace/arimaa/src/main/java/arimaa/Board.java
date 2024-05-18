@@ -305,22 +305,55 @@ public class Board {
         }
     }
 
-    // TD: PUSH ENEMY PIECE
+    // ! TD: PUSH ENEMY PIECE
 
-    // TD: PULL ENEMY PIECE
+    // ! TD: PULL ENEMY PIECE
 
-    // TD: CHECK IF THE GAME ENDED (WIN OR LOSE)
+    // ! TD: CHECK IF THE GAME ENDED (WIN OR LOSE)
+    // 1. The first player to move a rabbit to the other side of the board wins.
+    public boolean isRabbitOnTheOtherSide(int row, int col) throws IndexOutOfBoundsException {
+        Piece piece = getPieceAt(row, col);
+
+        // ! TD: Fix when a player can choose sides, now it is that the GOLDEN player always has to start at the [0] index of the array, and the SILVER player at the [7] index of the array
+        if (piece != null && piece.getType() == PieceType.RABBIT) {
+            if (piece.getColor() == PieceColor.GOLDEN && row == 7) {
+                return true;
+            }
+            if (piece.getColor() == PieceColor.SILVER && row == 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // 32. If you cannot move because all of your pieces are frozen, you lose the game.
 
 
-/**
- * Prints the current state of the board.
- * The board is displayed with rows and columns, and each cell is represented by its corresponding Piece or null value.
- * If a cell is empty, it is displayed as "...".
- * If a cell is a trap, it is displayed as "xxx".
- * If a cell contains a piece, it is displayed as a Piece.
- *
- * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
- */
+    // 33. If you are unable to move, because you don't have a legal move, you lose the game.
+
+
+    // 34. If you lose all your rabbits, you lose the game.
+
+
+    // 35. If you lose all your pieces, you lose the game.
+
+    
+    // 36. If both players lose all of their rabbits on the same turn, the player whose turn it was (and made that move) wins the game.
+
+
+
+
+
+    /**
+     * Prints the current state of the board.
+     * The board is displayed with rows and columns, and each cell is represented by its corresponding Piece or null value.
+     * If a cell is empty, it is displayed as "...".
+     * If a cell is a trap, it is displayed as "xxx".
+     * If a cell contains a piece, it is displayed as a Piece.
+     *
+     * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
+     */
 	public void printBoard() throws IndexOutOfBoundsException {
 		System.out.println("-   0    1    2    3    4    5    6    7");
 
@@ -344,4 +377,3 @@ public class Board {
         }
     }
 }
-  
