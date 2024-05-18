@@ -394,11 +394,26 @@ public class Board {
     }
 
 
-    // 34. If you lose all your rabbits, you lose the game. (also check if player lost all of his pieces, because if he loses all of his pieces, he loses his rabbits as well)
-    // 36. If both players lose all of their rabbits on the same turn, the player whose turn it was (and made that move) wins the game.
-    public boolean isPlayerWithoutAllRabbits(Player player) {
-        
-        return false;
+    /**
+     * Checks if a player has no rabbits left on the board.
+     *
+     * @param player the player whose pieces are being checked
+     * @return true if the player has no rabbits left, false otherwise
+     * @throws IndexOutOfBoundsException if the row or column index is out of bounds
+     */
+    public boolean isPlayerWithoutAllRabbits(Player player) throws IndexOutOfBoundsException {
+        PieceColor playerColor = player.getColor();
+
+        for (int row = 0; row < ROW_SIZE; row++) {
+            for (int col = 0; col < COL_SIZE; col++) {
+                Piece piece = getPieceAt(row, col);
+                if (piece != null && piece.getType() == PieceType.RABBIT && piece.getColor() == playerColor) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     
