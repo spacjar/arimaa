@@ -372,21 +372,22 @@ public class Board {
         return true;
     }
 
+
     // 33. If you are unable to move, because you don't have a legal move, you lose the game.
+    public boolean isPlayerUnableToMove(Player player) throws IndexOutOfBoundsException {
+
+        return false;
+    }
 
 
-    // 34. If you lose all your rabbits, you lose the game.
-
-
-    // 35. If you lose all your pieces, you lose the game. (Redundant, because if he lost all pieces, he also lost all rabbits, so the isPlayerWithoutRabbits will check it)
-
-
+    // 34. If you lose all your rabbits, you lose the game. (also check if player lost all of his pieces, because if he loses all of his pieces, he loses his rabbits as well)
     // 36. If both players lose all of their rabbits on the same turn, the player whose turn it was (and made that move) wins the game.
+    public boolean isPlayerWithoutAllRabbits(Player player) {
+        
+        return false;
+    }
 
-
-
-
-
+    
     /**
      * Prints the current state of the board.
      * The board is displayed with rows and columns, and each cell is represented by its corresponding Piece or null value.
