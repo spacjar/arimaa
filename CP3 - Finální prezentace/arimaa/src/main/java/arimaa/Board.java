@@ -321,7 +321,15 @@ public class Board {
         return false;
     }
 
-    // 1. The first player to move a rabbit to the other side of the board wins.
+    
+    /**
+     * Checks if a rabbit piece is on the other side of the board.
+     *
+     * @param row the row index of the piece
+     * @param col the column index of the piece
+     * @return true if a rabbit piece is on the other side, false otherwise
+     * @throws IndexOutOfBoundsException if the row or column index is out of bounds
+     */
     public boolean isRabbitOnTheOtherSide(int row, int col) throws IndexOutOfBoundsException {
         Piece piece = getPieceAt(row, col);
 
