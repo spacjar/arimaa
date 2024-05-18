@@ -312,39 +312,33 @@ public class Board {
 
 
     // ! TD: CHECK IF THE GAME ENDED (WIN OR LOSE)
-    public boolean isGameWon() {
-        for (int row = 0; row < ROW_SIZE; row++) {
-            for (int col = 0; col < COL_SIZE; col++) {
-                if (isRabbitOnTheOtherSide(row, col)) {
-                    return true;
-                }
-            }
+    public boolean isGameWon(Player currentPlayer) {
+        if(isRabbitOnTheOtherSide(currentPlayer)) {
+            return true;
         }
         return false;
     }
 
     
     /**
-     * Checks if a rabbit piece is on the other side of the board.
+     * Checks if there is a rabbit piece on the other side of the board for the given player.
      *
-     * @param row the row index of the piece
-     * @param col the column index of the piece
-     * @return true if a rabbit piece is on the other side, false otherwise
+     * @param player the player for whom to check the rabbit piece
+     * @return true if there is a rabbit piece on the other side, false otherwise
      * @throws IndexOutOfBoundsException if the row or column index is out of bounds
      */
-    public boolean isRabbitOnTheOtherSide(int row, int col) throws IndexOutOfBoundsException {
-        Piece piece = getPieceAt(row, col);
+    public boolean isRabbitOnTheOtherSide(Player player) throws IndexOutOfBoundsException {
+        PieceColor playerColor = player.getColor();
 
-        // ! TD: Fix when a player can choose sides, now it is that the GOLDEN player always has to start at the [0] index of the array, and the SILVER player at the [7] index of the array
-        if (piece != null && piece.getType() == PieceType.RABBIT) {
-            if (piece.getColor() == PieceColor.GOLDEN && row == 7) {
-                return true;
-            }
-            if (piece.getColor() == PieceColor.SILVER && row == 0) {
+        int targetRow = playerColor == PieceColor.GOLDEN ? 7 : 0;
+    
+        for (int col = 0; col < COL_SIZE; col++) {
+            Piece piece = getPieceAt(targetRow, col);
+            if (piece != null && piece.getType() == PieceType.RABBIT && piece.getColor() == playerColor) {
                 return true;
             }
         }
-
+    
         return false;
     }
 
@@ -352,15 +346,15 @@ public class Board {
     /**
      * Checks if every piece belonging to the current player is frozen on the board.
      *
-     * @param currentPlayer the player whose pieces are being checked
+     * @param player the player whose pieces are being checked
      * @return true if every piece belonging to the current player is frozen, false otherwise
      * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
      */
-    public boolean isEveryPieceFrozen(Player currentPlayer) throws IndexOutOfBoundsException {
+    public boolean isEveryPieceFrozen(Player player) throws IndexOutOfBoundsException {
         for (int row = 0; row < ROW_SIZE; row++) {
             for (int col = 0; col < COL_SIZE; col++) {
                 Piece piece = getPieceAt(row, col);
-                if (piece != null && piece.getColor() == currentPlayer.getColor() && !isFrozen(row, col)) {
+                if (piece != null && piece.getColor() == player.getColor() && !isFrozen(row, col)) {
                     return false;
                 }
             }
@@ -369,7 +363,7 @@ public class Board {
     }
 
     // 33. If you are unable to move, because you don't have a legal move, you lose the game.
-
+    
 
     // 34. If you lose all your rabbits, you lose the game.
 
