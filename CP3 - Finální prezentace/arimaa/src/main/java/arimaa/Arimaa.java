@@ -24,7 +24,7 @@ public class Arimaa {
 
     // Current player
     Player currentPlayer = goldenPlayer;
-    
+
 
     public void startGame() {
         isGameRunning = true;
@@ -73,6 +73,20 @@ public class Arimaa {
                 } else {
                     silverPlayerMoves--;
                 }
+
+                // Check if the game is won
+                if(board.isGameWon(currentPlayer)) {
+                    System.out.println(currentPlayer + " won the game!");
+                    isGameRunning = false;
+                    return;
+                };
+ 
+                // Check if the game is won
+                if(board.isGameLost(currentPlayer)) {
+                    System.out.println(currentPlayer + " lost the game!");
+                    isGameRunning = false;
+                    return;
+                };
         
                 // If the current player has no moves left, switch to the other player and reset their moves
                 if ((currentPlayer == goldenPlayer && goldenPlayerMoves == 0) || (currentPlayer == silverPlayer && silverPlayerMoves == 0)) {
