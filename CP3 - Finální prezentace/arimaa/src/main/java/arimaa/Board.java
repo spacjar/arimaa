@@ -312,6 +312,13 @@ public class Board {
 
 
     // ! TD: CHECK IF THE GAME ENDED (WIN OR LOSE)
+    /**
+     * Checks if the game is won by the current player.
+     *
+     * @param currentPlayer the player for whom the game is being checked
+     * @return true if the game is won by the current player, false otherwise
+     * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
+     */
     public boolean isGameWon(Player currentPlayer) throws IndexOutOfBoundsException {
         if(isRabbitOnTheOtherSide(currentPlayer)) {
             return true;
@@ -320,6 +327,14 @@ public class Board {
         return false;
     }
 
+
+    /**
+     * Checks if the game is lost by the current player.
+     *
+     * @param currentPlayer the player for whom the game is being checked
+     * @return true if the game is lost by the current player, false otherwise
+     * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
+     */
     public boolean isGameLost(Player currentPlayer) throws IndexOutOfBoundsException {
         if(isEveryPieceFrozen(currentPlayer) || isPlayerUnableToMove(currentPlayer) || isPlayerWithoutAllRabbits(currentPlayer)) {
             return true;
