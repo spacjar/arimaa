@@ -387,10 +387,28 @@ public class Board {
     }
 
 
-    // 33. If you are unable to move, because you don't have a legal move, you lose the game.
+    
+    /**
+     * Checks if a player is unable to make any moves on the board.
+     *
+     * @param player the player whose pieces are being checked
+     * @return true if the player is unable to move, false otherwise
+     * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
+     */
     public boolean isPlayerUnableToMove(Player player) throws IndexOutOfBoundsException {
+        for (int row = 0; row < ROW_SIZE; row++) {
+            for (int col = 0; col < COL_SIZE; col++) {
+                Piece piece = getPieceAt(row, col);
+                int numOfAdjacentPieces = getAdjacentPiecePositions(row, col).size();
 
-        return false;
+                // Check if the current piece is a) not frozen and b) has less than 4 pieces adjacent to it - this way you can determine if the piece is able to move
+                if (piece != null && piece.getColor() == player.getColor() && !isFrozen(row, col) && numOfAdjacentPieces < 4) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
 
