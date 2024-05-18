@@ -24,7 +24,7 @@ public class Arimaa {
 
     // Current player
     Player currentPlayer = goldenPlayer;
-
+    
 
     public void startGame() {
         isGameRunning = true;
@@ -50,6 +50,11 @@ public class Arimaa {
                 int fromRow = InputUtils.getIntFromInput("Select the row where is the piece you would like to move: ");
                 int fromCol = InputUtils.getIntFromInput("Select the column where is the piece you would like to move: ");
                 
+                if(!board.isOccupied(fromRow, fromCol)) {
+                    System.err.println("There is no piece at the specified location!");
+                    continue;
+                }
+
                 Piece piece = board.getPieceAt(fromRow, fromCol);
 
                 if (piece.getColor() != currentPlayer.getColor()) {
