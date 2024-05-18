@@ -316,6 +316,16 @@ public class Board {
         if(isRabbitOnTheOtherSide(currentPlayer)) {
             return true;
         }
+
+
+        return false;
+    }
+
+    public boolean isGameLost(Player currentPlayer) {
+        if(isEveryPieceFrozen(currentPlayer)) {
+            return true;
+        }
+
         return false;
     }
 
@@ -363,7 +373,7 @@ public class Board {
     }
 
     // 33. If you are unable to move, because you don't have a legal move, you lose the game.
-    
+
 
     // 34. If you lose all your rabbits, you lose the game.
 
