@@ -176,6 +176,9 @@ public class Arimaa {
         // Set the game control value of the phase as running
         isGameRunning = true;
 
+        // Reset the current player to be golden player, since he always starts the game
+        currentPlayer = goldenPlayer;
+
         // ----- DEBUG game init start -----
         // for(int i = 0; i <= 7; i++) {
         //     board.setPiece(new Piece(PieceType.ELEPHANT, PieceColor.GOLDEN), 0, i);
