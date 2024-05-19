@@ -67,7 +67,6 @@ public class Arimaa {
     
     private void setupGame() {
         System.out.println("\n***** - | Game setup | - *****\n");
-        board.printBoard();
 
         // Initialize the piece counts
         Map<PieceType, Integer> goldenPieces = new HashMap<>();
@@ -107,10 +106,21 @@ public class Arimaa {
             }
 
             // ! TD: Exception handling
-            // ! TD: Print out all of the available pieces (+ how many are there)
-            // Ask the player to choose a piece  
-            System.out.println("Current player: " + currentPlayer);
-            System.out.println("Piece types numbers - (1: RABBIT | 2: CAT | 3: DOG | 4: HORSE | 5: CAMEL | 6 ELEPHANT)");
+            // Print the current player
+            System.out.println("\nCurrent player: " + currentPlayer);
+            
+            // Print the board
+            board.printBoard();
+            
+            // Print out all of the available piece types
+            System.out.println("Currently available pieces: ");
+            // Loop over the hashmap and print out the keys (piece types) and values (counts)
+            for (Map.Entry<PieceType, Integer> entry : currentPieces.entrySet()) {
+                System.out.println(entry.getKey() + ": " + entry.getValue());
+            }
+            
+            // Ask the player to choose a piece type
+            System.out.println("(1: RABBIT | 2: CAT | 3: DOG | 4: HORSE | 5: CAMEL | 6 ELEPHANT)");
             int chosenPieceTypeNum = InputUtils.getIntFromInput("Please choose a piece type number: ");
             PieceType chosenPieceType;
 
