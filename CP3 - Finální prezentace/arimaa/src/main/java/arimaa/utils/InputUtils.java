@@ -32,4 +32,18 @@ public class InputUtils {
         }
         return number;
     }
+
+    public static Integer getPositionsFromInput(String message) {
+        while (true) {
+            String userInput = getUserInput(message);
+            if (userInput.equalsIgnoreCase("skip")) {
+                return null;
+            }
+            try {
+                return Integer.parseInt(userInput);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid number or 'skip'.");
+            }
+        }
+    }
 }
