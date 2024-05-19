@@ -224,14 +224,14 @@ public class Arimaa {
                 System.out.println("Silver player moves left: " + silverPlayerMoves);
 
                 // Get the from row number or skip the turn 
-                Integer fromRow = InputUtils.getPositionsFromInput("Select the row where is the piece you would like to move or type 'skip' to skip your turn: ");
+                Integer fromRow = InputUtils.handlePositionInput("Select the row where is the piece you would like to move or type 'skip' to skip your turn: ");
                 if (fromRow == null) {
                     handleTurnSkip();
                     continue;
                 }
                 
                 // Get the from col number or skip the turn
-                Integer fromCol = InputUtils.getPositionsFromInput("Select the column where is the piece you would like to move or type 'skip' to skip your turn: ");
+                Integer fromCol = InputUtils.handlePositionInput("Select the column where is the piece you would like to move or type 'skip' to skip your turn: ");
                 if (fromCol == null) {
                     handleTurnSkip();
                     continue;
@@ -251,14 +251,14 @@ public class Arimaa {
                 }
         
                 // Get the to row number or skip the turn
-                Integer toRow = InputUtils.getPositionsFromInput("Select the row where you would like to move the piece or type 'skip' to skip your turn: ");
+                Integer toRow = InputUtils.handlePositionInput("Select the row where you would like to move the piece or type 'skip' to skip your turn: ");
                 if (toRow == null) {
                     handleTurnSkip();
                     continue;
                 }
 
                 // Get the to col number or skip the turn
-                Integer toCol = InputUtils.getPositionsFromInput("Select the column where you would like to move the piece or type 'skip' to skip your turn: ");
+                Integer toCol = InputUtils.handlePositionInput("Select the column where you would like to move the piece or type 'skip' to skip your turn: ");
                 if (toCol == null) {
                     handleTurnSkip();
                     continue;
