@@ -223,37 +223,16 @@ public class Arimaa {
                 System.out.println("Golden player moves left: " + goldenPlayerMoves);
                 System.out.println("Silver player moves left: " + silverPlayerMoves);
 
-                // ! TD: Clean up the shitty code
                 Integer fromRow = InputUtils.getPositionsFromInput("Select the row where is the piece you would like to move or type 'skip' to skip your turn: ");
                 if (fromRow == null) {
-                    if (currentPlayer == goldenPlayer && goldenPlayerMoves < 4) {
-                        currentPlayer = silverPlayer;
-                        System.out.println("Turn skipped!");
-                        continue;
-                    }
-                    if (currentPlayer == silverPlayer && silverPlayerMoves < 4) {
-                        currentPlayer = goldenPlayer;
-                        System.out.println("Turn skipped!");
-                        continue;
-                    }
-
-                    throw new IllegalArgumentException("You cannot skip your move when you have not moved with any of your pieces!");
+                    handleTurnSkip();
+                    continue;
                 }
                 
                 Integer fromCol = InputUtils.getPositionsFromInput("Select the column where is the piece you would like to move or type 'skip' to skip your turn: ");
                 if (fromCol == null) {
-                    if (currentPlayer == goldenPlayer && goldenPlayerMoves < 4) {
-                        currentPlayer = silverPlayer;
-                        System.out.println("Turn skipped!");
-                        continue;
-                    }
-                    if (currentPlayer == silverPlayer && silverPlayerMoves < 4) {
-                        currentPlayer = goldenPlayer;
-                        System.out.println("Turn skipped!");
-                        continue;
-                    }
-
-                    throw new IllegalArgumentException("You cannot skip your move when you have not moved with any of your pieces!");
+                    handleTurnSkip();
+                    continue;
                 }
                 
                 if(!board.isOccupied(fromRow, fromCol)) {
@@ -268,34 +247,14 @@ public class Arimaa {
         
                 Integer toRow = InputUtils.getPositionsFromInput("Select the row where you would like to move the piece or type 'skip' to skip your turn: ");
                 if (toRow == null) {
-                    if (currentPlayer == goldenPlayer && goldenPlayerMoves < 4) {
-                        currentPlayer = silverPlayer;
-                        System.out.println("Turn skipped!");
-                        continue;
-                    }
-                    if (currentPlayer == silverPlayer && silverPlayerMoves < 4) {
-                        currentPlayer = goldenPlayer;
-                        System.out.println("Turn skipped!");
-                        continue;
-                    }
-
-                    throw new IllegalArgumentException("You cannot skip your move when you have not moved with any of your pieces!");
+                    handleTurnSkip();
+                    continue;
                 }
 
                 Integer toCol = InputUtils.getPositionsFromInput("Select the column where you would like to move the piece or type 'skip' to skip your turn: ");
                 if (toCol == null) {
-                    if (currentPlayer == goldenPlayer && goldenPlayerMoves < 4) {
-                        currentPlayer = silverPlayer;
-                        System.out.println("Turn skipped!");
-                        continue;
-                    }
-                    if (currentPlayer == silverPlayer && silverPlayerMoves < 4) {
-                        currentPlayer = goldenPlayer;
-                        System.out.println("Turn skipped!");
-                        continue;
-                    }
-
-                    throw new IllegalArgumentException("You cannot skip your move when you have not moved with any of your pieces!");
+                    handleTurnSkip();
+                    continue;
                 }
 
                 board.movePiece(fromRow, fromCol, toRow, toCol);
@@ -336,6 +295,18 @@ public class Arimaa {
             } catch (Exception e) {
                 System.err.println("\n----------\n(!) ERROR: " + e.getMessage() + "\n----------\n");
             }
+        }
+    }
+
+    private void handleTurnSkip() {
+        if (currentPlayer == goldenPlayer && goldenPlayerMoves < 4) {
+            currentPlayer = silverPlayer;
+            System.out.println("Turn skipped!");
+        } else if (currentPlayer == silverPlayer && silverPlayerMoves < 4) {
+            currentPlayer = goldenPlayer;
+            System.out.println("Turn skipped!");
+        } else {
+            throw new IllegalArgumentException("You cannot skip your move when you have not moved with any of your pieces!");
         }
     }
 
