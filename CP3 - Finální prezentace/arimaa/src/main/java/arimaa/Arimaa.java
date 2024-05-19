@@ -217,15 +217,13 @@ public class Arimaa {
                 int fromCol = InputUtils.getIntFromInput("Select the column where is the piece you would like to move: ");
                 
                 if(!board.isOccupied(fromRow, fromCol)) {
-                    System.err.println("There is no piece at the specified location!");
-                    continue;
+                    throw new IllegalArgumentException("There is no piece at the specified location!");
                 }
 
                 Piece piece = board.getPieceAt(fromRow, fromCol);
 
                 if (piece.getColor() != currentPlayer.getColor()) {
-                    System.err.println("You can only move your own pieces!");
-                    continue;
+                    throw new IllegalArgumentException("You can only move with your own pieces!");
                 }
         
                 int toRow = InputUtils.getIntFromInput("Select the row where you would like to move the piece: ");
