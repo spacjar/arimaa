@@ -216,41 +216,48 @@ public class Arimaa {
 
         // ---- Game logic ----
         while (isGameRunning) {
-            board.printBoard();
-
             try {
+                // Print the game status
+                board.printBoard();
                 System.out.println("Current player: " + currentPlayer);
                 System.out.println("Golden player moves left: " + goldenPlayerMoves);
                 System.out.println("Silver player moves left: " + silverPlayerMoves);
 
+                // Get the from row number or skip the turn 
                 Integer fromRow = InputUtils.getPositionsFromInput("Select the row where is the piece you would like to move or type 'skip' to skip your turn: ");
                 if (fromRow == null) {
                     handleTurnSkip();
                     continue;
                 }
                 
+                // Get the from col number or skip the turn
                 Integer fromCol = InputUtils.getPositionsFromInput("Select the column where is the piece you would like to move or type 'skip' to skip your turn: ");
                 if (fromCol == null) {
                     handleTurnSkip();
                     continue;
                 }
                 
+                // Check if the piece to be moved exists
                 if(!board.isOccupied(fromRow, fromCol)) {
                     throw new IllegalArgumentException("There is no piece at the specified location!");
                 }
 
+                // Get the piece that is going to be moved
                 Piece piece = board.getPieceAt(fromRow, fromCol);
 
+                // Check if the player can move the piece based on its color
                 if (piece.getColor() != currentPlayer.getColor()) {
                     throw new IllegalArgumentException("You can only move with your own pieces!");
                 }
         
+                // Get the to row number or skip the turn
                 Integer toRow = InputUtils.getPositionsFromInput("Select the row where you would like to move the piece or type 'skip' to skip your turn: ");
                 if (toRow == null) {
                     handleTurnSkip();
                     continue;
                 }
 
+                // Get the to col number or skip the turn
                 Integer toCol = InputUtils.getPositionsFromInput("Select the column where you would like to move the piece or type 'skip' to skip your turn: ");
                 if (toCol == null) {
                     handleTurnSkip();
@@ -266,21 +273,35 @@ public class Arimaa {
                     silverPlayerMoves--;
                 }
 
-                // !!! TD: Fix game won/lost check - when I play as golden player, I don't check for silver player
-                // Check if the game is won
+                // Check if the current player won the game
                 if(board.isGameWon(currentPlayer)) {
                     System.out.println(currentPlayer + " won the game!");
                     isGameRunning = false;
                     return;
                 };
  
-                // Check if the game is won
+                // Check if the current player lost the game
                 if(board.isGameLost(currentPlayer)) {
                     System.out.println(currentPlayer + " lost the game!");
                     isGameRunning = false;
                     return;
                 };
-        
+
+                // Check if the other player won the game
+                if(board.isGameWon(currentPlayer == goldenPlayer ? goldenPlayer : silverPlayer)) {
+                    System.out.println(currentPlayer == goldenPlayer ? goldenPlayer : silverPlayer + " won the game!");
+                    isGameRunning = false;
+                    return;
+                };
+
+                // Check if the other player won the game
+                if(board.isGameLost(currentPlayer == goldenPlayer ? goldenPlayer : silverPlayer)) {
+                    System.out.println(currentPlayer == goldenPlayer ? goldenPlayer : silverPlayer + " lost the game!");
+                    isGameRunning = false;
+                    return;
+                };
+
+
                 // If the current player has no moves left, switch to the other player and reset their moves
                 if ((currentPlayer == goldenPlayer && goldenPlayerMoves == 0) || (currentPlayer == silverPlayer && silverPlayerMoves == 0)) {
                     currentPlayer = (currentPlayer == goldenPlayer) ? silverPlayer : goldenPlayer;
@@ -290,14 +311,18 @@ public class Arimaa {
                         silverPlayerMoves = 4;
                     }
                 }
-
-                // currentPlayer
             } catch (Exception e) {
                 System.err.println("\n----------\n(!) ERROR: " + e.getMessage() + "\n----------\n");
             }
         }
     }
 
+
+    /**
+     * Handles the skipping of a player's turn.
+     * If the current player has made at least 1 move, the turn is skipped and the current player is switched.
+     * Otherwise, an exception is thrown indicating that the player cannot skip their move without making any moves.
+     */
     private void handleTurnSkip() {
         if (currentPlayer == goldenPlayer && goldenPlayerMoves < 4) {
             currentPlayer = silverPlayer;
@@ -310,6 +335,7 @@ public class Arimaa {
         }
     }
 
+
     public void saveGame(String filename) {
         try (FileWriter writer = new FileWriter(filename)) {
             // TODO: Implement
@@ -317,6 +343,7 @@ public class Arimaa {
             System.err.println("\n----------\n(!) ERROR: " + e.getMessage() + "\n----------\n");
         }
     }
+
 
     public void loadGame(String filename) {
         try (FileReader reader = new FileReader(filename)) {
