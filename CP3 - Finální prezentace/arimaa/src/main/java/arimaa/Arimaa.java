@@ -14,6 +14,8 @@ import java.util.Map;
 public class Arimaa {
 
     Board board = new Board();
+
+    // Game state
     boolean isSetupFinished = false;
     boolean isGameRunning = false;
 
@@ -25,11 +27,11 @@ public class Arimaa {
     Player silverPlayer = new Player(PieceColor.SILVER);
     int silverPlayerMoves = 4;
 
-    // Current player
+    // Current player (first is always the golden player)
     Player currentPlayer = goldenPlayer;
 
 
-
+    
     /**
      * Sets up a player's piece on the game board at the specified position.
      *
@@ -63,12 +65,15 @@ public class Arimaa {
     }
 
     
-
     private void setupGame() {
+        System.out.println("\n***** - | Game setup | - *****\n");
+        board.printBoard();
+
         // Initialize the piece counts
         Map<PieceType, Integer> goldenPieces = new HashMap<>();
         Map<PieceType, Integer> silverPieces = new HashMap<>();
 
+        // Loop over the piece types and set their counts into the hashmaps
         for (PieceType type : PieceType.values()) {
             int count = 0;
 
@@ -84,18 +89,32 @@ public class Arimaa {
             silverPieces.put(type, count);
         }
 
-        // Ask the player to setup their pieces
-        // ! TD: Finish logic
-        boolean allPiecesAvailable = true;
-
-        // ! TD: Loop
-        if (allPiecesAvailable) {
-            // Ask the player to choose a piece
+        boolean allGoldenPiecesPlaced = false;
+        boolean allSilverPiecesPlaced = false;
+        
+        // Loop until the players setup their pieces
+        while (!allGoldenPiecesPlaced || !allSilverPiecesPlaced) {
+            // Set the piece types hashmap based on the players color
+            Map<PieceType, Integer> currentPieces = currentPlayer.getColor() == PieceColor.GOLDEN ? goldenPieces : silverPieces;
             
+            // Check if there are still available pieces to be placed
+            boolean areCurrentPiecesAvailable = currentPieces.values().stream().anyMatch(count -> count > 0);
+
+            // Check if the golden player placed all of his pieces and then switch to the silver player (+ skip the current iteration)
+            if (!areCurrentPiecesAvailable) {
+                currentPlayer = currentPlayer.getColor() == PieceColor.GOLDEN ? silverPlayer : goldenPlayer;
+                continue;
+            }
+
+            // ! TD: Exception handling
+            // ! TD: Print out all of the available pieces (+ how many are there)
+            // Ask the player to choose a piece  
+            System.out.println("Current player: " + currentPlayer);
             System.out.println("Piece types numbers - (1: RABBIT | 2: CAT | 3: DOG | 4: HORSE | 5: CAMEL | 6 ELEPHANT)");
             int chosenPieceTypeNum = InputUtils.getIntFromInput("Please choose a piece type number: ");
             PieceType chosenPieceType;
 
+            // Get the piece type based on the provided number
             switch(chosenPieceTypeNum) {
                 case 1:
                     chosenPieceType = PieceType.RABBIT;
@@ -118,17 +137,25 @@ public class Arimaa {
                 default:
                     throw new IllegalArgumentException("This piece with the following number does not exist: " + chosenPieceTypeNum);
             }
-
             
             // Ask the player to choose a row and column
             int chosenRow = InputUtils.getIntFromInput("Select the row where you would like to place the piece: ");
             int chosenCol = InputUtils.getIntFromInput("Select the col where you would like to place the piece: ");
 
             // Try to setup the chosen piece at the chosen location
-            setupPlayerPieces(currentPlayer, goldenPieces, chosenPieceType, chosenRow, chosenCol);
-        } else {
-            System.out.println("No more pieces of the selected type are available!");
+            setupPlayerPieces(currentPlayer, currentPieces, chosenPieceType, chosenRow, chosenCol);
+
+            // Print the board
+            board.printBoard();
+
+            // Check if all of the pieces for the golden player have been setup
+            allGoldenPiecesPlaced = !goldenPieces.values().stream().anyMatch(count -> count > 0);
+            // Check if all of the pieces for the silver player have been setup
+            allSilverPiecesPlaced = !silverPieces.values().stream().anyMatch(count -> count > 0);
         }
+
+        // Set the control value of the setup as finished
+        isSetupFinished = true;
     }
 
 
