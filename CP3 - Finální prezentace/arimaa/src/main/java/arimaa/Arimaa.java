@@ -56,7 +56,7 @@ public class Arimaa {
         }
     
         if (piecesCount.get(chosenPieceType) <= 0) {
-            throw new IllegalArgumentException("No more pieces of the selected type are available!");
+            throw new IllegalArgumentException("There are no more pieces of the selected type are available!");
         }
     
         Piece piece = new Piece(chosenPieceType, player.getColor());
@@ -120,7 +120,7 @@ public class Arimaa {
                 }
                 
                 // Ask the player to choose a piece type
-                System.out.println("(1: RABBIT | 2: CAT | 3: DOG | 4: HORSE | 5: CAMEL | 6: ELEPHANT)");
+                System.out.println("[1]: RABBIT, [2]: CAT, [3]: DOG, [4]: HORSE, [5]: CAMEL, [6]: ELEPHANT");
                 int chosenPieceTypeNum = InputUtils.getIntFromInput("Please choose a piece type number: ");
                 PieceType chosenPieceType;
 
@@ -163,16 +163,17 @@ public class Arimaa {
                 // Check if all of the pieces for the silver player have been setup
                 allSilverPiecesPlaced = !silverPieces.values().stream().anyMatch(count -> count > 0);
             } catch (Exception e) {
-                System.out.println("(!) ERROR: " + e.getMessage());
+                System.err.println("\n----------\n(!) ERROR: " + e.getMessage() + "\n----------\n");
             }
         }
 
-        // Set the control value of the setup as finished
+        // Set the game control value of the setup as finished
         isSetupFinished = true;
     }
 
 
     public void startGame() {
+        // Set the game control value of the phase as running
         isGameRunning = true;
 
         // ----- DEBUG game init start -----
@@ -197,7 +198,8 @@ public class Arimaa {
         if(isSetupFinished == false) {
             setupGame();
         }
-        
+
+        System.out.println("\n***** - | Game | - *****\n");
 
         // ---- Game logic ----
         while (isGameRunning) {
@@ -205,8 +207,8 @@ public class Arimaa {
 
             try {
                 System.out.println("Current player: " + currentPlayer);
-                System.out.println("Golden player moves: " + goldenPlayerMoves);
-                System.out.println("Silver player moves: " + silverPlayerMoves);
+                System.out.println("Golden player moves left: " + goldenPlayerMoves);
+                System.out.println("Silver player moves left: " + silverPlayerMoves);
 
                 int fromRow = InputUtils.getIntFromInput("Select the row where is the piece you would like to move: ");
                 int fromCol = InputUtils.getIntFromInput("Select the column where is the piece you would like to move: ");
@@ -219,7 +221,7 @@ public class Arimaa {
                 Piece piece = board.getPieceAt(fromRow, fromCol);
 
                 if (piece.getColor() != currentPlayer.getColor()) {
-                    System.err.println("You can only move your own pieces.");
+                    System.err.println("You can only move your own pieces!");
                     continue;
                 }
         
@@ -262,7 +264,7 @@ public class Arimaa {
 
                 // currentPlayer
             } catch (Exception e) {
-                System.err.println("--- ERROR: " + e.getMessage());
+                System.err.println("\n----------\n(!) ERROR: " + e.getMessage() + "\n----------\n");
             }
         }
     }
@@ -271,7 +273,7 @@ public class Arimaa {
         try (FileWriter writer = new FileWriter(filename)) {
             // TODO: Implement
         } catch (IOException e) {
-            System.err.println("Error saving game: " + e.getMessage());
+            System.err.println("\n----------\n(!) ERROR: " + e.getMessage() + "\n----------\n");
         }
     }
 
@@ -279,7 +281,7 @@ public class Arimaa {
         try (FileReader reader = new FileReader(filename)) {
             // TODO: Implement
         } catch (IOException e) {
-            System.err.println("Error loading game: " + e.getMessage());
+            System.err.println("\n----------\n(!) ERROR: " + e.getMessage() + "\n----------\n");
         }
     }
 
