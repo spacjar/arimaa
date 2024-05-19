@@ -450,7 +450,8 @@ public class Board {
      * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
      */
     public void printBoard() throws IndexOutOfBoundsException {
-	    System.out.println("-   0    1    2    3    4    5    6    7");
+        System.out.println("-----------------------------------------");
+	    System.out.println("    0    1    2    3    4    5    6    7");
 
         for (int row = 0; row < ROW_SIZE; row++) {
 		    System.out.print((row) + " ");
@@ -471,5 +472,7 @@ public class Board {
 
             System.out.println();
         }
+
+        System.out.println("-----------------------------------------");
     }
 }
