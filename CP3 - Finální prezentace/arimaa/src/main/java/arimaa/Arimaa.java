@@ -190,20 +190,20 @@ public class Arimaa {
         currentPlayer = goldenPlayer;
 
         // ----- DEBUG game init start -----
-        // for(int i = 0; i <= 7; i++) {
-        //     board.setPiece(new Piece(PieceType.ELEPHANT, PieceColor.GOLDEN), 0, i);
-        // }
-        // for(int i = 0; i <= 7; i++) {
-        //     board.setPiece(new Piece(PieceType.RABBIT, PieceColor.GOLDEN), 1, i);
-        // }
+        for(int i = 0; i <= 7; i++) {
+            board.setPiece(new Piece(PieceType.ELEPHANT, PieceColor.GOLDEN), 0, i);
+        }
+        for(int i = 0; i <= 7; i++) {
+            board.setPiece(new Piece(PieceType.RABBIT, PieceColor.GOLDEN), 1, i);
+        }
 
-        // for(int i = 0; i <= 7; i++) {
-        //     board.setPiece(new Piece(PieceType.ELEPHANT, PieceColor.SILVER), 7, i);
-        // }
-        // for(int i = 0; i <= 7; i++) {
-        //     board.setPiece(new Piece(PieceType.RABBIT, PieceColor.SILVER), 6, i);
-        // }
-        // isSetupFinished = true;
+        for(int i = 0; i <= 7; i++) {
+            board.setPiece(new Piece(PieceType.ELEPHANT, PieceColor.SILVER), 7, i);
+        }
+        for(int i = 0; i <= 7; i++) {
+            board.setPiece(new Piece(PieceType.RABBIT, PieceColor.SILVER), 6, i);
+        }
+        isSetupFinished = true;
         // ----- DEBUG game init end -----
 
 
@@ -223,8 +223,38 @@ public class Arimaa {
                 System.out.println("Golden player moves left: " + goldenPlayerMoves);
                 System.out.println("Silver player moves left: " + silverPlayerMoves);
 
-                int fromRow = InputUtils.getIntFromInput("Select the row where is the piece you would like to move: ");
-                int fromCol = InputUtils.getIntFromInput("Select the column where is the piece you would like to move: ");
+                // ! TD: Clean up the shitty code
+                Integer fromRow = InputUtils.getPositionsFromInput("Select the row where is the piece you would like to move or type 'skip' to skip your turn: ");
+                if (fromRow == null) {
+                    if (currentPlayer == goldenPlayer && goldenPlayerMoves < 4) {
+                        currentPlayer = silverPlayer;
+                        System.out.println("Turn skipped!");
+                        continue;
+                    }
+                    if (currentPlayer == silverPlayer && silverPlayerMoves < 4) {
+                        currentPlayer = goldenPlayer;
+                        System.out.println("Turn skipped!");
+                        continue;
+                    }
+
+                    throw new IllegalArgumentException("You cannot skip your move when you have not moved with any of your pieces!");
+                }
+                
+                Integer fromCol = InputUtils.getPositionsFromInput("Select the column where is the piece you would like to move or type 'skip' to skip your turn: ");
+                if (fromCol == null) {
+                    if (currentPlayer == goldenPlayer && goldenPlayerMoves < 4) {
+                        currentPlayer = silverPlayer;
+                        System.out.println("Turn skipped!");
+                        continue;
+                    }
+                    if (currentPlayer == silverPlayer && silverPlayerMoves < 4) {
+                        currentPlayer = goldenPlayer;
+                        System.out.println("Turn skipped!");
+                        continue;
+                    }
+
+                    throw new IllegalArgumentException("You cannot skip your move when you have not moved with any of your pieces!");
+                }
                 
                 if(!board.isOccupied(fromRow, fromCol)) {
                     throw new IllegalArgumentException("There is no piece at the specified location!");
@@ -236,8 +266,37 @@ public class Arimaa {
                     throw new IllegalArgumentException("You can only move with your own pieces!");
                 }
         
-                int toRow = InputUtils.getIntFromInput("Select the row where you would like to move the piece: ");
-                int toCol = InputUtils.getIntFromInput("Select the column where you would like to move the piece: ");
+                Integer toRow = InputUtils.getPositionsFromInput("Select the row where you would like to move the piece or type 'skip' to skip your turn: ");
+                if (toRow == null) {
+                    if (currentPlayer == goldenPlayer && goldenPlayerMoves < 4) {
+                        currentPlayer = silverPlayer;
+                        System.out.println("Turn skipped!");
+                        continue;
+                    }
+                    if (currentPlayer == silverPlayer && silverPlayerMoves < 4) {
+                        currentPlayer = goldenPlayer;
+                        System.out.println("Turn skipped!");
+                        continue;
+                    }
+
+                    throw new IllegalArgumentException("You cannot skip your move when you have not moved with any of your pieces!");
+                }
+
+                Integer toCol = InputUtils.getPositionsFromInput("Select the column where you would like to move the piece or type 'skip' to skip your turn: ");
+                if (toCol == null) {
+                    if (currentPlayer == goldenPlayer && goldenPlayerMoves < 4) {
+                        currentPlayer = silverPlayer;
+                        System.out.println("Turn skipped!");
+                        continue;
+                    }
+                    if (currentPlayer == silverPlayer && silverPlayerMoves < 4) {
+                        currentPlayer = goldenPlayer;
+                        System.out.println("Turn skipped!");
+                        continue;
+                    }
+
+                    throw new IllegalArgumentException("You cannot skip your move when you have not moved with any of your pieces!");
+                }
 
                 board.movePiece(fromRow, fromCol, toRow, toCol);
         
