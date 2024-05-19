@@ -65,6 +65,16 @@ public class Arimaa {
     }
 
     
+    /**
+     * Sets up the game by initializing the piece counts, allowing players to place their pieces on the board, and checking if all pieces have been placed for both players.
+     * 
+     * This method loops until all pieces have been placed for both players. It prompts the current player to choose
+     * a piece type and a location on the board to place the piece. The method also checks if the chosen piece type
+     * is valid and if the chosen location is available. If any errors occur during the setup process, an error message
+     * is displayed.
+     * 
+     * After all pieces have been placed, the method sets the game control value of the setup as finished.
+     */
     private void setupGame() {
         System.out.println("\n***** - | Game setup | - *****\n");
 
