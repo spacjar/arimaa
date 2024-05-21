@@ -13,8 +13,20 @@
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
-    <dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>arimaa.Main</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
+    <dependencies>
         <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-controls -->
         <dependency>
             <groupId>org.openjfx</groupId>
