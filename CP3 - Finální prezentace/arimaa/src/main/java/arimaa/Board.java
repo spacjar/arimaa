@@ -5,7 +5,6 @@ import java.util.List;
 
 import arimaa.enums.PieceColor;
 import arimaa.enums.PieceType;
-import arimaa.models.Player;
 
 public class Board {
     private Piece[][] board;
