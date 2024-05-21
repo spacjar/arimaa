@@ -30,7 +30,7 @@
     <!-- <Button mnemonicParsing="false" text="Pull" onAction="#pull" /> -->
 
     <!-- Save and load -->
-    <!-- <Button mnemonicParsing="false" text="Load game" onAction="#loadGame" /> --> -->
-    <!-- <Button mnemonicParsing="false" text="Save game" onAction="#loadGame" /> --> -->
+    <!-- <Button mnemonicParsing="false" text="Load game" onAction="#loadGame" /> -->
+    <!-- <Button mnemonicParsing="false" text="Save game" onAction="#loadGame" /> -->
 
 </VBox>
