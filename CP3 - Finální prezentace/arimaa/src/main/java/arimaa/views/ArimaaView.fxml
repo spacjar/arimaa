@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -10,18 +11,18 @@
 
 <VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx" fx:controller="arimaa.controllers.ArimaaController">
     <!-- Place for the row input and its label -->
-    <!-- <Label fx:id="rowLabel" text="Row" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label> -->
-    <!-- <Input fx:id="rowInput" /> -->
+    <Label fx:id="rowLabel" text="Row" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
+    <TextField fx:id="rowInput" />
 
     <!-- Place for the col input and its label -->
-    <!-- <Label fx:id="colLabel" text="Column" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label> -->
-    <!-- <Input fx:id="colInput" /> -->
+    <Label fx:id="colLabel" text="Column" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
+    <TextField fx:id="colInput" />
 
     <!-- Submit button -->
     <Button mnemonicParsing="false" text="Submit" onAction="#submit" />
 
     <!-- Feedback message -->
-    <Label fx:id="feedbackMessage" text="Test" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx">
+    <Label fx:id="feedbackMessage" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx">
     </Label>
 
     <!-- Actions -->
