@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.shape.Rectangle?>
+
+<GridPane fx:id="gridPane" fx:controller="com.example.chess.ChessboardController" prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+  <children>
+    <GridPane.constraints>
+      < javafx:util:StringConverter<java.lang.Integer> fx:factory="javafx.util.converter.IntegerStringConverter" />
+      < javafx:util:StringConverter<java.lang.Integer> fx:factory="javafx.util.converter.IntegerStringConverter" />
+    </GridPane.constraints>
+    <Rectangle fx:id="square{rowIndex}{columnIndex}" layoutX="{columnIndex * 50.0}" layoutY="{rowIndex * 50.0}" 
+               fill="{getSquareColor(rowIndex, columnIndex)}" height="50.0" stroke="#808080" strokeType="INSIDE" width="50.0" />
+  </children>
+</GridPane>
