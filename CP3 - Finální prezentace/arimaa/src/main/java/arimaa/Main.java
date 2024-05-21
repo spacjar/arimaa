@@ -1,28 +1,24 @@
 package arimaa;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        // Load the FXML file for the chessboard view
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("BoardView.fxml"));
-        // Load the scene from the FXML file
-        Scene scene = loader.load();
-
-        // Set the scene and title for the stage
+    public void start(Stage primaryStage) {
+        Label label = new Label("Hello World");
+        Scene scene = new Scene(label, 200, 100);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Chess Game");
-
-        // Show the stage
+        primaryStage.setTitle("Hello World");
         primaryStage.show();
     }
 
     public static void main(String[] args) {
+        // Arimaa arimaa = new Arimaa();
+        // arimaa.startGame();
+
         launch(args);
     }
 }
