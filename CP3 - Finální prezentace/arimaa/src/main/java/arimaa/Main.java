@@ -1,18 +1,23 @@
 package arimaa;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
-        Label label = new Label("Hello World");
-        Scene scene = new Scene(label, 200, 100);
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Hello World");
-        primaryStage.show();
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("./views/BoardView.fxml"));
+            Scene scene = new Scene(root, 400, 400);
+            primaryStage.setScene(scene);
+            primaryStage.setTitle("Arimaa Game");
+            primaryStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
