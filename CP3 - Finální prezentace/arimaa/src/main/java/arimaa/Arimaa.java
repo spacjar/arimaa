@@ -1,7 +1,7 @@
 package arimaa;
 import arimaa.enums.PieceColor;
 import arimaa.enums.PieceType;
-
+import arimaa.models.Player;
 import arimaa.utils.*;
 
 import java.io.FileReader;
