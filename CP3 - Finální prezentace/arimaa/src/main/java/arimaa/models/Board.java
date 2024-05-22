@@ -39,7 +39,7 @@ public class Board {
      * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
      */
     public Piece getPieceAt(int row, int col) throws IndexOutOfBoundsException {
-        logger.info("Getting piece at row " + row + ", column " + col);
+        // logger.info("Getting piece at row " + row + ", column " + col);
         if(row < 0 || col < 0 || row >= ROW_SIZE || col >= COL_SIZE) {
             logger.warning("The selected row or column exceeds board size.");
             throw new IndexOutOfBoundsException("The selected row or column exceeds board size.");
@@ -57,7 +57,7 @@ public class Board {
      * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
      */
     public void setPiece(Piece piece, int row, int col) throws IndexOutOfBoundsException {
-        logger.info("Setting piece at row " + row + ", column " + col);
+        // logger.info("Setting piece at row " + row + ", column " + col);
         if(row < 0 || col < 0 || row >= ROW_SIZE || col >= COL_SIZE) {
             logger.warning("The selected row or column exceeds board size.");
             throw new IndexOutOfBoundsException("The selected row or column exceeds board size.");
@@ -74,7 +74,7 @@ public class Board {
      * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
      */
     public void removePiece(int row, int col) throws IndexOutOfBoundsException {
-        logger.info("Removing piece at row " + row + ", column " + col);
+        // logger.info("Removing piece at row " + row + ", column " + col);
         if(row < 0 || col < 0 || row >= ROW_SIZE || col >= COL_SIZE) {
             logger.warning("The selected row or column exceeds board size.");
             throw new IndexOutOfBoundsException("The selected row or column exceeds board size.");
