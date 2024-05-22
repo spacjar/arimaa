@@ -16,6 +16,16 @@ public class Board {
     }
 
 
+    // -------------------- Getters and setters --------------------
+    public int getRowSize() {
+        return ROW_SIZE;
+    }
+
+    public int getColSize() {
+        return COL_SIZE;
+    }
+
+
     // -------------------- Core logic --------------------
     /**
      * Retrieves the piece at the specified position on the board.
