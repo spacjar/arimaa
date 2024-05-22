@@ -124,15 +124,15 @@ public class ArimaaController {
             String toRowInputText = toRowInput.getText();
             String toColInputText = toColInput.getText();
 
-            int fromRowInputNum = Integer.parseInt(fromRowInputText);
-            int fromColInputNum = Integer.parseInt(fromColInputText);
+            int fromRowInputNum = Integer.parseInt(fromRowInputText)-1;
+            int fromColInputNum = Integer.parseInt(fromColInputText)-1;
             
             if(!board.isOccupied(fromRowInputNum, fromColInputNum)) {
                 throw new IllegalArgumentException("There is no piece at the specified location!");
             }
             
-            int toRowInputNum = Integer.parseInt(toRowInputText);
-            int toColInputNum = Integer.parseInt(toColInputText);
+            int toRowInputNum = Integer.parseInt(toRowInputText)-1;
+            int toColInputNum = Integer.parseInt(toColInputText)-1;
 
             Piece piece = board.getPieceAt(fromRowInputNum, fromColInputNum);
 
@@ -256,8 +256,8 @@ public class ArimaaController {
         logger.info("Submitting game setup.");
         
         try {
-            int chosenSetupRow = Integer.parseInt(rowInputSetup.getText());
-            int chosenSetupCol = Integer.parseInt(colInputSetup.getText());
+            int chosenSetupRow = Integer.parseInt(rowInputSetup.getText())-1;
+            int chosenSetupCol = Integer.parseInt(colInputSetup.getText())-1;
             int chosenSetupPieceType = Integer.parseInt(pieceTypeInputSetup.getText());
    
             PieceType chosenPieceType = getChosenPieceType(chosenSetupPieceType);

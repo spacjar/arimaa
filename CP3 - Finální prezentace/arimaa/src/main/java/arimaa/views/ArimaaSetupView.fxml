@@ -30,7 +30,7 @@
 
     <!-- Submit button -->
     <Button mnemonicParsing="false" fx:id="setupButton" text="Place" onAction="#submitSetup" />
-    <Button mnemonicParsing="false" fx:id="setupButton" text="Le Debug button" onAction="#devSetup" />
+    <Button mnemonicParsing="false" fx:id="setupButton" text="Auto-setup" onAction="#devSetup" />
 
     <!-- Feedback message -->
     <Label fx:id="feedbackMessageSetup" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx">

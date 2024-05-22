@@ -56,7 +56,7 @@ public class Main extends Application {
 
             // Set up the scene and stage
             logger.info("Setting up scene and stage.");
-            Scene scene = new Scene(root, 640, 640);
+            Scene scene = new Scene(root, 960, 960);
             primaryStage.setScene(scene);
             primaryStage.setTitle("Arimaa Game");
             primaryStage.show();
