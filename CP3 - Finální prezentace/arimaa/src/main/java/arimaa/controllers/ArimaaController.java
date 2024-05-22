@@ -51,36 +51,55 @@ public class ArimaaController {
     }
 
     
+
     // ---------- Init ----------
     @FXML
     public void initialize() {
+        // Check if the board is not null and if the game is not already initialized
         if (board != null && !isInitialized) {
+            // If the setup is not finished, initialize the pieces
             if(!arimaa.getIsSetupFinished()) {
                 arimaa.initializePieces();
             }
 
+            // Mark the game as initialized
             isInitialized = true;
             logger.info("Game initialized.");
+
+            // Render the view
             renderView();
         }
     }
 
+    /**
+     * Renders the view based on the current state of the Arimaa game.
+     * If the setup is not finished, it loads the ArimaaSetupView.
+     * Otherwise, it loads the ArimaaView.
+     * Sets the necessary properties and initializes the ArimaaController.
+     */
     public void renderView() {
         try {
+            // Create a new FXMLLoader
             FXMLLoader loader = new FXMLLoader();
             Parent view;
     
+            // Set the location of the FXML file to load based on whether the setup is finished
             if (!arimaa.getIsSetupFinished()) {
                 loader.setLocation(getClass().getResource("../views/ArimaaSetupView.fxml"));
             } else {
                 loader.setLocation(getClass().getResource("../views/ArimaaView.fxml"));
             }
-    
+            
+            // Load the FXML file
             view = loader.load();
+
+            // Set the loaded view as the bottom of the root pane
             root.setBottom(view);
     
+            // Get the controller of the loaded view
             Object controller = loader.getController();
     
+            // If the controller is an instance of ArimaaController, set the necessary properties
             if (controller instanceof ArimaaController) {
                 ArimaaController arimaaController = (ArimaaController) controller;
                 arimaaController.setBoard(board);
@@ -98,24 +117,36 @@ public class ArimaaController {
     }
 
 
+
     // ---------- Game ----------    
     @FXML
     private Label feedbackMessage;
 
+    // Input field for entering the from row number
     @FXML
     private TextField fromRowInput;
 
+    // Input field for entering the from column number
     @FXML
     private TextField fromColInput;
 
+    // Input field for entering the to row number
     @FXML
     private TextField toRowInput;
 
+    // Input field for entering the to column number
     @FXML
     private TextField toColInput;
 
+
+    /**
+     * Submits a game move based on the input coordinates.
+     *
+     * @throws IOException if an I/O error occurs.
+     * @throws IllegalArgumentException if there is something wrong with the board checking conditions
+     */
     @FXML
-    private void submitGame() throws IOException {
+    private void submitGame() throws IOException, IllegalArgumentException {
         logger.info("Submitting a game move.");
 
         try {
@@ -177,22 +208,33 @@ public class ArimaaController {
 
             // If the current player has no moves left, switch to the other player and reset their moves
             if (arimaa.isCurrentPlayerOutOfMoves()) {
-                arimaa.switchPlayer();
+                arimaa.switchPlayers();
                 arimaa.resetCurrentPlayerMoves();
             }
 
+            // Render the board
             boardController.displayBoard();
 
+            // Set a feedback message
             feedbackMessage.setText("The selected coordinates are: " + fromRowInputText + ", " + fromColInputText + ", " + toRowInputText + ", " + toColInputText);
         } catch (Exception e) {
             feedbackMessage.setText(e.getMessage());
             logger.severe(e.getMessage());
         }
-        
     }
 
+
+    /**
+     * Skips the turn of the current player.
+     * If the current player is the golden player and has made less than 4 moves, the turn is skipped and the current player is set to the silver player.
+     * If the current player is the silver player and has made less than 4 moves, the turn is skipped and the current player is set to the golden player.
+     * If neither of the above conditions are met, an exception is thrown indicating that the current player cannot skip their move without making at least one move with their pieces.
+     *
+     * @throws IOException if an I/O error occurs.
+     * @throws IllegalArgumentException if the current player tries to skip their move without making any moves with their pieces.
+     */
     @FXML
-    private void skipTurn() throws IOException {
+    private void skipTurn() throws IOException, IllegalArgumentException {
         try {
             if (arimaa.getCurrentPlayer() == arimaa.getGoldenPlayer() && arimaa.getGoldenPlayerMoves() < 4) {
                 arimaa.setCurrentPlayer(arimaa.getSilverPlayer());
@@ -216,87 +258,118 @@ public class ArimaaController {
 
 
 
-    // ---------- Game setup ----------
+    // ---------- Game setup ----------    
     @FXML
-    private Label pieceTypeLabelSetup;
-
-    @FXML
+    // Input field for entering the type of piece during setup
     private TextField pieceTypeInputSetup;
-
+    
     @FXML
-    private Label rowLabelSetup;
-
-    @FXML
+    // Input field for entering the row number during setup
     private TextField rowInputSetup;
-
+    
     @FXML
-    private Label colLabelSetup;
-
-    @FXML
+    // Input field for entering the column number during setup
     private TextField colInputSetup;
-
+    
     @FXML
+    // Button for submitting the setup
     private Button setupButton;
-
+    
     @FXML
+    // Label for displaying feedback messages during setup
     private Label feedbackMessageSetup;
-
+    
     @FXML 
+    // Label for displaying the number of available pieces during setup
     private Label availablePiecesSetup;
-
+    
+    
+    /**
+     * Method for setting up the board automatically (in developer mode).
+     * This method calls the setupBoardDev method in the boardController to set up the board.
+     * It then sets the isSetupFinished flag in the arimaa object to true and renders the view.
+     */
     @FXML
     public void devSetup() {
         boardController.setupBoardDev();
         arimaa.setIsSetupFinished(true);
         renderView();
     }
+    
 
+    /**
+     * Submits the game setup.
+     * This method is called when the user submits the setup by clicking a button.
+     * It parses the chosen row, column, and piece type from the input fields, places the chosen piece on the board, and updates the game state accordingly.
+     * If all pieces for the golden player are placed, it starts the setup for the silver player.
+     * If no pieces are left, it changes player and renders the game.
+     * If an error occurs during the setup, it displays an error message.
+     */
     @FXML
     public void submitSetup() {
         logger.info("Submitting game setup.");
         
         try {
+            // Parse the chosen row, column, and piece type from the input fields
             int chosenSetupRow = Integer.parseInt(rowInputSetup.getText())-1;
             int chosenSetupCol = Integer.parseInt(colInputSetup.getText())-1;
             int chosenSetupPieceType = Integer.parseInt(pieceTypeInputSetup.getText());
-   
+       
+            // Get the chosen piece type
             PieceType chosenPieceType = getChosenPieceType(chosenSetupPieceType);
             logger.info("Chosen piece type: " + chosenPieceType);
-
+    
+            // Get the current player
             Player currentPlayer = arimaa.getCurrentPlayer();
             logger.info("Current player: " + currentPlayer);
             
-            arimaa.placePiece(currentPlayer, chosenPieceType, chosenSetupRow, chosenSetupCol);
+            // Place the chosen piece on the board
+            arimaa.setupPiece(currentPlayer, chosenPieceType, chosenSetupRow, chosenSetupCol);
             logger.info("Placed piece on the board.");
-
+    
+            // Display the board
             boardController.displayBoard();
             
+            // Get the current pieces of the current player
             Map<PieceType, Integer> currentPieces = arimaa.getCurrentPieces(currentPlayer);
+            // Check if there are any pieces left
             boolean areCurrentPiecesAvailable = currentPieces.values().stream().anyMatch(count -> count > 0);
             
+            // Print the available pieces
             printAvailablePieces(currentPieces);
-
+    
+            // If all pieces are placed, finish the setup and change the player
             if (arimaa.areAllPiecesPlaced()) {
                 arimaa.setIsSetupFinished(true);
                 arimaa.changePlayer(currentPlayer);
                 logger.info("All pieces are placed. Setup is finished.");
                 renderView();
             }
-
+    
+            // If no pieces are left, change the player
             if (!areCurrentPiecesAvailable) {
                 arimaa.changePlayer(currentPlayer);
                 logger.info("No pieces available. Changing player.");
                 return;
             }
-
+    
+            // Clear the feedback message
             feedbackMessageSetup.setText("");
         } catch (Exception e) {
+            // Display the error message and log it
             feedbackMessageSetup.setText(e.getMessage());
             logger.severe(e.getMessage());
         }
     }
 
-    private PieceType getChosenPieceType(int chosenSetupPieceType) {
+
+    /**
+     * Gets the piece based on the number provided
+     * 
+     * @param chosenSetupPieceType a piece number
+     * @throws IllegalArgumentException the piece with the number provided does not exist
+     */
+    private PieceType getChosenPieceType(int chosenSetupPieceType) throws IllegalArgumentException {
         logger.info("Getting chosen piece type: " + chosenSetupPieceType);
         switch(chosenSetupPieceType) {
             case 1: 
@@ -316,6 +389,12 @@ public class ArimaaController {
         }
     }
 
+
+    /**
+     * Prints the available pieces to the console.
+     *
+     * @param currentPieces a map containing the current piece types and their quantities
+     */
     private void printAvailablePieces(Map<PieceType, Integer> currentPieces) {
         logger.info("Printing available pieces.");
         StringBuilder piecesString = new StringBuilder("Currently available pieces: ");

@@ -49,7 +49,7 @@ public class BoardController {
     /**
      * Displays the board by creating a graphical representation of the game board.
      * Each square on the board is represented by a Pane object with a specific background color.
-     * If a piece is present on a square, a label displaying the piece's color and type is added to the Pane.
+     * If a piece is present on a square, a circle and a label displaying the piece's color and type is added to the Pane.
      * The Panes are then added to the boardGrid, which is a GridPane object.
      *
      * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
@@ -57,11 +57,14 @@ public class BoardController {
     public void displayBoard() throws IndexOutOfBoundsException {
         logger.info("Displaying board.");
 
+        // Iterate over each row and col
         for (int row = 0; row < board.getRowSize(); row++) {
             for (int col = 0; col < board.getColSize(); col++) {
+                // Create a new Pane for the square
                 Pane square = new Pane();
                 square.setPrefSize(120, 120);
 
+                // Check if the square is a trap (and if so change the color)
                 if (board.isInTrap(row, col)) {
                     square.setStyle("-fx-background-color: #1C1212; -fx-border-color: #1C1212;");
                 } else {
@@ -69,10 +72,13 @@ public class BoardController {
                 }
 
                 Piece piece = board.getPieceAt(row, col);
+
                 if (piece != null) {
-                    Label label = new Label(piece.getColor() + "-" + piece.getType().toString());
+                    // Label and circle representing the piece
+                    Label label = new Label(piece.getColor() + "-" + piece.getType().toString()); 
                     Circle pieceCircle = new Circle(40);
                     
+                    // Change color based on the piece color
                     switch (piece.getColor()) {
                         case GOLDEN:
                             pieceCircle.setFill(Color.GOLDENROD);
@@ -86,22 +92,30 @@ public class BoardController {
                             break;
                     }
 
+                    // Change the color of the piece if it is frozen
                     if(board.isFrozen(row, col)) {
                         pieceCircle.setFill(Color.BLUE);
                         label.setStyle("-fx-text-fill: #FFFFFF;");
                     }
                     
-                        StackPane stack = new StackPane();
-                        stack.getChildren().addAll(pieceCircle, label);
-                        stack.setAlignment(Pos.CENTER); // Align children to the center
-                        square.getChildren().add(stack);
+                    // Create a StackPane, add the circle and the label to it
+                    StackPane stack = new StackPane();
+                    stack.getChildren().addAll(pieceCircle, label);
+                    stack.setAlignment(Pos.CENTER);
+                    square.getChildren().add(stack);
                 }
 
+                // Add the square to the board grid
                 boardGrid.add(square, col, row);
             }
         }
     }
 
+
+    /**
+     * Sets up the board with predefined piece positions for development purposes.
+     * Automatically places and displays pieces on the board according to the specified positions.
+     */
     public void setupBoardDev() {
         logger.info("Automatically placing pieces.");
 

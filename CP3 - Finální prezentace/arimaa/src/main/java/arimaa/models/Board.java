@@ -12,14 +12,16 @@ public class Board {
     private static final int ROW_SIZE = 8;
     private static final int COL_SIZE = 8;
 
+    // Logger
     private static final Logger logger = Logger.getLogger(Board.class.getName());
 
+    // Create the board
     public Board() {
         board = new Piece[ROW_SIZE][COL_SIZE];
     }
 
 
-    // -------------------- Getters and setters --------------------
+    // ----- Getters and setters -----
     public int getRowSize() {
         return ROW_SIZE;
     }
@@ -29,7 +31,7 @@ public class Board {
     }
 
 
-    // -------------------- Core logic --------------------
+    // ----- Core logic -----
     /**
      * Retrieves the piece at the specified position on the board.
      *

@@ -21,31 +21,29 @@ public class Main extends Application {
         try {
             logger.info("Starting application.");
 
+            // Create the root pane for the application
             BorderPane root = new BorderPane();
 
-            // Create the board
+            // Create the game board and the game instance
             logger.info("Creating board.");
             Board board = new Board();
-
             Arimaa arimaa = new Arimaa();
             arimaa.setBoard(board);
 
-            // Load BoardView.fxml and set the board
+            // Load the board view, set the board, and initialize the controller
             logger.info("Loading BoardView.fxml.");
             FXMLLoader boardLoader = new FXMLLoader(getClass().getResource("./views/BoardView.fxml"));
             Parent boardView = boardLoader.load();
             root.setCenter(boardView);
-
             BoardController boardController = boardLoader.getController();
             boardController.setBoard(board);
             boardController.initialize();
 
-            // Load ArimaaView.fxml and set the board
+            // Load the game view, set the board, game, and other necessary properties, and initialize the controller
             logger.info("Loading ArimaaView.fxml.");
             FXMLLoader arimaaLoader = new FXMLLoader(getClass().getResource("./views/ArimaaView.fxml"));
             Parent arimaaView = arimaaLoader.load();
             root.setBottom(arimaaView);
-
             ArimaaController arimaaController = arimaaLoader.getController();
             arimaaController.setBoard(board);
             arimaaController.setBoardController(boardController);
@@ -54,7 +52,7 @@ public class Main extends Application {
             arimaaController.setStage(primaryStage); // Pass the stage to the controller
             arimaaController.initialize();
 
-            // Set up the scene and stage
+            // Set up the scene and stage and show the stage
             logger.info("Setting up scene and stage.");
             Scene scene = new Scene(root, 960, 960);
             primaryStage.setScene(scene);
@@ -73,6 +71,7 @@ public class Main extends Application {
             logger.setLevel(Level.OFF);
         }
 
+        // Launch the application
         launch(args);
     }
 }

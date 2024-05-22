@@ -1,11 +1,7 @@
 package arimaa.models;
 import arimaa.enums.PieceColor;
 import arimaa.enums.PieceType;
-import arimaa.utils.*;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,9 +25,12 @@ public class Arimaa {
     // Current player (first is always the golden player)
     private Player currentPlayer = goldenPlayer;
 
+    // Hashmaps for pieces (setup)
     private Map<PieceType, Integer> goldenPieces = new HashMap<>();
     private Map<PieceType, Integer> silverPieces = new HashMap<>();
     private Map<PieceType, Integer> currentPieces = currentPlayer.getColor() == PieceColor.GOLDEN ? goldenPieces : silverPieces;
+
+    // Check if all of the pieces are placed during the setup
     private boolean allGoldenPiecesPlaced = false;
     private boolean allSilverPiecesPlaced = false;
 
@@ -92,31 +91,37 @@ public class Arimaa {
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
-
-    public Player getOtherPlayer() {
-        return (currentPlayer == goldenPlayer) ? silverPlayer : goldenPlayer;
+    
+    public void switchPlayers() {
+        this.currentPlayer = (currentPlayer == goldenPlayer) ? silverPlayer : goldenPlayer;
     }
 
-    public void switchPlayer() {
-        currentPlayer = (currentPlayer == goldenPlayer) ? silverPlayer : goldenPlayer;
+    public void changePlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer.getColor() == PieceColor.GOLDEN ? silverPlayer : goldenPlayer;
     }
     
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
 
+    public Player getOtherPlayer() {
+        return (currentPlayer == goldenPlayer) ? silverPlayer : goldenPlayer;
+    }
+
     public Map<PieceType, Integer> getCurrentPieces(Player player) {
-        return player.getColor() == PieceColor.GOLDEN ? goldenPieces : silverPieces;
+        return currentPieces;
     }
 
     public void setCurrentPieces(Player player) {
         this.currentPieces = getCurrentPieces(player);
     }
 
-    public void changePlayer(Player currentPlayer) {
-        this.currentPlayer = currentPlayer.getColor() == PieceColor.GOLDEN ? silverPlayer : goldenPlayer;
-    }
 
+    /**
+     * Decrements the number of moves for the current player.
+     * If the current player is the golden player, the golden player's moves are decremented by 1.
+     * If the current player is the silver player, the silver player's moves are decremented by 1.
+     */
     public void decrementCurrentPlayerMoves() {
         if (currentPlayer == goldenPlayer) {
             goldenPlayerMoves--;
@@ -124,13 +129,13 @@ public class Arimaa {
             silverPlayerMoves--;
         }
     }
-
-    public boolean isCurrentPlayerOutOfMoves() {
-        return (currentPlayer == goldenPlayer && goldenPlayerMoves == 0) || (currentPlayer == silverPlayer && silverPlayerMoves == 0);
-    }
     
 
-    
+    /**
+     * Resets the number of moves for the current player.
+     * If the current player is the golden player, the number of moves is set to 4.
+     * If the current player is the silver player, the number of moves is set to 4.
+     */
     public void resetCurrentPlayerMoves() {
         if (currentPlayer == goldenPlayer) {
             goldenPlayerMoves = 4;
@@ -140,7 +145,75 @@ public class Arimaa {
     }
 
 
+    /**
+     * Checks if the current player is out of moves.
+     *
+     * @return true if the current player is out of moves, false otherwise.
+     */
+    public boolean isCurrentPlayerOutOfMoves() {
+        return (currentPlayer == goldenPlayer && goldenPlayerMoves == 0) || (currentPlayer == silverPlayer && silverPlayerMoves == 0);
+    }
+
     
+    /**
+     * Sets up the game by initializing the piece counts, allowing players to place their pieces on the board, and checking if all pieces have been placed for both players.
+     * 
+     * This method loops until all pieces have been placed for both players. It prompts the current player to choose
+     * a piece type and a location on the board to place the piece. The method also checks if the chosen piece type
+     * is valid and if the chosen location is available. If any errors occur during the setup process, an error message
+     * is displayed.
+     * 
+     * After all pieces have been placed, the method sets the game control value of the setup as finished.
+     */
+    public void initializePieces() {
+        for (PieceType type : PieceType.values()) {
+            int count = 0;
+
+            if (type == PieceType.ELEPHANT || type == PieceType.CAMEL) {
+                count = 1;
+            } else if (type == PieceType.HORSE || type == PieceType.DOG || type == PieceType.CAT) {
+                count = 2;
+            } else if (type == PieceType.RABBIT) {
+                count = 8;
+            }
+
+            goldenPieces.put(type, count);
+            silverPieces.put(type, count);
+        }
+    }
+
+
+    /**
+     * Checks if all pieces have been placed on the board.
+     *
+     * @return true if all golden and silver pieces have been placed, false otherwise.
+     */
+    public boolean areAllPiecesPlaced() {
+        return allGoldenPiecesPlaced && allSilverPiecesPlaced;
+    }
+
+
+    /**
+     * Sets up (places) a piece on the game board for the current player.
+     * 
+     * @param currentPlayer The current player who is placing the piece.
+     * @param chosenPieceType The type of piece to be placed.
+     * @param chosenRow The row where the piece will be placed.
+     * @param chosenCol The column where the piece will be placed.
+     * @throws IllegalArgumentException if the position is invalid, already occupied, or if there are no more pieces of the selected type available
+     */
+    public void setupPiece(Player currentPlayer, PieceType chosenPieceType, int chosenRow, int chosenCol) throws IllegalArgumentException {
+        // Sets up the remaining pieces for the current player
+        setCurrentPieces(currentPlayer);
+        
+        // 
+        setupPlayerPieces(currentPlayer, currentPieces, chosenPieceType, chosenRow, chosenCol);
+
+        allGoldenPiecesPlaced = !goldenPieces.values().stream().anyMatch(count -> count > 0);
+        allSilverPiecesPlaced = !silverPieces.values().stream().anyMatch(count -> count > 0);
+    }
+
+
     /**
      * Sets up a player's piece on the game board at the specified position.
      *
@@ -173,66 +246,21 @@ public class Arimaa {
         piecesCount.put(chosenPieceType, piecesCount.get(chosenPieceType) - 1);
     }
 
-    
-    /**
-     * Sets up the game by initializing the piece counts, allowing players to place their pieces on the board, and checking if all pieces have been placed for both players.
-     * 
-     * This method loops until all pieces have been placed for both players. It prompts the current player to choose
-     * a piece type and a location on the board to place the piece. The method also checks if the chosen piece type
-     * is valid and if the chosen location is available. If any errors occur during the setup process, an error message
-     * is displayed.
-     * 
-     * After all pieces have been placed, the method sets the game control value of the setup as finished.
-     */
-    public void initializePieces() {
-        for (PieceType type : PieceType.values()) {
-            int count = 0;
 
-            if (type == PieceType.ELEPHANT || type == PieceType.CAMEL) {
-                count = 1;
-            } else if (type == PieceType.HORSE || type == PieceType.DOG || type == PieceType.CAT) {
-                count = 2;
-            } else if (type == PieceType.RABBIT) {
-                count = 8;
-            }
-
-            goldenPieces.put(type, count);
-            silverPieces.put(type, count);
-        }
-    }
+    // public void saveGame(String filename) {
+    //     try (FileWriter writer = new FileWriter(filename)) {
+    //         // TODO: Implement
+    //     } catch (IOException e) {
+    //         System.err.println("\n----------\n(!) ERROR: " + e.getMessage() + "\n----------\n");
+    //     }
+    // }
 
 
-    public boolean areAllPiecesPlaced() {
-        return allGoldenPiecesPlaced && allSilverPiecesPlaced;
-    }
-
-
-    public void placePiece(Player currentPlayer, PieceType chosenPieceType, int chosenRow, int chosenCol) {
-        setCurrentPieces(currentPlayer);
-        
-        setupPlayerPieces(currentPlayer, currentPieces, chosenPieceType, chosenRow, chosenCol);
-
-
-        allGoldenPiecesPlaced = !goldenPieces.values().stream().anyMatch(count -> count > 0);
-        allSilverPiecesPlaced = !silverPieces.values().stream().anyMatch(count -> count > 0);
-    }
-
-
-    public void saveGame(String filename) {
-        try (FileWriter writer = new FileWriter(filename)) {
-            // TODO: Implement
-        } catch (IOException e) {
-            System.err.println("\n----------\n(!) ERROR: " + e.getMessage() + "\n----------\n");
-        }
-    }
-
-
-    public void loadGame(String filename) {
-        try (FileReader reader = new FileReader(filename)) {
-            // TODO: Implement
-        } catch (IOException e) {
-            System.err.println("\n----------\n(!) ERROR: " + e.getMessage() + "\n----------\n");
-        }
-    }
-
+    // public void loadGame(String filename) {
+    //     try (FileReader reader = new FileReader(filename)) {
+    //         // TODO: Implement
+    //     } catch (IOException e) {
+    //         System.err.println("\n----------\n(!) ERROR: " + e.getMessage() + "\n----------\n");
+    //     }
+    // }
 }
