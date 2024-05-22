@@ -1,5 +1,8 @@
 package arimaa;
 
+import arimaa.controllers.ArimaaController;
+import arimaa.controllers.BoardController;
+import arimaa.models.Board;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,12 +16,28 @@ public class Main extends Application {
         try {
             BorderPane root = new BorderPane();
 
-            Parent boardView = FXMLLoader.load(getClass().getResource("./views/BoardView.fxml"));
+            // Create the board
+            Board board = new Board();
+
+            // Load BoardView.fxml and set the board
+            FXMLLoader boardLoader = new FXMLLoader(getClass().getResource("./views/BoardView.fxml"));
+            Parent boardView = boardLoader.load();
             root.setCenter(boardView);
-    
-            Parent arimaaView = FXMLLoader.load(getClass().getResource("./views/ArimaaView.fxml"));
+
+            BoardController boardController = boardLoader.getController();
+            boardController.setBoard(board);
+            boardController.initialize();
+
+            // Load ArimaaView.fxml and set the board
+            FXMLLoader arimaaLoader = new FXMLLoader(getClass().getResource("./views/ArimaaView.fxml"));
+            Parent arimaaView = arimaaLoader.load();
             root.setBottom(arimaaView);
 
+            ArimaaController arimaaController = arimaaLoader.getController();
+            arimaaController.setBoard(board);
+            arimaaController.initialize();
+
+            // Set up the scene and stage
             Scene scene = new Scene(root, 400, 400);
             primaryStage.setScene(scene);
             primaryStage.setTitle("Arimaa Game");
