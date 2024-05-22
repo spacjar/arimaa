@@ -56,7 +56,7 @@ public class BoardController {
         for (int row = 0; row < board.getRowSize(); row++) {
             for (int col = 0; col < board.getColSize(); col++) {
                 Pane square = new Pane();
-                square.setPrefSize(60, 60);
+                square.setPrefSize(120, 120);
                 if ((row + col) % 2 == 0) {
                     square.setStyle("-fx-background-color: white;");
                 } else {
@@ -66,6 +66,23 @@ public class BoardController {
                 Piece piece = board.getPieceAt(row, col);
                 if (piece != null) {
                     Label label = new Label(piece.getColor() + "-" + piece.getType().toString() + (board.isFrozen(row, col) ? "-FRZ" : ""));
+
+                    
+                    switch (piece.getColor()) {
+                        case GOLDEN:
+                            label.setStyle("-fx-text-fill: goldenrod;");
+                            break;
+                        case SILVER:
+                            label.setStyle("-fx-text-fill: silver;");
+                            break;
+                        default:
+                            break;
+                    }
+
+                    if(board.isFrozen(row, col)) {
+                        label.setStyle("-fx-text-fill: blue;");
+                    }
+                    
                     square.getChildren().add(label);
                 }
 
