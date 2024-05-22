@@ -1,4 +1,4 @@
-package arimaa;
+package arimaa.models;
 
 import arimaa.enums.PieceColor;
 

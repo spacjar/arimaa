@@ -1,4 +1,4 @@
-package arimaa;
+package arimaa.models;
 
 import java.util.ArrayList;
 import java.util.List;
