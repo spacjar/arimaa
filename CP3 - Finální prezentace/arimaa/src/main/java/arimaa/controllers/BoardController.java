@@ -1,6 +1,9 @@
 package arimaa.controllers;
+import arimaa.enums.PieceColor;
+import arimaa.enums.PieceType;
 import arimaa.models.Board;
 import arimaa.models.Piece;
+import arimaa.models.Player;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -62,12 +65,29 @@ public class BoardController {
 
                 Piece piece = board.getPieceAt(row, col);
                 if (piece != null) {
-                    Label label = new Label(piece.getColor() + "-" + piece.getType().toString());
+                    Label label = new Label(piece.getColor() + "-" + piece.getType().toString() + (board.isFrozen(row, col) ? "-FRZ" : ""));
                     square.getChildren().add(label);
                 }
 
                 boardGrid.add(square, col, row);
             }
         }
+    }
+
+    public void setupBoardDev() {
+        for (int i = 0; i < 8; i++) {
+            board.setPiece(new Piece(PieceType.RABBIT,PieceColor.GOLDEN), 0, i);
+        }
+        for (int i = 0; i < 8; i++) {
+            board.setPiece(new Piece(PieceType.ELEPHANT,PieceColor.GOLDEN), 1, i);
+        }
+        for (int i = 0; i < 8; i++) {
+            board.setPiece(new Piece(PieceType.RABBIT,PieceColor.SILVER), 6, i);
+        }
+        for (int i = 0; i < 8; i++) {
+            board.setPiece(new Piece(PieceType.ELEPHANT,PieceColor.SILVER), 7, i);
+        }
+
+        displayBoard();
     }
 }

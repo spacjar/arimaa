@@ -92,6 +92,14 @@ public class Arimaa {
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
+
+    public Player getOtherPlayer() {
+        return (currentPlayer == goldenPlayer) ? silverPlayer : goldenPlayer;
+    }
+
+    public void switchPlayer() {
+        currentPlayer = (currentPlayer == goldenPlayer) ? silverPlayer : goldenPlayer;
+    }
     
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
@@ -107,6 +115,28 @@ public class Arimaa {
 
     public void changePlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer.getColor() == PieceColor.GOLDEN ? silverPlayer : goldenPlayer;
+    }
+
+    public void decrementCurrentPlayerMoves() {
+        if (currentPlayer == goldenPlayer) {
+            goldenPlayerMoves--;
+        } else if (currentPlayer == silverPlayer) {
+            silverPlayerMoves--;
+        }
+    }
+
+    public boolean isCurrentPlayerOutOfMoves() {
+        return (currentPlayer == goldenPlayer && goldenPlayerMoves == 0) || (currentPlayer == silverPlayer && silverPlayerMoves == 0);
+    }
+    
+
+    
+    public void resetCurrentPlayerMoves() {
+        if (currentPlayer == goldenPlayer) {
+            goldenPlayerMoves = 4;
+        } else {
+            silverPlayerMoves = 4;
+        }
     }
 
 
@@ -194,22 +224,6 @@ public class Arimaa {
 
         // Reset the current player to be golden player, since he always starts the game
         currentPlayer = goldenPlayer;
-
-        // ----- DEBUG game init start -----
-        for(int i = 0; i <= 7; i++) {
-            board.setPiece(new Piece(PieceType.ELEPHANT, PieceColor.GOLDEN), 0, i);
-        }
-        for(int i = 0; i <= 7; i++) {
-            board.setPiece(new Piece(PieceType.RABBIT, PieceColor.GOLDEN), 1, i);
-        }
-
-        for(int i = 0; i <= 7; i++) {
-            board.setPiece(new Piece(PieceType.ELEPHANT, PieceColor.SILVER), 7, i);
-        }
-        for(int i = 0; i <= 7; i++) {
-            board.setPiece(new Piece(PieceType.RABBIT, PieceColor.SILVER), 6, i);
-        }
-        isSetupFinished = true;
         // ----- DEBUG game init end -----
 
 

@@ -5,6 +5,7 @@ import java.util.Map;
 import arimaa.enums.PieceType;
 import arimaa.models.Arimaa;
 import arimaa.models.Board;
+import arimaa.models.Piece;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,7 +16,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import arimaa.models.Player;
 import java.util.logging.Logger;
-import java.util.logging.Level;
 
 public class ArimaaController {
     
@@ -118,22 +118,102 @@ public class ArimaaController {
     private void submitGame() throws IOException {
         logger.info("Submitting a game move.");
 
-        String fromRowInputText = fromRowInput.getText();
-        String fromColInputText = fromColInput.getText();
-        String toRowInputText = toRowInput.getText();
-        String toColInputText = toColInput.getText();
+        try {
+            String fromRowInputText = fromRowInput.getText();
+            String fromColInputText = fromColInput.getText();
+            String toRowInputText = toRowInput.getText();
+            String toColInputText = toColInput.getText();
 
-        int fromRowInputNum = Integer.parseInt(fromRowInputText);
-        int fromColInputNum = Integer.parseInt(fromColInputText);
-        int toRowInputNum = Integer.parseInt(toRowInputText);
-        int toColInputNum = Integer.parseInt(toColInputText);
+            int fromRowInputNum = Integer.parseInt(fromRowInputText);
+            int fromColInputNum = Integer.parseInt(fromColInputText);
+            
+            if(!board.isOccupied(fromRowInputNum, fromColInputNum)) {
+                throw new IllegalArgumentException("There is no piece at the specified location!");
+            }
+            
+            int toRowInputNum = Integer.parseInt(toRowInputText);
+            int toColInputNum = Integer.parseInt(toColInputText);
 
-        board.movePiece(fromRowInputNum, fromColInputNum, toRowInputNum, toColInputNum);
+            Piece piece = board.getPieceAt(fromRowInputNum, fromColInputNum);
 
-        boardController.displayBoard();
+            if (piece.getColor() != arimaa.getCurrentPlayer().getColor()) {
+                throw new IllegalArgumentException("You can only move with your own pieces!");
+            }
 
-        feedbackMessage.setText("The selected coordinates are: " + fromRowInputText + ", " + fromColInputText + ", " + toRowInputText + ", " + toColInputText);
+            board.movePiece(fromRowInputNum, fromColInputNum, toRowInputNum, toColInputNum);
+
+            // Decrement the current player's moves
+            arimaa.decrementCurrentPlayerMoves();
+
+            Player otherPlayer = arimaa.getOtherPlayer();
+
+            // Check if one of the players won the game
+            if(board.isGameWon(arimaa.getCurrentPlayer())) {
+                logger.info(arimaa.getCurrentPlayer() + " won the game!");
+                feedbackMessage.setText(arimaa.getCurrentPlayer() + " won the game!");
+                arimaa.setIsGameRunning(false);
+                return;
+            } 
+            if(board.isGameWon(otherPlayer)) {
+                logger.info(otherPlayer + " won the game!");
+                feedbackMessage.setText(otherPlayer + " won the game!");
+                arimaa.setIsGameRunning(false);
+                return;
+            }
+            
+            // Check if one of the players lost the game
+            if(board.isGameLost(arimaa.getCurrentPlayer())) {
+                logger.info(arimaa.getCurrentPlayer() + " lost the game!");
+                feedbackMessage.setText(arimaa.getCurrentPlayer() + " lost the game!");
+                arimaa.setIsGameRunning(false);
+                return;
+            }
+            if(board.isGameLost(otherPlayer)) {
+                logger.info(otherPlayer + " lost the game!");
+                feedbackMessage.setText(otherPlayer + " lost the game!");
+                arimaa.setIsGameRunning(false);
+                return;
+            }
+
+            // If the current player has no moves left, switch to the other player and reset their moves
+            if (arimaa.isCurrentPlayerOutOfMoves()) {
+                arimaa.switchPlayer();
+                arimaa.resetCurrentPlayerMoves();
+            }
+
+            boardController.displayBoard();
+
+            feedbackMessage.setText("The selected coordinates are: " + fromRowInputText + ", " + fromColInputText + ", " + toRowInputText + ", " + toColInputText);
+        } catch (Exception e) {
+            feedbackMessage.setText(e.getMessage());
+            logger.severe(e.getMessage());
+        }
+        
     }
+
+    @FXML
+    private void skipTurn() throws IOException {
+        try {
+            if (arimaa.getCurrentPlayer() == arimaa.getGoldenPlayer() && arimaa.getGoldenPlayerMoves() < 4) {
+                arimaa.setCurrentPlayer(arimaa.getSilverPlayer());
+                arimaa.setGoldenPlayerMoves(4);
+                logger.info("Turn skipped!");
+                feedbackMessage.setText("Turn skipped!");
+            } else if (arimaa.getCurrentPlayer() == arimaa.getSilverPlayer() && arimaa.getSilverPlayerMoves() < 4) {
+                arimaa.setCurrentPlayer(arimaa.getGoldenPlayer());
+                arimaa.setSilverPlayerMoves(4);
+                logger.info("Turn skipped!");
+                feedbackMessage.setText("Turn skipped!");
+            } else {
+                logger.warning("Turn was not skipped, move with at least one of your pieces first!");
+                throw new IllegalArgumentException("You cannot skip your move when you have not moved with any of your pieces!");
+            }  
+        } catch (Exception e) {
+            feedbackMessage.setText(e.getMessage());
+            logger.severe(e.getMessage());
+        }
+    }
+
 
 
     // ---------- Game setup ----------
@@ -165,6 +245,13 @@ public class ArimaaController {
     private Label availablePiecesSetup;
 
     @FXML
+    public void devSetup() {
+        boardController.setupBoardDev();
+        arimaa.setIsSetupFinished(true);
+        renderView();
+    }
+
+    @FXML
     public void submitSetup() {
         logger.info("Submitting game setup.");
         
@@ -191,6 +278,7 @@ public class ArimaaController {
 
             if (arimaa.areAllPiecesPlaced()) {
                 arimaa.setIsSetupFinished(true);
+                arimaa.changePlayer(currentPlayer);
                 logger.info("All pieces are placed. Setup is finished.");
                 renderView();
             }

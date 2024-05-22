@@ -34,14 +34,15 @@
     <!-- Submit button -->
     <Button mnemonicParsing="false" text="Submit" onAction="#submitGame" />
 
+
+    <!-- Actions -->
+    <Button mnemonicParsing="false" text="Skip turn" onAction="#skipTurn" />
+    <!-- <Button mnemonicParsing="false" text="Push" onAction="#push" /> -->
+    <!-- <Button mnemonicParsing="false" text="Pull" onAction="#pull" /> -->
+    
     <!-- Feedback message -->
     <Label fx:id="feedbackMessage" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx">
     </Label>
-
-    <!-- Actions -->
-    <!-- <Button mnemonicParsing="false" text="Skip turn" onAction="#skipTurn" /> -->
-    <!-- <Button mnemonicParsing="false" text="Push" onAction="#push" /> -->
-    <!-- <Button mnemonicParsing="false" text="Pull" onAction="#pull" /> -->
 
     <!-- Save and load -->
     <!-- <Button mnemonicParsing="false" text="Load game" onAction="#loadGame" /> -->

@@ -4,37 +4,37 @@ public enum PieceType {
     ELEPHANT {
         @Override
         public String toString() {
-            return "E";
+            return "Elephant";
         }
     },
     CAMEL {
         @Override
         public String toString() {
-            return "C";
+            return "Camel";
         }
     },
     HORSE {
         @Override
         public String toString() {
-            return "H";
+            return "Horse";
         }
     },
     DOG {
         @Override
         public String toString() {
-            return "D";
+            return "Dog";
         }
     },
     CAT {
         @Override
         public String toString() {
-            return "C";
+            return "Cat";
         }
     },
     RABBIT {
         @Override
         public String toString() {
-            return "R";
+            return "Rabbit";
         }
     }
 }
