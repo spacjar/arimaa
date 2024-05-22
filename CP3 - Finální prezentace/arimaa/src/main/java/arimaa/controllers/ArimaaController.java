@@ -2,32 +2,32 @@ package arimaa.controllers;
 
 import java.io.IOException;
 import java.util.Map;
-
-import arimaa.enums.PieceColor;
 import arimaa.enums.PieceType;
 import arimaa.models.Arimaa;
 import arimaa.models.Board;
-import arimaa.utils.InputUtils;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import arimaa.models.Player;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class ArimaaController {
+    
     private boolean isInitialized = false;
     private Board board;
     private BoardController boardController;
     private Arimaa arimaa;
     private Stage stage;
     private BorderPane root;
+    
+    // Logger
+    private static final Logger logger = Logger.getLogger(ArimaaController.class.getName());
 
 
     public void setBoard(Board board) {
@@ -60,6 +60,7 @@ public class ArimaaController {
             }
 
             isInitialized = true;
+            logger.info("Game initialized.");
             renderView();
         }
     }
@@ -92,7 +93,7 @@ public class ArimaaController {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.severe("(!) ERROR: " + e.getMessage());
         }
     }
 
@@ -115,7 +116,7 @@ public class ArimaaController {
 
     @FXML
     private void submitGame() throws IOException {
-        System.out.println("Submit");
+        logger.info("Submitting a game move.");
 
         String fromRowInputText = fromRowInput.getText();
         String fromColInputText = fromColInput.getText();
@@ -165,16 +166,22 @@ public class ArimaaController {
 
     @FXML
     public void submitSetup() {
+        logger.info("Submitting game setup.");
+        
         try {
             int chosenSetupRow = Integer.parseInt(rowInputSetup.getText());
             int chosenSetupCol = Integer.parseInt(colInputSetup.getText());
             int chosenSetupPieceType = Integer.parseInt(pieceTypeInputSetup.getText());
-
-            
+   
             PieceType chosenPieceType = getChosenPieceType(chosenSetupPieceType);
+            logger.info("Chosen piece type: " + chosenPieceType);
+
             Player currentPlayer = arimaa.getCurrentPlayer();
+            logger.info("Current player: " + currentPlayer);
             
             arimaa.placePiece(currentPlayer, chosenPieceType, chosenSetupRow, chosenSetupCol);
+            logger.info("Placed piece on the board.");
+
             boardController.displayBoard();
             
             Map<PieceType, Integer> currentPieces = arimaa.getCurrentPieces(currentPlayer);
@@ -184,34 +191,45 @@ public class ArimaaController {
 
             if (arimaa.areAllPiecesPlaced()) {
                 arimaa.setIsSetupFinished(true);
+                logger.info("All pieces are placed. Setup is finished.");
                 renderView();
             }
 
             if (!areCurrentPiecesAvailable) {
                 arimaa.changePlayer(currentPlayer);
+                logger.info("No pieces available. Changing player.");
                 return;
             }
 
             feedbackMessageSetup.setText("");
         } catch (Exception e) {
             feedbackMessageSetup.setText(e.getMessage());
-            System.err.println("\n----------\n(!) ERROR: " + e.getMessage() + "\n----------\n");
+            logger.severe(e.getMessage());
         }
     }
 
     private PieceType getChosenPieceType(int chosenSetupPieceType) {
+        logger.info("Getting chosen piece type: " + chosenSetupPieceType);
         switch(chosenSetupPieceType) {
-            case 1: return PieceType.RABBIT;
-            case 2: return PieceType.CAT;
-            case 3: return PieceType.DOG;
-            case 4: return PieceType.HORSE;
-            case 5: return PieceType.CAMEL;
-            case 6: return PieceType.ELEPHANT;
-            default: throw new IllegalArgumentException("The piece type with the number " + chosenSetupPieceType + " does not exist!" );
+            case 1: 
+                return PieceType.RABBIT;
+            case 2: 
+                return PieceType.CAT;
+            case 3: 
+                return PieceType.DOG;
+            case 4: 
+                return PieceType.HORSE;
+            case 5: 
+                return PieceType.CAMEL;
+            case 6: 
+                return PieceType.ELEPHANT;
+            default:    
+                throw new IllegalArgumentException("The piece type with the number " + chosenSetupPieceType + " does not exist!" );
         }
     }
 
     private void printAvailablePieces(Map<PieceType, Integer> currentPieces) {
+        logger.info("Printing available pieces.");
         StringBuilder piecesString = new StringBuilder("Currently available pieces: ");
         for (Map.Entry<PieceType, Integer> entry : currentPieces.entrySet()) {
             piecesString.append(entry.getKey()).append(": ").append(entry.getValue()).append(", ");

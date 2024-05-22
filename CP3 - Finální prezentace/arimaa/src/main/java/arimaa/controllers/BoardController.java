@@ -5,18 +5,20 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import java.util.logging.Logger;
+
 
 public class BoardController {
     private Board board;
+    private static final Logger logger = Logger.getLogger(BoardController.class.getName());
 
     public void setBoard(Board board) {
         this.board = board;
+        logger.info("Board set.");
     }
-
 
     @FXML
     private GridPane boardGrid;
-
 
     public void initialize() {
         if (board != null) {
@@ -34,11 +36,16 @@ public class BoardController {
         //         board.setPiece(new Piece(PieceType.RABBIT, PieceColor.SILVER), 6, i);
         //     }
             
+            logger.info("Initializing board.");
             displayBoard();
+        } else {
+            logger.warning("Board is null during initialization.");
         }
     }
 
     public void displayBoard() throws IndexOutOfBoundsException {
+        logger.info("Displaying board.");
+
         for (int row = 0; row < board.getRowSize(); row++) {
             for (int col = 0; col < board.getColSize(); col++) {
                 Pane square = new Pane();
