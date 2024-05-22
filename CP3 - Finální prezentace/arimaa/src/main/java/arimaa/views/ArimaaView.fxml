@@ -10,13 +10,26 @@
 
 
 <VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx" fx:controller="arimaa.controllers.ArimaaController">
-    <!-- Place for the row input and its label -->
-    <Label fx:id="rowLabel" text="Row" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
-    <TextField fx:id="rowInput" />
+    <!-- Current stats -->
+    <!-- <Label fx:id="currentPlayerLabel" text="Current player: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label> -->
+    <!-- <Label fx:id="currentPlayerLabel" text="Golden player moves: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label> -->
+    <!-- <Label fx:id="currentPlayerLabel" text="Silver player moves: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label> -->
 
-    <!-- Place for the col input and its label -->
-    <Label fx:id="colLabel" text="Column" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
-    <TextField fx:id="colInput" />
+    <!-- Place for the from row input and its label -->
+    <Label fx:id="fromRowLabel" text="From Row" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
+    <TextField fx:id="fromRowInput" />
+
+    <!-- Place for the from col input and its label -->
+    <Label fx:id="fromColLabel" text="From Column" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
+    <TextField fx:id="fromColInput" />
+
+    <!-- Place for the to row input and its label -->
+    <Label fx:id="toRowLabel" text="To Row" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
+    <TextField fx:id="toRowInput" />
+
+    <!-- Place for the to col input and its label -->
+    <Label fx:id="toColLabel" text="To Column" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
+    <TextField fx:id="toColInput" />
 
     <!-- Submit button -->
     <Button mnemonicParsing="false" text="Submit" onAction="#submit" />
