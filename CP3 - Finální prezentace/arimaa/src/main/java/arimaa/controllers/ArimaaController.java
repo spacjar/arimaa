@@ -2,6 +2,7 @@ package arimaa.controllers;
 
 import java.io.IOException;
 
+import arimaa.models.Arimaa;
 import arimaa.models.Board;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -10,13 +11,19 @@ import javafx.scene.control.TextField;
 public class ArimaaController {
     private Board board;
     private BoardController boardController;
+    private Arimaa arimaa;
 
+    
     public void setBoard(Board board) {
         this.board = board;
     }
 
     public void setBoardController(BoardController boardController) {
         this.boardController = boardController;
+    }
+
+    public void setArimaa(Arimaa arimaa) {
+        this.arimaa = arimaa;
     }
 
     public void initialize() {

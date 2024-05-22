@@ -11,23 +11,85 @@ import java.util.Map;
 
 
 public class Arimaa {
-
-    Board board = new Board();
+    // Game board
+    private Board board;
 
     // Game state
-    boolean isSetupFinished = false;
-    boolean isGameRunning = false;
+    private boolean isSetupFinished = false;
+    private boolean isGameRunning = false;
 
     // Golden player
-    Player goldenPlayer = new Player(PieceColor.GOLDEN);
-    int goldenPlayerMoves = 4;
+    private Player goldenPlayer = new Player(PieceColor.GOLDEN);
+    private int goldenPlayerMoves = 4;
 
     // Silver player
-    Player silverPlayer = new Player(PieceColor.SILVER);
-    int silverPlayerMoves = 4;
+    private Player silverPlayer = new Player(PieceColor.SILVER);
+    private int silverPlayerMoves = 4;
 
     // Current player (first is always the golden player)
-    Player currentPlayer = goldenPlayer;
+    private Player currentPlayer = goldenPlayer;
+
+
+    // ----- Getters and setters -----
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
+    public boolean isSetupFinished() {
+        return isSetupFinished;
+    }
+    
+    public void setIsSetupFinished(boolean isSetupFinished) {
+        this.isSetupFinished = isSetupFinished;
+    }
+    
+    public boolean isGameRunning() {
+        return isGameRunning;
+    }
+    
+    public void setIsGameRunning(boolean isGameRunning) {
+        this.isGameRunning = isGameRunning;
+    }
+    
+    public Player getGoldenPlayer() {
+        return goldenPlayer;
+    }
+    
+    public void setGoldenPlayer(Player goldenPlayer) {
+        this.goldenPlayer = goldenPlayer;
+    }
+    
+    public int getGoldenPlayerMoves() {
+        return goldenPlayerMoves;
+    }
+    
+    public void setGoldenPlayerMoves(int goldenPlayerMoves) {
+        this.goldenPlayerMoves = goldenPlayerMoves;
+    }
+    
+    public Player getSilverPlayer() {
+        return silverPlayer;
+    }
+    
+    public void setSilverPlayer(Player silverPlayer) {
+        this.silverPlayer = silverPlayer;
+    }
+    
+    public int getSilverPlayerMoves() {
+        return silverPlayerMoves;
+    }
+    
+    public void setSilverPlayerMoves(int silverPlayerMoves) {
+        this.silverPlayerMoves = silverPlayerMoves;
+    }
+    
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+    
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
 
 
     

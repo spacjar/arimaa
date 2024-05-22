@@ -2,6 +2,7 @@ package arimaa;
 
 import arimaa.controllers.ArimaaController;
 import arimaa.controllers.BoardController;
+import arimaa.models.Arimaa;
 import arimaa.models.Board;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +19,9 @@ public class Main extends Application {
 
             // Create the board
             Board board = new Board();
+
+            Arimaa arimaa = new Arimaa();
+            arimaa.setBoard(board);
 
             // Load BoardView.fxml and set the board
             FXMLLoader boardLoader = new FXMLLoader(getClass().getResource("./views/BoardView.fxml"));
@@ -36,6 +40,7 @@ public class Main extends Application {
             ArimaaController arimaaController = arimaaLoader.getController();
             arimaaController.setBoard(board);
             arimaaController.setBoardController(boardController);
+            arimaaController.setArimaa(arimaa);
             arimaaController.initialize();
 
             // Set up the scene and stage
