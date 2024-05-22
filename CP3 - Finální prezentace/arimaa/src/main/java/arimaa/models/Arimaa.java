@@ -101,6 +101,10 @@ public class Arimaa {
         return player.getColor() == PieceColor.GOLDEN ? goldenPieces : silverPieces;
     }
 
+    public void setCurrentPieces(Player player) {
+        this.currentPieces = getCurrentPieces(player);
+    }
+
     public void changePlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer.getColor() == PieceColor.GOLDEN ? silverPlayer : goldenPlayer;
     }
@@ -174,7 +178,10 @@ public class Arimaa {
 
 
     public void placePiece(Player currentPlayer, PieceType chosenPieceType, int chosenRow, int chosenCol) {
+        setCurrentPieces(currentPlayer);
+        
         setupPlayerPieces(currentPlayer, currentPieces, chosenPieceType, chosenRow, chosenCol);
+
 
         allGoldenPiecesPlaced = !goldenPieces.values().stream().anyMatch(count -> count > 0);
         allSilverPiecesPlaced = !silverPieces.values().stream().anyMatch(count -> count > 0);

@@ -47,6 +47,8 @@ public class ArimaaController {
         this.root = root;
     }
 
+
+
     public void initialize() {
         if (board != null && !isInitialized) {
             if(!arimaa.getIsSetupFinished()) {
@@ -136,19 +138,20 @@ public class ArimaaController {
             PieceType chosenPieceType = getChosenPieceType(chosenSetupPieceType);
             Player currentPlayer = arimaa.getCurrentPlayer();
             
-            Map<PieceType, Integer> currentPieces = arimaa.getCurrentPieces(currentPlayer);
-            boolean areCurrentPiecesAvailable = currentPieces.values().stream().anyMatch(count -> count > 0);
             arimaa.placePiece(currentPlayer, chosenPieceType, chosenSetupRow, chosenSetupCol);
             boardController.displayBoard();
-
-            if (!areCurrentPiecesAvailable) {
-                arimaa.changePlayer(currentPlayer);
-                return;
-            }
+            
+            Map<PieceType, Integer> currentPieces = arimaa.getCurrentPieces(currentPlayer);
+            boolean areCurrentPiecesAvailable = currentPieces.values().stream().anyMatch(count -> count > 0);
 
             if (arimaa.areAllPiecesPlaced()) {
                 arimaa.setIsSetupFinished(true);
                 renderView();
+            }
+
+            if (!areCurrentPiecesAvailable) {
+                arimaa.changePlayer(currentPlayer);
+                return;
             }
 
             feedbackMessageSetup.setText("");
