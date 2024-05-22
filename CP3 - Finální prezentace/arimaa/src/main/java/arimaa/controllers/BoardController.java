@@ -12,30 +12,25 @@ public class BoardController {
     private Board board;
     private static final Logger logger = Logger.getLogger(BoardController.class.getName());
 
+
+    // --- Getters and setters ---
     public void setBoard(Board board) {
         this.board = board;
         logger.info("Board set.");
     }
 
+    
     @FXML
     private GridPane boardGrid;
 
-    public void initialize() {
-        if (board != null) {
-        //     for(int i = 0; i <= 7; i++) {
-        //         board.setPiece(new Piece(PieceType.ELEPHANT, PieceColor.GOLDEN), 0, i);
-        //     }
-        //     for(int i = 0; i <= 7; i++) {
-        //         board.setPiece(new Piece(PieceType.RABBIT, PieceColor.GOLDEN), 1, i);
-        //     }
 
-        //     for(int i = 0; i <= 7; i++) {
-        //         board.setPiece(new Piece(PieceType.ELEPHANT, PieceColor.SILVER), 7, i);
-        //     }
-        //     for(int i = 0; i <= 7; i++) {
-        //         board.setPiece(new Piece(PieceType.RABBIT, PieceColor.SILVER), 6, i);
-        //     }
-            
+    /**
+     * Initializes the board.
+     * If the board is not null, it logs an info message and displays the board.
+     * If the board is null, it logs a warning message.
+     */
+    public void initialize() {
+        if (board != null) {            
             logger.info("Initializing board.");
             displayBoard();
         } else {
@@ -43,6 +38,15 @@ public class BoardController {
         }
     }
 
+
+    /**
+     * Displays the board by creating a graphical representation of the game board.
+     * Each square on the board is represented by a Pane object with a specific background color.
+     * If a piece is present on a square, a label displaying the piece's color and type is added to the Pane.
+     * The Panes are then added to the boardGrid, which is a GridPane object.
+     *
+     * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
+     */
     public void displayBoard() throws IndexOutOfBoundsException {
         logger.info("Displaying board.");
 
