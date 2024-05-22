@@ -38,24 +38,28 @@ public class BoardController {
                 board.setPiece(new Piece(PieceType.RABBIT, PieceColor.SILVER), 6, i);
             }
             
-            for (int row = 0; row < 8; row++) {
-                for (int col = 0; col < 8; col++) {
-                    Pane square = new Pane();
-                    square.setPrefSize(60, 60);
-                    if ((row + col) % 2 == 0) {
-                        square.setStyle("-fx-background-color: white;");
-                    } else {
-                        square.setStyle("-fx-background-color: gray;");
-                    }
+            displayBoard();
+        }
+    }
 
-                    Piece piece = board.getPieceAt(row, col);
-                    if (piece != null) {
-                        Label label = new Label(piece.getColor() + "-" + piece.getType().toString());
-                        square.getChildren().add(label);
-                    }
-
-                    boardGrid.add(square, col, row);
+    public void displayBoard() throws IndexOutOfBoundsException {
+        for (int row = 0; row < board.getRowSize(); row++) {
+            for (int col = 0; col < board.getColSize(); col++) {
+                Pane square = new Pane();
+                square.setPrefSize(60, 60);
+                if ((row + col) % 2 == 0) {
+                    square.setStyle("-fx-background-color: white;");
+                } else {
+                    square.setStyle("-fx-background-color: gray;");
                 }
+
+                Piece piece = board.getPieceAt(row, col);
+                if (piece != null) {
+                    Label label = new Label(piece.getColor() + "-" + piece.getType().toString());
+                    square.getChildren().add(label);
+                }
+
+                boardGrid.add(square, col, row);
             }
         }
     }

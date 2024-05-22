@@ -9,9 +9,14 @@ import javafx.scene.control.TextField;
 
 public class ArimaaController {
     private Board board;
+    private BoardController boardController;
 
     public void setBoard(Board board) {
         this.board = board;
+    }
+
+    public void setBoardController(BoardController boardController) {
+        this.boardController = boardController;
     }
 
     public void initialize() {
@@ -41,6 +46,15 @@ public class ArimaaController {
         String fromColInputText = fromColInput.getText();
         String toRowInputText = toRowInput.getText();
         String toColInputText = toColInput.getText();
+
+        int fromRowInputNum = Integer.parseInt(fromRowInputText);
+        int fromColInputNum = Integer.parseInt(fromColInputText);
+        int toRowInputNum = Integer.parseInt(toRowInputText);
+        int toColInputNum = Integer.parseInt(toColInputText);
+
+        board.movePiece(fromRowInputNum, fromColInputNum, toRowInputNum, toColInputNum);
+
+        boardController.displayBoard();
 
         feedbackMessage.setText("The selected coordinates are: " + fromRowInputText + ", " + fromColInputText + ", " + toRowInputText + ", " + toColInputText);
     }

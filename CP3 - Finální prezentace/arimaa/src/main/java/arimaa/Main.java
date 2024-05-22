@@ -35,10 +35,11 @@ public class Main extends Application {
 
             ArimaaController arimaaController = arimaaLoader.getController();
             arimaaController.setBoard(board);
+            arimaaController.setBoardController(boardController);
             arimaaController.initialize();
 
             // Set up the scene and stage
-            Scene scene = new Scene(root, 400, 400);
+            Scene scene = new Scene(root, 640, 640);
             primaryStage.setScene(scene);
             primaryStage.setTitle("Arimaa Game");
             primaryStage.show();

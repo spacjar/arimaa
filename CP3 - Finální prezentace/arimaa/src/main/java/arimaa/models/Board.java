@@ -440,42 +440,4 @@ public class Board {
 
         return true;
     }
-
-    
-    // -------------------- Board utils  --------------------
-    /**
-     * Prints the current state of the board.
-     * The board is displayed with rows and columns, and each cell is represented by its corresponding Piece or null value.
-     * If a cell is empty, it is displayed as "...".
-     * If a cell is a trap, it is displayed as "xxx".
-     * If a cell contains a piece, it is displayed as a Piece.
-     *
-     * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
-     */
-    public void printBoard() throws IndexOutOfBoundsException {
-        System.out.println("-----------------------------------------");
-	    System.out.println("    0    1    2    3    4    5    6    7");
-
-        for (int row = 0; row < ROW_SIZE; row++) {
-		    System.out.print((row) + " ");
-
-            for (int col = 0; col < COL_SIZE; col++) {
-                Piece piece = board[row][col];
-				
-                if (piece == null) {
-                    if(isInTrap(row, col)) {
-                        System.out.print(" xxx ");
-                    } else {
-                        System.out.print(" ... ");
-                    }
-                } else {
-                    System.out.print(" " + piece.toString() + (isFrozen(row, col) ? "FRZ" : "") + " ");
-                }
-            }
-
-            System.out.println();
-        }
-
-        System.out.println("-----------------------------------------");
-    }
 }

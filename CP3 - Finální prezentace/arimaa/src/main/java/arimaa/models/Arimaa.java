@@ -119,7 +119,7 @@ public class Arimaa {
                 System.out.println("\nCurrent player: " + currentPlayer);
                 
                 // Print the board
-                board.printBoard();
+                // ! board.printBoard();
                 
                 // Print out all of the available piece types
                 System.out.println("Currently available pieces: ");
@@ -165,7 +165,7 @@ public class Arimaa {
                 setupPlayerPieces(currentPlayer, currentPieces, chosenPieceType, chosenRow, chosenCol);
 
                 // Print the board
-                board.printBoard();
+                // ! board.printBoard();
 
                 // Check if all of the pieces for the golden player have been setup
                 allGoldenPiecesPlaced = !goldenPieces.values().stream().anyMatch(count -> count > 0);
@@ -217,7 +217,7 @@ public class Arimaa {
         while (isGameRunning) {
             try {
                 // Print the game status
-                board.printBoard();
+                // ! board.printBoard();
                 System.out.println("Current player: " + currentPlayer);
                 System.out.println("Golden player moves left: " + goldenPlayerMoves);
                 System.out.println("Silver player moves left: " + silverPlayerMoves);
