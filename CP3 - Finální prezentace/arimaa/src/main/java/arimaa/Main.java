@@ -41,6 +41,8 @@ public class Main extends Application {
             arimaaController.setBoard(board);
             arimaaController.setBoardController(boardController);
             arimaaController.setArimaa(arimaa);
+            arimaaController.setRoot(root); // Pass the root to the controller
+            arimaaController.setStage(primaryStage); // Pass the stage to the controller
             arimaaController.initialize();
 
             // Set up the scene and stage
