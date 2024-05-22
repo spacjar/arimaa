@@ -4,11 +4,12 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 
 <VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx" fx:controller="arimaa.controllers.BoardController">
-    <Label fx:id="feedbackMessage" text="This will be the board!" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx">
-    </Label>
+    <GridPane fx:id="boardGrid" hgap="2" vgap="2">
+    </GridPane>
 </VBox>
