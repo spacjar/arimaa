@@ -1,14 +1,10 @@
 package arimaa.controllers;
-import arimaa.enums.PieceColor;
-import arimaa.enums.PieceType;
 import arimaa.models.Board;
 import arimaa.models.Piece;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.RowConstraints;
 
 public class BoardController {
     private Board board;

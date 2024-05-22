@@ -50,6 +50,8 @@ public class ArimaaController {
         this.root = root;
     }
 
+    
+    // ---------- Init ----------
     @FXML
     public void initialize() {
         if (board != null && !isInitialized) {
@@ -62,6 +64,40 @@ public class ArimaaController {
         }
     }
 
+    public void renderView() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            Parent view;
+    
+            if (!arimaa.getIsSetupFinished()) {
+                loader.setLocation(getClass().getResource("../views/ArimaaSetupView.fxml"));
+            } else {
+                loader.setLocation(getClass().getResource("../views/ArimaaView.fxml"));
+            }
+    
+            view = loader.load();
+            root.setBottom(view);
+    
+            Object controller = loader.getController();
+    
+            if (controller instanceof ArimaaController) {
+                ArimaaController arimaaController = (ArimaaController) controller;
+                arimaaController.setBoard(board);
+                arimaaController.setBoardController(boardController);
+                arimaaController.setArimaa(arimaa);
+                arimaaController.setRoot(root);
+                arimaaController.setStage(stage);
+                if (!isInitialized) {
+                    arimaaController.initialize();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    // ---------- Game ----------    
     @FXML
     private Label feedbackMessage;
 
@@ -78,7 +114,7 @@ public class ArimaaController {
     private TextField toColInput;
 
     @FXML
-    private void submit() throws IOException {
+    private void submitGame() throws IOException {
         System.out.println("Submit");
 
         String fromRowInputText = fromRowInput.getText();
@@ -99,12 +135,7 @@ public class ArimaaController {
     }
 
 
-
-    // Instance variables to store the piece type, row, and column
-    private int chosenSetupRow;
-    private int chosenSetupCol;
-    private int chosenSetupPieceType;
-
+    // ---------- Game setup ----------
     @FXML
     private Label pieceTypeLabelSetup;
 
@@ -133,11 +164,11 @@ public class ArimaaController {
     private Label availablePiecesSetup;
 
     @FXML
-    public void placeSetup() {
+    public void submitSetup() {
         try {
-            chosenSetupRow = Integer.parseInt(rowInputSetup.getText());
-            chosenSetupCol = Integer.parseInt(colInputSetup.getText());
-            chosenSetupPieceType = Integer.parseInt(pieceTypeInputSetup.getText());
+            int chosenSetupRow = Integer.parseInt(rowInputSetup.getText());
+            int chosenSetupCol = Integer.parseInt(colInputSetup.getText());
+            int chosenSetupPieceType = Integer.parseInt(pieceTypeInputSetup.getText());
 
             
             PieceType chosenPieceType = getChosenPieceType(chosenSetupPieceType);
@@ -190,38 +221,5 @@ public class ArimaaController {
             piecesString.setLength(piecesString.length() - 2);
         }
         availablePiecesSetup.setText(piecesString.toString());
-    }
-
-
-    public void renderView() {
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            Parent view;
-    
-            if (!arimaa.getIsSetupFinished()) {
-                loader.setLocation(getClass().getResource("../views/ArimaaSetupView.fxml"));
-            } else {
-                loader.setLocation(getClass().getResource("../views/ArimaaView.fxml"));
-            }
-    
-            view = loader.load();
-            root.setBottom(view);
-    
-            Object controller = loader.getController();
-    
-            if (controller instanceof ArimaaController) {
-                ArimaaController arimaaController = (ArimaaController) controller;
-                arimaaController.setBoard(board);
-                arimaaController.setBoardController(boardController);
-                arimaaController.setArimaa(arimaa);
-                arimaaController.setRoot(root);
-                arimaaController.setStage(stage);
-                if (!isInitialized) {
-                    arimaaController.initialize();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

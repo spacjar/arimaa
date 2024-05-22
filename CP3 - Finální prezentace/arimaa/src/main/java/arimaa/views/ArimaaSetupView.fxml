@@ -29,7 +29,7 @@
     <TextField fx:id="colInputSetup" />
 
     <!-- Submit button -->
-    <Button mnemonicParsing="false" fx:id="setupButton" text="Place" onAction="#placeSetup" />
+    <Button mnemonicParsing="false" fx:id="setupButton" text="Place" onAction="#submitSetup" />
 
     <!-- Feedback message -->
     <Label fx:id="feedbackMessageSetup" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx">
