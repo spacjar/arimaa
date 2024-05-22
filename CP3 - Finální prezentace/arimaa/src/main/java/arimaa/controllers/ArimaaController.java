@@ -8,11 +8,14 @@ import arimaa.enums.PieceType;
 import arimaa.models.Arimaa;
 import arimaa.models.Board;
 import arimaa.utils.InputUtils;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -47,8 +50,7 @@ public class ArimaaController {
         this.root = root;
     }
 
-
-
+    @FXML
     public void initialize() {
         if (board != null && !isInitialized) {
             if(!arimaa.getIsSetupFinished()) {
@@ -59,7 +61,6 @@ public class ArimaaController {
             renderView();
         }
     }
-
 
     @FXML
     private Label feedbackMessage;
@@ -128,6 +129,9 @@ public class ArimaaController {
     @FXML
     private Label feedbackMessageSetup;
 
+    @FXML 
+    private Label availablePiecesSetup;
+
     @FXML
     public void placeSetup() {
         try {
@@ -135,6 +139,7 @@ public class ArimaaController {
             chosenSetupCol = Integer.parseInt(colInputSetup.getText());
             chosenSetupPieceType = Integer.parseInt(pieceTypeInputSetup.getText());
 
+            
             PieceType chosenPieceType = getChosenPieceType(chosenSetupPieceType);
             Player currentPlayer = arimaa.getCurrentPlayer();
             
@@ -143,6 +148,8 @@ public class ArimaaController {
             
             Map<PieceType, Integer> currentPieces = arimaa.getCurrentPieces(currentPlayer);
             boolean areCurrentPiecesAvailable = currentPieces.values().stream().anyMatch(count -> count > 0);
+            
+            printAvailablePieces(currentPieces);
 
             if (arimaa.areAllPiecesPlaced()) {
                 arimaa.setIsSetupFinished(true);
@@ -174,10 +181,15 @@ public class ArimaaController {
     }
 
     private void printAvailablePieces(Map<PieceType, Integer> currentPieces) {
-        System.out.println("Currently available pieces: ");
+        StringBuilder piecesString = new StringBuilder("Currently available pieces: ");
         for (Map.Entry<PieceType, Integer> entry : currentPieces.entrySet()) {
-            System.out.println("- " + entry.getKey() + ": " + entry.getValue());
+            piecesString.append(entry.getKey()).append(": ").append(entry.getValue()).append(", ");
         }
+        // Remove the last comma and space
+        if (piecesString.length() > 0) {
+            piecesString.setLength(piecesString.length() - 2);
+        }
+        availablePiecesSetup.setText(piecesString.toString());
     }
 
 

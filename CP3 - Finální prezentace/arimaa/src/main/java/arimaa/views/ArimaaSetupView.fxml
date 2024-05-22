@@ -15,6 +15,8 @@
     <!-- <Label fx:id="currentPlayerLabel" text="Golden player moves: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label> -->
     <!-- <Label fx:id="currentPlayerLabel" text="Silver player moves: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label> -->
 
+    <Label fx:id="availablePiecesSetup" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
+
     <Label fx:id="pieceTypeLabelSetup" text="Piece type" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
     <TextField fx:id="pieceTypeInputSetup" />
 
