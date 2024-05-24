@@ -24,6 +24,8 @@ public class BoardController {
     private Integer fromCol = null;
     private Integer toRow = null;
     private Integer toCol = null;
+    private Pane selectedFromSquare;
+    private Pane selectedToSquare;
 
     // --- Getters and setters ---
     public void setBoard(Board board) {
@@ -69,41 +71,47 @@ public class BoardController {
         // Iterate over each row and col
         for (int row = 0; row < board.getRowSize(); row++) {
             for (int col = 0; col < board.getColSize(); col++) {
-                // logger.info("Processing square at row " + row + ", col " + col);
                 // Create a new Pane for the square
                 Pane square = new Pane();
                 square.setPrefSize(120, 120);
 
                 // Add a click event handler to the square
-                final int finalRow = row;
-                final int finalCol = col;
+                final int selectedRow = row;
+                final int selectedCol = col;
                 square.setOnMouseClicked(event -> {
+                    
                     if (fromRow == null && fromCol == null) {
-                        fromRow = finalRow;
-                        fromCol = finalCol;
-                        square.setStyle("-fx-border-color: red;");
-                    } else if (fromRow == finalRow && fromCol == finalCol) {
-                        // Deselect the "from" square
-                        fromRow = null;
-                        fromCol = null;
-                        square.setStyle("-fx-border-color: #1C1212;");
-                    } else if (fromRow != null && fromCol != null && toRow == null && toCol == null) {
-                        toRow = finalRow;
-                        toCol = finalCol;
-
-                        try {
-                            logger.info("Arimaa move: (" + fromRow + ", " + fromCol + " -> " + toRow + ", " + toCol + ")");
-                            arimaaController.submitGameMove(fromRow, fromCol, toRow, toCol);
-                        } catch (Exception e) {
-                            logger.severe(e.getMessage());
+                        if(!board.isOccupied(selectedRow, selectedCol)) {
+                            throw new IndexOutOfBoundsException("You cannot select");
                         }
-
+                        fromRow = selectedRow;
+                        fromCol = selectedCol;
+                        selectedFromSquare = square;
+                        selectedFromSquare.setStyle("-fx-border-color: red;");
+                    } else if (fromRow == selectedRow && fromCol == selectedCol) {
+                        selectedFromSquare.setStyle("-fx-border-color: #1C1212;");
+                        // Deselect the "from" square
+                        selectedFromSquare = null;
                         fromRow = null;
                         fromCol = null;
-                        toCol = null;
+                    } else if (fromRow != null && fromCol != null && toRow == null && toCol == null && fromRow != toRow && fromCol != toCol) {
+                        toRow = selectedRow;
+                        toCol = selectedCol;
+                        
+                        selectedFromSquare.setStyle("-fx-border-color: #1C1212;");
+                        logger.info("Arimaa move: (" + fromRow + ", " + fromCol + " -> " + toRow + ", " + toCol + ")");
+                        arimaaController.submitGameMove(fromRow, fromCol, toRow, toCol);
+                        displayBoard();
+                        
+                        selectedFromSquare = null;
+                        fromRow = null;
+                        fromCol = null;
                         toRow = null;
+                        toCol = null;
+                        logger.info("Reseted values");
                     }
-                    logger.info("Clicked square at row " + finalRow + ", col " + finalCol);
+
+                    logger.info("Selected (fromFrom: " + fromRow + ", fromCol: " + fromCol + ") -> (toRow: " + toRow + ", toCol: " + toCol + ")");
                 });
 
                 // Change the cursor to a hand when the mouse enters the square
