@@ -5,13 +5,13 @@ import arimaa.models.Board;
 import arimaa.models.Piece;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-
 import java.util.logging.Logger;
 
 
@@ -63,6 +63,25 @@ public class BoardController {
                 // Create a new Pane for the square
                 Pane square = new Pane();
                 square.setPrefSize(120, 120);
+
+                // Add a click event handler to the square
+                final int finalRow = row;
+                final int finalCol = col;
+                square.setOnMouseClicked(event -> {
+                    logger.info("Clicked square at row " + finalRow + ", col " + finalCol);
+                });
+
+                // Change the cursor to a hand when the mouse enters the square
+                square.setOnMouseEntered(event -> {
+                    square.setStyle("-fx-border-color: red;");
+                    square.setCursor(Cursor.HAND);
+                });
+
+                // Change the cursor back to the default when the mouse exits the square
+                square.setOnMouseExited(event -> {
+                    // square.setStyle("-fx-border-color: #1C1212;");
+                    square.setCursor(Cursor.DEFAULT);
+                });
 
                 // Check if the square is a trap (and if so change the color)
                 if (board.isInTrap(row, col)) {
