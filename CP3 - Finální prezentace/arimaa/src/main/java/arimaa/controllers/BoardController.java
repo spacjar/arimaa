@@ -79,36 +79,12 @@ public class BoardController {
                 final int selectedRow = row;
                 final int selectedCol = col;
                 square.setOnMouseClicked(event -> {
-                    
                     if (fromRow == null && fromCol == null) {
-                        if(!board.isOccupied(selectedRow, selectedCol)) {
-                            throw new IndexOutOfBoundsException("You cannot select");
-                        }
-                        fromRow = selectedRow;
-                        fromCol = selectedCol;
-                        selectedFromSquare = square;
-                        selectedFromSquare.setStyle("-fx-border-color: red;");
+                        handleFirstSelection(selectedRow, selectedCol, square);
                     } else if (fromRow == selectedRow && fromCol == selectedCol) {
-                        selectedFromSquare.setStyle("-fx-border-color: #1C1212;");
-                        // Deselect the "from" square
-                        selectedFromSquare = null;
-                        fromRow = null;
-                        fromCol = null;
+                        handleDeselection();
                     } else if (fromRow != null && fromCol != null && toRow == null && toCol == null && fromRow != toRow && fromCol != toCol) {
-                        toRow = selectedRow;
-                        toCol = selectedCol;
-                        
-                        selectedFromSquare.setStyle("-fx-border-color: #1C1212;");
-                        logger.info("Arimaa move: (" + fromRow + ", " + fromCol + " -> " + toRow + ", " + toCol + ")");
-                        arimaaController.submitGameMove(fromRow, fromCol, toRow, toCol);
-                        displayBoard();
-                        
-                        selectedFromSquare = null;
-                        fromRow = null;
-                        fromCol = null;
-                        toRow = null;
-                        toCol = null;
-                        logger.info("Reseted values");
+                        handleMove(selectedRow, selectedCol);
                     }
 
                     logger.info("Selected (fromFrom: " + fromRow + ", fromCol: " + fromCol + ") -> (toRow: " + toRow + ", toCol: " + toCol + ")");
@@ -116,13 +92,11 @@ public class BoardController {
 
                 // Change the cursor to a hand when the mouse enters the square
                 square.setOnMouseEntered(event -> {
-                    // square.setStyle("-fx-border-color: red;");
                     square.setCursor(Cursor.HAND);
                 });
 
                 // Change the cursor back to the default when the mouse exits the square
                 square.setOnMouseExited(event -> {
-                    // square.setStyle("-fx-border-color: #1C1212;");
                     square.setCursor(Cursor.DEFAULT);
                 });
 
@@ -134,7 +108,6 @@ public class BoardController {
                 }
 
                 Piece piece = board.getPieceAt(row, col);
-                // logger.info("Got piece at row " + row + ", col " + col);
 
                 if (piece != null) {
                     // Label and circle representing the piece
@@ -175,6 +148,41 @@ public class BoardController {
 
         }
         logger.info("Finished displaying board.");
+    }
+
+    private void handleFirstSelection(int selectedRow, int selectedCol, Pane square) {
+        if(!board.isOccupied(selectedRow, selectedCol)) {
+            throw new IndexOutOfBoundsException("You cannot select");
+        }
+        fromRow = selectedRow;
+        fromCol = selectedCol;
+        selectedFromSquare = square;
+        selectedFromSquare.setStyle("-fx-border-color: red;");
+    }
+
+    private void handleDeselection() {
+        selectedFromSquare.setStyle("-fx-border-color: #1C1212;");
+        // Deselect the "from" square
+        selectedFromSquare = null;
+        fromRow = null;
+        fromCol = null;
+    }
+
+    private void handleMove(int selectedRow, int selectedCol) {
+        toRow = selectedRow;
+        toCol = selectedCol;
+    
+        selectedFromSquare.setStyle("-fx-border-color: #1C1212;");
+        logger.info("Arimaa move: (" + fromRow + ", " + fromCol + " -> " + toRow + ", " + toCol + ")");
+        arimaaController.submitGameMove(fromRow, fromCol, toRow, toCol);
+        displayBoard();
+    
+        selectedFromSquare = null;
+        fromRow = null;
+        fromCol = null;
+        toRow = null;
+        toCol = null;
+        logger.info("Reseted values");
     }
 
 
