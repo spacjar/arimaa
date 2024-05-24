@@ -11,41 +11,17 @@
 
 <VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx" fx:controller="arimaa.controllers.ArimaaController">
     <!-- Current stats -->
-    <!-- <Label fx:id="currentPlayerLabel" text="Current player: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label> -->
-    <!-- <Label fx:id="currentPlayerLabel" text="Golden player moves: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label> -->
-    <!-- <Label fx:id="currentPlayerLabel" text="Silver player moves: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label> -->
-
-    <!-- Place for the from row input and its label -->
-    <Label fx:id="fromRowLabel" text="From Row" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
-    <TextField fx:id="fromRowInput" />
-
-    <!-- Place for the from col input and its label -->
-    <Label fx:id="fromColLabel" text="From Column" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
-    <TextField fx:id="fromColInput" />
-
-    <!-- Place for the to row input and its label -->
-    <Label fx:id="toRowLabel" text="To Row" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
-    <TextField fx:id="toRowInput" />
-
-    <!-- Place for the to col input and its label -->
-    <Label fx:id="toColLabel" text="To Column" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
-    <TextField fx:id="toColInput" />
-
-    <!-- Submit button -->
-    <!-- <Button mnemonicParsing="false" text="Submit" onAction="#submitGame" /> -->
-
+    <Label fx:id="currentPlayerLabel" text="Current player: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
+    <Label fx:id="currentPlayerLabel" text="Golden player moves: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
+    <Label fx:id="currentPlayerLabel" text="Silver player moves: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
 
     <!-- Actions -->
     <Button mnemonicParsing="false" text="Skip turn" onAction="#skipTurn" />
-    <!-- <Button mnemonicParsing="false" text="Push" onAction="#push" /> -->
-    <!-- <Button mnemonicParsing="false" text="Pull" onAction="#pull" /> -->
     
     <!-- Feedback message -->
     <Label fx:id="feedbackMessage" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx">
     </Label>
 
     <!-- Save and load -->
-    <!-- <Button mnemonicParsing="false" text="Load game" onAction="#loadGame" /> -->
-    <!-- <Button mnemonicParsing="false" text="Save game" onAction="#loadGame" /> -->
-
+    <!-- <Button mnemonicParsing="false" text="Save game" onAction="#saveGame" /> -->
 </VBox>
