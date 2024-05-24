@@ -16,6 +16,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import arimaa.models.Player;
 import java.util.logging.Logger;
+import javafx.beans.binding.Bindings;
 
 public class ArimaaController {
     
@@ -54,7 +55,18 @@ public class ArimaaController {
 
     // ---------- Init ----------
     @FXML
+    private Label currentPlayerLabel;
+
+    @FXML
+    private Label goldenPlayerMovesLabel;
+
+    @FXML
+    private Label silverPlayerMovesLabel;
+
+    @FXML
     public void initialize() {
+        // currentPlayerLabel.textProperty().bind(Bindings.createStringBinding(() -> arimaa.getCurrentPlayer().getColor().toString()));
+
         // Check if the board is not null and if the game is not already initialized
         if (board != null && !isInitialized) {
             // If the setup is not finished, initialize the pieces
@@ -122,29 +134,13 @@ public class ArimaaController {
     @FXML
     private Label feedbackMessage;
 
-    // Input field for entering the from row number
-    @FXML
-    private TextField fromRowInput;
-
-    // Input field for entering the from column number
-    @FXML
-    private TextField fromColInput;
-
-    // Input field for entering the to row number
-    @FXML
-    private TextField toRowInput;
-
-    // Input field for entering the to column number
-    @FXML
-    private TextField toColInput;
-
 
     /**
      * Submits a game move based on the input coordinates.
      *
      * @throws IllegalArgumentException if there is something wrong with the board checking conditions
      */
-    protected void submitGameMove(Integer fromRow, Integer fromCol, Integer toRow, Integer toCol) throws IllegalArgumentException {
+    protected void submitGameMove(Integer fromRow, Integer fromCol, Integer toRow, Integer toCol) {
         logger.info("Submitting a game move.");
 
         try {
@@ -205,8 +201,8 @@ public class ArimaaController {
             // Set a feedback message
             // feedbackMessage.setText("The selected coordinates are: " + fromRowInputText + ", " + fromColInputText + ", " + toRowInputText + ", " + toColInputText);
         } catch (Exception e) {
-            feedbackMessage.setText(e.getMessage());
-            logger.severe(e.getMessage());
+            feedbackMessage.setText("ERROR: " + e.getMessage());
+            logger.severe("(!) Arimaa erorre: " + e.getMessage());
         }
     }
 
@@ -313,9 +309,6 @@ public class ArimaaController {
             // Place the chosen piece on the board
             arimaa.setupPiece(currentPlayer, chosenPieceType, chosenSetupRow, chosenSetupCol);
             logger.info("Placed piece on the board.");
-    
-            // Display the board
-            boardController.displayBoard();
             
             // Get the current pieces of the current player
             Map<PieceType, Integer> currentPieces = arimaa.getCurrentPieces(currentPlayer);
