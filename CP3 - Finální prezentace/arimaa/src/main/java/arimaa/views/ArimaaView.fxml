@@ -32,7 +32,7 @@
     <TextField fx:id="toColInput" />
 
     <!-- Submit button -->
-    <Button mnemonicParsing="false" text="Submit" onAction="#submitGame" />
+    <!-- <Button mnemonicParsing="false" text="Submit" onAction="#submitGame" /> -->
 
 
     <!-- Actions -->

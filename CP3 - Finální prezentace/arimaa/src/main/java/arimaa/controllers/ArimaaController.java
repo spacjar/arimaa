@@ -142,36 +142,23 @@ public class ArimaaController {
     /**
      * Submits a game move based on the input coordinates.
      *
-     * @throws IOException if an I/O error occurs.
      * @throws IllegalArgumentException if there is something wrong with the board checking conditions
      */
-    @FXML
-    private void submitGame() throws IOException, IllegalArgumentException {
+    protected void submitGameMove(Integer fromRow, Integer fromCol, Integer toRow, Integer toCol) throws IllegalArgumentException {
         logger.info("Submitting a game move.");
 
         try {
-            String fromRowInputText = fromRowInput.getText();
-            String fromColInputText = fromColInput.getText();
-            String toRowInputText = toRowInput.getText();
-            String toColInputText = toColInput.getText();
-
-            int fromRowInputNum = Integer.parseInt(fromRowInputText)-1;
-            int fromColInputNum = Integer.parseInt(fromColInputText)-1;
-            
-            if(!board.isOccupied(fromRowInputNum, fromColInputNum)) {
+            if(!board.isOccupied(fromRow, fromCol)) {
                 throw new IllegalArgumentException("There is no piece at the specified location!");
             }
-            
-            int toRowInputNum = Integer.parseInt(toRowInputText)-1;
-            int toColInputNum = Integer.parseInt(toColInputText)-1;
-
-            Piece piece = board.getPieceAt(fromRowInputNum, fromColInputNum);
+        
+            Piece piece = board.getPieceAt(fromRow, fromCol);
 
             if (piece.getColor() != arimaa.getCurrentPlayer().getColor()) {
                 throw new IllegalArgumentException("You can only move with your own pieces!");
             }
 
-            board.movePiece(fromRowInputNum, fromColInputNum, toRowInputNum, toColInputNum);
+            board.movePiece(fromRow, fromCol, toRow, toCol);
 
             // Decrement the current player's moves
             arimaa.decrementCurrentPlayerMoves();
@@ -216,7 +203,7 @@ public class ArimaaController {
             boardController.displayBoard();
 
             // Set a feedback message
-            feedbackMessage.setText("The selected coordinates are: " + fromRowInputText + ", " + fromColInputText + ", " + toRowInputText + ", " + toColInputText);
+            // feedbackMessage.setText("The selected coordinates are: " + fromRowInputText + ", " + fromColInputText + ", " + toRowInputText + ", " + toColInputText);
         } catch (Exception e) {
             feedbackMessage.setText(e.getMessage());
             logger.severe(e.getMessage());

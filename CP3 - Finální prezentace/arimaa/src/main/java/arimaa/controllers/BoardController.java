@@ -17,13 +17,22 @@ import java.util.logging.Logger;
 
 public class BoardController {
     private Board board;
+    private ArimaaController arimaaController;
     private static final Logger logger = Logger.getLogger(BoardController.class.getName());
 
+    private Integer fromRow = null;
+    private Integer fromCol = null;
+    private Integer toRow = null;
+    private Integer toCol = null;
 
     // --- Getters and setters ---
     public void setBoard(Board board) {
         this.board = board;
         logger.info("Board set.");
+    }
+
+    public void setArimaaController(ArimaaController arimaaController) {
+        this.arimaaController = arimaaController;
     }
 
     
@@ -60,6 +69,7 @@ public class BoardController {
         // Iterate over each row and col
         for (int row = 0; row < board.getRowSize(); row++) {
             for (int col = 0; col < board.getColSize(); col++) {
+                // logger.info("Processing square at row " + row + ", col " + col);
                 // Create a new Pane for the square
                 Pane square = new Pane();
                 square.setPrefSize(120, 120);
@@ -68,12 +78,37 @@ public class BoardController {
                 final int finalRow = row;
                 final int finalCol = col;
                 square.setOnMouseClicked(event -> {
+                    if (fromRow == null && fromCol == null) {
+                        fromRow = finalRow;
+                        fromCol = finalCol;
+                        square.setStyle("-fx-border-color: red;");
+                    } else if (fromRow == finalRow && fromCol == finalCol) {
+                        // Deselect the "from" square
+                        fromRow = null;
+                        fromCol = null;
+                        square.setStyle("-fx-border-color: #1C1212;");
+                    } else if (fromRow != null && fromCol != null && toRow == null && toCol == null) {
+                        toRow = finalRow;
+                        toCol = finalCol;
+
+                        try {
+                            logger.info("Arimaa move: (" + fromRow + ", " + fromCol + " -> " + toRow + ", " + toCol + ")");
+                            arimaaController.submitGameMove(fromRow, fromCol, toRow, toCol);
+                        } catch (Exception e) {
+                            logger.severe(e.getMessage());
+                        }
+
+                        fromRow = null;
+                        fromCol = null;
+                        toCol = null;
+                        toRow = null;
+                    }
                     logger.info("Clicked square at row " + finalRow + ", col " + finalCol);
                 });
 
                 // Change the cursor to a hand when the mouse enters the square
                 square.setOnMouseEntered(event -> {
-                    square.setStyle("-fx-border-color: red;");
+                    // square.setStyle("-fx-border-color: red;");
                     square.setCursor(Cursor.HAND);
                 });
 
@@ -91,6 +126,7 @@ public class BoardController {
                 }
 
                 Piece piece = board.getPieceAt(row, col);
+                // logger.info("Got piece at row " + row + ", col " + col);
 
                 if (piece != null) {
                     // Label and circle representing the piece
@@ -125,9 +161,12 @@ public class BoardController {
                 }
 
                 // Add the square to the board grid
+                // logger.info("Adding square to board grid at row " + row + ", col " + col);
                 boardGrid.add(square, col, row);
             }
+
         }
+        logger.info("Finished displaying board.");
     }
 
 
