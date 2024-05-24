@@ -191,7 +191,7 @@ public class ArimaaController {
 
             // If the current player has no moves left, switch to the other player and reset their moves
             if (arimaa.isCurrentPlayerOutOfMoves()) {
-                arimaa.switchPlayers();
+                arimaa.changePlayer(arimaa.getCurrentPlayer());
                 arimaa.resetCurrentPlayerMoves();
             }
 
@@ -220,13 +220,13 @@ public class ArimaaController {
     private void skipTurn() throws IOException, IllegalArgumentException {
         try {
             if (arimaa.getCurrentPlayer() == arimaa.getGoldenPlayer() && arimaa.getGoldenPlayerMoves() < 4) {
-                arimaa.setCurrentPlayer(arimaa.getSilverPlayer());
-                arimaa.setGoldenPlayerMoves(4);
+                arimaa.changePlayer(arimaa.getCurrentPlayer());
+                arimaa.resetCurrentPlayerMoves();
                 logger.info("Turn skipped!");
                 feedbackMessage.setText("Turn skipped!");
             } else if (arimaa.getCurrentPlayer() == arimaa.getSilverPlayer() && arimaa.getSilverPlayerMoves() < 4) {
-                arimaa.setCurrentPlayer(arimaa.getGoldenPlayer());
-                arimaa.setSilverPlayerMoves(4);
+                arimaa.changePlayer(arimaa.getCurrentPlayer());
+                arimaa.resetCurrentPlayerMoves();
                 logger.info("Turn skipped!");
                 feedbackMessage.setText("Turn skipped!");
             } else {
