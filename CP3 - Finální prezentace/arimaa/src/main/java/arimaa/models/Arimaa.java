@@ -7,7 +7,7 @@ import java.util.Map;
 
 
 public class Arimaa {
-    // Game board
+    // Game board (model)
     private Board board;
 
     // Game state
@@ -33,6 +33,14 @@ public class Arimaa {
     // Check if all of the pieces are placed during the setup
     private boolean allGoldenPiecesPlaced = false;
     private boolean allSilverPiecesPlaced = false;
+
+    // Check if the player is pushing or pulling
+    private boolean isPushing = false;
+    private boolean isPulling = false;
+    private Integer pushingFromRow = null;
+    private Integer pushingFromCol = null;
+    private Integer pullingFromRow = null;
+    private Integer pullingFromCol = null;
 
 
     // ----- Getters and setters -----
@@ -70,6 +78,18 @@ public class Arimaa {
     
     public void setGoldenPlayerMoves(int goldenPlayerMoves) {
         this.goldenPlayerMoves = goldenPlayerMoves;
+    }
+
+    public int getPlayersMoves(Player player) {
+        if (currentPlayer == goldenPlayer) {
+            return getGoldenPlayerMoves();
+        }
+        
+        if (currentPlayer == silverPlayer) {
+            return getSilverPlayerMoves();
+        } 
+        
+        throw new IllegalStateException("Current player is neither golden nor silver");
     }
     
     public Player getSilverPlayer() {
@@ -115,6 +135,41 @@ public class Arimaa {
     public void setCurrentPieces(Player player) {
         this.currentPieces = getCurrentPieces(player);
     }
+
+    public boolean getIsPushing() {
+        return isPushing;
+    }
+
+    public void setIsPushing(boolean isPushing) {
+        this.isPushing = isPushing;
+    }
+
+    public boolean getIsPulling() {
+        return isPulling;
+    }
+
+    public void setIsPulling(boolean isPulling) {
+        this.isPulling = isPulling;
+    }
+
+    public void setPushingFromCoordinates(Integer row, Integer col) {
+        this.pushingFromRow = row;
+        this.pushingFromCol = col;
+    }
+    
+    public Integer[] getPushingFromCoordinates() {
+        return new Integer[] {this.pushingFromRow, this.pushingFromCol};
+    }
+
+    public void setPullingFromCoordinates(Integer row, Integer col) {
+        this.pushingFromRow = row;
+        this.pushingFromCol = col;
+    }
+    
+    public Integer[] setPullingFromCoordinates() {
+        return new Integer[] {this.pullingFromRow, this.pullingFromCol};
+    }
+
 
 
     /**

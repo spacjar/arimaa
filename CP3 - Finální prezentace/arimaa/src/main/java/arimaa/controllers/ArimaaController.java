@@ -16,20 +16,27 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import arimaa.models.Player;
 import java.util.logging.Logger;
-import javafx.beans.binding.Bindings;
+import javafx.application.Platform;
 
 public class ArimaaController {
     
-    private boolean isInitialized = false;
+    private Arimaa arimaa;
     private Board board;
     private BoardController boardController;
-    private Arimaa arimaa;
     private Stage stage;
     private BorderPane root;
     
     // Logger
     private static final Logger logger = Logger.getLogger(ArimaaController.class.getName());
+    
+    // State
+    private boolean isInitialized = false;
 
+
+    // --- Getters and setters ---
+    public void setArimaa(Arimaa arimaa) {
+        this.arimaa = arimaa;
+    }
 
     public void setBoard(Board board) {
         this.board = board;
@@ -37,10 +44,6 @@ public class ArimaaController {
 
     public void setBoardController(BoardController boardController) {
         this.boardController = boardController;
-    }
-
-    public void setArimaa(Arimaa arimaa) {
-        this.arimaa = arimaa;
     }
 
     public void setStage(Stage stage) {
@@ -140,21 +143,55 @@ public class ArimaaController {
      *
      * @throws IllegalArgumentException if there is something wrong with the board checking conditions
      */
-    protected void submitGameMove(Integer fromRow, Integer fromCol, Integer toRow, Integer toCol) {
+    public void submitGameMove(Integer fromRow, Integer fromCol, Integer toRow, Integer toCol) {
         logger.info("Submitting a game move.");
 
         try {
             if(!board.isOccupied(fromRow, fromCol)) {
                 throw new IllegalArgumentException("There is no piece at the specified location!");
             }
-        
+
             Piece piece = board.getPieceAt(fromRow, fromCol);
 
-            if (piece.getColor() != arimaa.getCurrentPlayer().getColor()) {
-                throw new IllegalArgumentException("You can only move with your own pieces!");
+            // Check if the player is pushing his piece to the location of the previous pushed piece and reset the values
+            Integer[] pushingFromCoordinates = arimaa.getPushingFromCoordinates();
+            Integer pushingFromRow = pushingFromCoordinates[0];
+            Integer pushingFromCol = pushingFromCoordinates[1];
+
+            if(arimaa.getIsPushing() && (toRow != pushingFromRow || toCol != pushingFromCol)) {
+                logger.warning("You can move only to the position of the previous enemy piece!");
+                throw new IllegalArgumentException("You can move only to the position of the previous enemy piece!");
             }
 
-            board.movePiece(fromRow, fromCol, toRow, toCol);
+            if(arimaa.getIsPushing() && (toRow == pushingFromRow || toCol == pushingFromCol)) {
+                logger.info("Resetting pushing");
+                arimaa.setPushingFromCoordinates(null, null);
+                arimaa.setIsPushing(false);
+            }
+
+
+            // Pushing
+            if (piece.getColor() != arimaa.getCurrentPlayer().getColor()) {
+                if(arimaa.getPlayersMoves(arimaa.getCurrentPlayer()) < 2) {
+                    logger.warning("You can not push or pull pieces when you have less than 2 moves!");
+                    throw new IllegalArgumentException("You can not push or pull pieces when you have less than 2 moves!");
+                }
+        
+                // Pushing
+                if(board.hasAdjacentEnemyPiecesWithHigherValue(fromRow, fromCol)) {
+                    if(board.isOccupied(toRow, toCol)) {
+                        throw new IllegalArgumentException("The destination square is already occupied!");
+                    }
+        
+                    logger.info("Pushing");
+                    arimaa.setIsPushing(true);
+                    arimaa.setPushingFromCoordinates(fromRow, fromCol);
+                } else {
+                    throw new IllegalArgumentException("You can only move with your own pieces!");
+                }
+            }
+
+            board.movePiece(fromRow, fromCol, toRow, toCol, arimaa.getIsPushing(), arimaa.getIsPulling());
 
             // Decrement the current player's moves
             arimaa.decrementCurrentPlayerMoves();
@@ -201,7 +238,17 @@ public class ArimaaController {
             // Set a feedback message
             // feedbackMessage.setText("The selected coordinates are: " + fromRowInputText + ", " + fromColInputText + ", " + toRowInputText + ", " + toColInputText);
         } catch (Exception e) {
-            feedbackMessage.setText("ERROR: " + e.getMessage());
+            Platform.runLater(() -> {
+                    try {
+                        logger.severe("Is FX Application Thread: " + Platform.isFxApplicationThread());
+                        feedbackMessage.setText("ERROR: " + e.getMessage());
+                        feedbackMessage.getParent().layout();
+                        logger.severe("Runs: " + Platform.isFxApplicationThread());
+                    } catch (Exception ex) {
+                        logger.severe("Exception in Platform.runLater: " + ex.getMessage());
+                    }
+            });
+            renderView();
             logger.severe("(!) Arimaa erorre: " + e.getMessage());
         }
     }
@@ -219,6 +266,11 @@ public class ArimaaController {
     @FXML
     private void skipTurn() throws IOException, IllegalArgumentException {
         try {
+            if (arimaa.getIsPushing() || arimaa.getIsPulling()) {
+                logger.warning("Cannot skip turn while you are pushing or pulling!");
+                throw new IllegalArgumentException("Cannot skip turn while you are pushing or pulling!");
+            }
+
             if (arimaa.getCurrentPlayer() == arimaa.getGoldenPlayer() && arimaa.getGoldenPlayerMoves() < 4) {
                 arimaa.changePlayer(arimaa.getCurrentPlayer());
                 arimaa.resetCurrentPlayerMoves();
@@ -337,7 +389,7 @@ public class ArimaaController {
             feedbackMessageSetup.setText("");
         } catch (Exception e) {
             // Display the error message and log it
-            feedbackMessageSetup.setText(e.getMessage());
+            feedbackMessage.setText(e.getMessage());
             logger.severe(e.getMessage());
         }
     }
