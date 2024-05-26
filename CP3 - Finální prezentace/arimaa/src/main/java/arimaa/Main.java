@@ -7,15 +7,41 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import java.util.logging.Logger;
+
+import arimaa.controllers.ArimaaController;
+import arimaa.controllers.BoardController;
+import arimaa.controllers.DummyController;
+import arimaa.models.Arimaa;
+import arimaa.models.Board;
+
 import java.io.IOException;
 import java.util.logging.Level;
 import javafx.scene.Node;
 
+
+
 public class Main extends Application {
+    ArimaaController arimaaController;
+    BoardController boardController;
+    DummyController dummyController;
+
     private static final Logger logger = Logger.getLogger(Main.class.getName());
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        // Models
+        Arimaa arimaa = new Arimaa();
+        Board board = new Board();
+
+        // Controllers
+        arimaaController = new ArimaaController(arimaa, board);
+        boardController = new BoardController(board);
+        dummyController = new DummyController();
+
+        arimaaController.setBoardController(boardController);
+        boardController.setArimaaController(arimaaController);
+
+        // Game state
         boolean isGameStarted = false;
         boolean isGameRunning = false;
     
@@ -28,24 +54,28 @@ public class Main extends Application {
         }
     
         Scene scene = new Scene((Parent) content.getKey());
-        Object controller = content.getValue();
+        // Object controller = content.getValue();
         // Do something with the controller...
     
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private <T> Pair<Node, T> loadFXML(boolean isGameStarted, boolean isGameRunning) throws IOException {
+    private Pair<Node, Object> loadFXML(boolean isGameStarted, boolean isGameRunning) throws IOException {
         FXMLLoader loader;
+        Object controller;
         if (!isGameStarted) {
             loader = new FXMLLoader(getClass().getResource("./views/StartView.fxml"));
+            controller = dummyController;
         } else if (isGameRunning) {
             loader = new FXMLLoader(getClass().getResource("./views/GameView.fxml"));
+            controller = dummyController;
         } else {
             loader = new FXMLLoader(getClass().getResource("./views/EndView.fxml"));
+            controller = dummyController;
         }
+        loader.setControllerFactory(c -> controller);
         Node root = (Node) loader.load();
-        T controller = loader.getController();
         return new Pair<>(root, controller);
     }
 
