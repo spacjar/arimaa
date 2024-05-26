@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.GridPane?>
 
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx" fx:controller="arimaa.controllers.BoardController">
+<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx">
     <GridPane fx:id="boardGrid" hgap="2" vgap="2">
     </GridPane>
 </VBox>

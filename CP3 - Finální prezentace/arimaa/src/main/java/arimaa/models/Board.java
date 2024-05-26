@@ -524,4 +524,18 @@ public class Board {
         logger.info("The player has no rabbits left on the board.");
         return true;
     }
+
+
+
+    // ----- Utils -----
+    /**
+     * Clears the entire board by setting all positions to null.
+     */
+    public void clearBoard() {
+        for (int row = 0; row < ROW_SIZE; row++) {
+            for (int col = 0; col < COL_SIZE; col++) {
+                board[row][col] = null;
+            }
+        }
+    }
 }

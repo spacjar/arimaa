@@ -17,7 +17,12 @@ import java.util.logging.Logger;
 
 public class BoardController {
     private Board board;
-    private ArimaaController arimaaController;
+    private ArimaaGameController arimaaController;
+
+    public BoardController(Board board) {
+        this.board = board;
+    }
+
     private static final Logger logger = Logger.getLogger(BoardController.class.getName());
 
     private Integer fromRow = null;
@@ -27,17 +32,9 @@ public class BoardController {
     private Pane selectedFromSquare;
     private Pane selectedToSquare;
 
-    public BoardController(Board board) {
-        this.board = board;
-    }
 
     // --- Getters and setters ---
-    // public void setBoard(Board board) {
-    //     this.board = board;
-    //     logger.info("Board set.");
-    // }
-
-    public void setArimaaController(ArimaaController arimaaController) {
+    public void setArimaaController(ArimaaGameController arimaaController) {
         this.arimaaController = arimaaController;
     }
 
@@ -54,6 +51,8 @@ public class BoardController {
     public void initialize() {
         if (board != null) {            
             logger.info("Initializing board.");
+            board.clearBoard();
+            setupBoardDev();
             displayBoard();
         } else {
             logger.warning("Board is null during initialization.");

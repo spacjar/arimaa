@@ -12,7 +12,8 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 import javafx.scene.Node;
 
-import arimaa.controllers.ArimaaController;
+import arimaa.controllers.ArimaaGameController;
+import arimaa.controllers.ArimaaSetupController;
 import arimaa.controllers.ArimaaEndController;
 import arimaa.controllers.ArimaaStartController;
 import arimaa.controllers.BoardController;
@@ -24,8 +25,9 @@ import arimaa.models.Board;
 
 public class Main extends Application {
     ArimaaStartController arimaaStartController;
+    ArimaaSetupController arimaaSetupController;
+    ArimaaGameController arimaaGameController;
     ArimaaEndController arimaaEndController;
-    ArimaaController arimaaController;
     BoardController boardController;
     DummyController dummyController;
 
@@ -44,14 +46,15 @@ public class Main extends Application {
         Arimaa arimaa = new Arimaa(board);
 
         // Controllers
-        arimaaStartController = new ArimaaStartController(arimaa, board);
-        arimaaEndController = new ArimaaEndController(arimaa, board);
-        arimaaController = new ArimaaController(arimaa, board);
+        arimaaStartController = new ArimaaStartController(arimaa);
+        arimaaSetupController = new ArimaaSetupController(arimaa);
+        arimaaGameController = new ArimaaGameController(arimaa, board);
+        arimaaEndController = new ArimaaEndController(arimaa);
         boardController = new BoardController(board);
         dummyController = new DummyController();
 
-        arimaaController.setBoardController(boardController);
-        boardController.setArimaaController(arimaaController);
+        arimaaGameController.setBoardController(boardController);
+        boardController.setArimaaController(arimaaGameController);
 
         // Game state
         isGameStart = new SimpleBooleanProperty();
@@ -104,8 +107,8 @@ public class Main extends Application {
     
         Scene scene = new Scene(rootContainer);
         primaryStage.setScene(scene);
-        primaryStage.setMinWidth(600);
-        primaryStage.setMinHeight(400);
+        primaryStage.setMinWidth(800);
+        primaryStage.setMinHeight(880);
         primaryStage.show();
     }
 
@@ -114,18 +117,18 @@ public class Main extends Application {
         rootContainer.getChildren().clear();
 
         if (!isGameStart.get() && !isGameSetup.get() && !isGameEnd.get()) {
-            Pair<Node, Object> content = loadFXML("./views/StartView.fxml", arimaaStartController);
+            Pair<Node, Object> content = loadFXML("./views/ArimaaStartView.fxml", arimaaStartController);
             rootContainer.getChildren().add(content.getKey());
         } else if (isGameStart.get() && !isGameSetup.get() && !isGameEnd.get()) {
-            Pair<Node, Object> content1 = loadFXML("./views/EndView.fxml", dummyController);
-            Pair<Node, Object> content2 = loadFXML("./views/EndView.fxml", dummyController);
+            Pair<Node, Object> content1 = loadFXML("./views/BoardView.fxml", boardController);
+            Pair<Node, Object> content2 = loadFXML("./views/ArimaaSetupView.fxml", arimaaSetupController);
             rootContainer.getChildren().addAll(content1.getKey(), content2.getKey());  
         } else if (isGameStart.get() && isGameSetup.get() && !isGameEnd.get()) {
-            Pair<Node, Object> content1 = loadFXML("./views/EndView.fxml", dummyController);
-            Pair<Node, Object> content2 = loadFXML("./views/EndView.fxml", dummyController);
+            Pair<Node, Object> content1 = loadFXML("./views/BoardView.fxml", boardController);
+            Pair<Node, Object> content2 = loadFXML("./views/ArimaaGameView.fxml", arimaaGameController);
             rootContainer.getChildren().addAll(content1.getKey(), content2.getKey());
         } else {
-            Pair<Node, Object> content = loadFXML("./views/EndView.fxml", arimaaEndController);
+            Pair<Node, Object> content = loadFXML("./views/ArimaaEndView.fxml", arimaaEndController);
             rootContainer.getChildren().add(content.getKey());
         }
     }

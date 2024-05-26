@@ -11,28 +11,14 @@
 
 <VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx">
     <!-- Current stats -->
-    <!-- <Label fx:id="currentPlayerLabel" text="Current player: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label> -->
-    <!-- <Label fx:id="currentPlayerLabel" text="Golden player moves: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label> -->
-    <!-- <Label fx:id="currentPlayerLabel" text="Silver player moves: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label> -->
-
-    <Label fx:id="availablePiecesSetup" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
-
-    <Label fx:id="pieceTypeLabelSetup" text="Piece type" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
-    <TextField fx:id="pieceTypeInputSetup" />
-
-    <!-- Place for the from row input and its label -->
-    <Label fx:id="rowLabelSetup" text="Row" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
-    <TextField fx:id="rowInputSetup" />
-
-    <!-- Place for the from col input and its label -->
-    <Label fx:id="colLabelSetup" text="Column" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
-    <TextField fx:id="colInputSetup" />
+    <Label fx:id="setupCurrentPlayerLabel" text="Current player: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
 
     <!-- Submit button -->
-    <Button mnemonicParsing="false" fx:id="setupButton" text="Place" onAction="#submitSetup" />
-    <Button mnemonicParsing="false" fx:id="setupButton" text="Auto-setup" onAction="#devSetup" />
+    <Button mnemonicParsing="false" fx:id="setupGoldenPlayerReadyButton" text="Is golden player ready?" onAction="#handleGoldenPlayerReady"/>
+    <Button mnemonicParsing="false" fx:id="setupSilverPlayerReadyButton" text="Is silver player ready?" onAction="#handleSilverPlayerReady"/>
+    <Button mnemonicParsing="false" fx:id="setupAllPlayersReadyButton" text="Start game!" onAction="#handleStartGame"/>
 
     <!-- Feedback message -->
-    <Label fx:id="feedbackMessageSetup" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx">
+    <Label fx:id="setupfeedbackMessage" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx">
     </Label>
 </VBox>
