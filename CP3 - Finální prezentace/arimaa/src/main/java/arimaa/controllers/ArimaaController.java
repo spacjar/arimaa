@@ -151,33 +151,40 @@ public class ArimaaController {
                 throw new IllegalArgumentException("There is no piece at the specified location!");
             }
 
-            Piece piece = board.getPieceAt(fromRow, fromCol);
-
-            // Check if the player is pushing his piece to the location of the previous pushed piece and reset the values
-            Integer[] pushingFromCoordinates = arimaa.getPushingFromCoordinates();
-            Integer pushingFromRow = pushingFromCoordinates[0];
-            Integer pushingFromCol = pushingFromCoordinates[1];
-
-            if(arimaa.getIsPushing() && (toRow != pushingFromRow || toCol != pushingFromCol)) {
+            Piece currentPiece = board.getPieceAt(fromRow, fromCol);
+            
+            // Previous piece position
+            Integer[] previousMove = arimaa.getPreviousMove();
+            Integer previousMoveFromRow = previousMove[0];
+            Integer previousMoveFromCol = previousMove[1];
+            Integer previousMoveToRow = previousMove[2];
+            Integer previousMoveToCol = previousMove[3];
+            
+            // Check that you can move your friendly piece only to the previous location of the enemy piece
+            if(arimaa.getIsPushing() && (toRow != previousMoveFromRow || toCol != previousMoveFromCol)) {
                 logger.warning("You can move only to the position of the previous enemy piece!");
                 throw new IllegalArgumentException("You can move only to the position of the previous enemy piece!");
             }
 
-            if(arimaa.getIsPushing() && (toRow == pushingFromRow || toCol == pushingFromCol)) {
+            if(arimaa.getIsPushing() && (toRow == previousMoveFromRow || toCol == previousMoveFromCol)) {
                 logger.info("Resetting pushing");
-                arimaa.setPushingFromCoordinates(null, null);
+                // arimaa.setPushingFromCoordinates(null, null);
                 arimaa.setIsPushing(false);
             }
 
+            Piece previousPiece = null;
 
-            // Pushing
-            if (piece.getColor() != arimaa.getCurrentPlayer().getColor()) {
-                if(arimaa.getPlayersMoves(arimaa.getCurrentPlayer()) < 2) {
-                    logger.warning("You can not push or pull pieces when you have less than 2 moves!");
-                    throw new IllegalArgumentException("You can not push or pull pieces when you have less than 2 moves!");
-                }
+            if(previousMoveToRow != null && previousMoveToCol != null){
+                previousPiece = board.getPieceAt(previousMoveToRow, previousMoveToCol);
+            }
+
+            if (currentPiece.getColor() != arimaa.getCurrentPlayer().getColor()) {
+                // if(arimaa.getPlayersMoves(arimaa.getCurrentPlayer()) < 2) {
+                //     logger.warning("You can not push or pull pieces when you have less than 2 moves!");
+                //     throw new IllegalArgumentException("You can not push or pull pieces when you have less than 2 moves!");
+                // }
         
-                // Pushing
+                // PUSH
                 if(board.hasAdjacentEnemyPiecesWithHigherValue(fromRow, fromCol)) {
                     if(board.isOccupied(toRow, toCol)) {
                         throw new IllegalArgumentException("The destination square is already occupied!");
@@ -189,9 +196,24 @@ public class ArimaaController {
                 } else {
                     throw new IllegalArgumentException("You can only move with your own pieces!");
                 }
+
+                // PULL
+                if(previousPiece != null && !arimaa.getIsPushing() && previousPiece.getPieceWeight() > currentPiece.getPieceWeight()) {
+                    throw new IllegalArgumentException("You can not push a stronger (or same) enemy piece!");
+                }
+
+                if(!arimaa.getIsPushing() && (toRow != previousMoveFromRow || toCol != previousMoveFromCol)) {
+                    logger.warning("You can move only to the position of the previous enemy piece!");
+                    throw new IllegalArgumentException("You can move only to the position of the previous enemy piece!");
+                }
+
+                if(!arimaa.getIsPushing() && (toRow == previousMoveFromRow && toCol == previousMoveFromCol)) {
+                    arimaa.setIsPulling(true);
+                }
             }
 
             board.movePiece(fromRow, fromCol, toRow, toCol, arimaa.getIsPushing(), arimaa.getIsPulling());
+            arimaa.setPreviousMove(fromRow, fromCol, toRow, toCol);
 
             // Decrement the current player's moves
             arimaa.decrementCurrentPlayerMoves();
@@ -232,24 +254,17 @@ public class ArimaaController {
                 arimaa.resetCurrentPlayerMoves();
             }
 
+            // Reset values
+            arimaa.setIsPulling(false);
+
             // Render the board
             boardController.displayBoard();
 
             // Set a feedback message
             // feedbackMessage.setText("The selected coordinates are: " + fromRowInputText + ", " + fromColInputText + ", " + toRowInputText + ", " + toColInputText);
         } catch (Exception e) {
-            Platform.runLater(() -> {
-                    try {
-                        logger.severe("Is FX Application Thread: " + Platform.isFxApplicationThread());
-                        feedbackMessage.setText("ERROR: " + e.getMessage());
-                        feedbackMessage.getParent().layout();
-                        logger.severe("Runs: " + Platform.isFxApplicationThread());
-                    } catch (Exception ex) {
-                        logger.severe("Exception in Platform.runLater: " + ex.getMessage());
-                    }
-            });
-            renderView();
             logger.severe("(!) Arimaa erorre: " + e.getMessage());
+            feedbackMessage.setText("ERROR: " + e.getMessage());
         }
     }
 
