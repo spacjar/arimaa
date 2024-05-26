@@ -17,6 +17,8 @@ import javafx.stage.Stage;
 import arimaa.models.Player;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 public class ArimaaController {
     
@@ -31,6 +33,7 @@ public class ArimaaController {
     
     // State
     private boolean isInitialized = false;
+    private boolean isMoved = false;
 
 
     // --- Getters and setters ---
@@ -57,6 +60,12 @@ public class ArimaaController {
     
 
     // ---------- Init ----------
+    // private final StringProperty currentPlayerProperty = new SimpleStringProperty();
+
+    // private void updateCurrentPlayer(Player player) {
+    //     currentPlayerProperty.set("Current player: " + player);
+    // }
+
     @FXML
     private Label currentPlayerLabel;
 
@@ -68,7 +77,7 @@ public class ArimaaController {
 
     @FXML
     public void initialize() {
-        // currentPlayerLabel.textProperty().bind(Bindings.createStringBinding(() -> arimaa.getCurrentPlayer().getColor().toString()));
+        // currentPlayerLabel.textProperty().bind(currentPlayerProperty);
 
         // Check if the board is not null and if the game is not already initialized
         if (board != null && !isInitialized) {
@@ -76,14 +85,16 @@ public class ArimaaController {
             if(!arimaa.getIsSetupFinished()) {
                 arimaa.initializePieces();
             }
-
+            
             // Mark the game as initialized
             isInitialized = true;
             logger.info("Game initialized.");
-
+            
             // Render the view
             renderView();
         }
+
+        
     }
 
     /**
@@ -147,10 +158,24 @@ public class ArimaaController {
         logger.info("Submitting a game move.");
 
         try {
+            // Reset the values
+            isMoved = false;
+
+            // Check if there is a piece at the selected "from" position
             if(!board.isOccupied(fromRow, fromCol)) {
                 throw new IllegalArgumentException("There is no piece at the specified location!");
             }
 
+            // Check if the "to" position is already occupied by another piece
+            if(board.isOccupied(toRow, toCol)) {
+                throw new IllegalArgumentException("There is already piece at the new specified location!");
+            }
+
+            // Get the players
+            Player currentPlayer = arimaa.getCurrentPlayer();
+            Player otherPlayer = arimaa.getOtherPlayer();
+    
+            // Get the piece at the currently selected position
             Piece currentPiece = board.getPieceAt(fromRow, fromCol);
             
             // Previous piece position
@@ -159,6 +184,23 @@ public class ArimaaController {
             Integer previousMoveFromCol = previousMove[1];
             Integer previousMoveToRow = previousMove[2];
             Integer previousMoveToCol = previousMove[3];
+
+            // Get the piece that was at the previous position
+            Piece previousPiece = null;
+
+            if(previousMoveToRow != null && previousMoveToCol != null){
+                previousPiece = board.getPieceAt(previousMoveToRow, previousMoveToCol);
+            }
+
+
+            // PUSH
+            // 1. Current player chooses the position of the enemy piece
+            // 2. The enemy piece (selected piece) checks if there are any adjacent current players pieces with bigger weight
+            // 3. The enemy piece (selected piece) checks if there are any free adjacent spaces
+            // 4. The enemy piece moves to the free adjacent space and its previous location (where it moved from) is noted
+            // 5. The current player can only move the previously adjacent pieces with a bigger weight (than the moved enemy piece)
+            // 6. The current player can only move these pieces to the previous location of the enemy piece
+            // NOTE: While you are pushing an enemy piece (2 moves) you cannot skip the round
             
             // Check that you can move your friendly piece only to the previous location of the enemy piece
             if(arimaa.getIsPushing() && (toRow != previousMoveFromRow || toCol != previousMoveFromCol)) {
@@ -167,86 +209,64 @@ public class ArimaaController {
             }
 
             if(arimaa.getIsPushing() && (toRow == previousMoveFromRow || toCol == previousMoveFromCol)) {
-                logger.info("Resetting pushing");
-                // arimaa.setPushingFromCoordinates(null, null);
-                arimaa.setIsPushing(false);
+                if(isMoved == false) {
+                    arimaa.setIsPushing(false);
+                    performPushingMove(fromRow, fromCol, toRow, toCol, false);
+                    isMoved = true;
+                }
             }
 
-            Piece previousPiece = null;
-
-            if(previousMoveToRow != null && previousMoveToCol != null){
-                previousPiece = board.getPieceAt(previousMoveToRow, previousMoveToCol);
-            }
-
+            
             if (currentPiece.getColor() != arimaa.getCurrentPlayer().getColor()) {
-                // if(arimaa.getPlayersMoves(arimaa.getCurrentPlayer()) < 2) {
-                //     logger.warning("You can not push or pull pieces when you have less than 2 moves!");
-                //     throw new IllegalArgumentException("You can not push or pull pieces when you have less than 2 moves!");
-                // }
-        
-                // PUSH
-                if(board.hasAdjacentEnemyPiecesWithHigherValue(fromRow, fromCol)) {
-                    if(board.isOccupied(toRow, toCol)) {
-                        throw new IllegalArgumentException("The destination square is already occupied!");
+                if(board.hasAdjacentEnemyPiecesWithHigherValue(fromRow, fromCol) && arimaa.getPlayersMoves(currentPlayer) >= 2) {
+                    if(isMoved == false) {
+                        logger.info("Pushing");
+                        arimaa.setIsPushing(true);
+                        performPushingMove(fromRow, fromCol, toRow, toCol, true);
+                        isMoved = true;
                     }
-        
-                    logger.info("Pushing");
-                    arimaa.setIsPushing(true);
-                    arimaa.setPushingFromCoordinates(fromRow, fromCol);
-                } else {
-                    throw new IllegalArgumentException("You can only move with your own pieces!");
-                }
-
-                // PULL
-                if(previousPiece != null && !arimaa.getIsPushing() && previousPiece.getPieceWeight() > currentPiece.getPieceWeight()) {
-                    throw new IllegalArgumentException("You can not push a stronger (or same) enemy piece!");
-                }
-
-                if(!arimaa.getIsPushing() && (toRow != previousMoveFromRow || toCol != previousMoveFromCol)) {
-                    logger.warning("You can move only to the position of the previous enemy piece!");
-                    throw new IllegalArgumentException("You can move only to the position of the previous enemy piece!");
-                }
-
-                if(!arimaa.getIsPushing() && (toRow == previousMoveFromRow && toCol == previousMoveFromCol)) {
-                    arimaa.setIsPulling(true);
                 }
             }
 
-            board.movePiece(fromRow, fromCol, toRow, toCol, arimaa.getIsPushing(), arimaa.getIsPulling());
-            arimaa.setPreviousMove(fromRow, fromCol, toRow, toCol);
+
+            // PULL
+            // 1. Current player chooses and moves his piece
+            // 2. Current player chooses an enemy piece he would like to pull
+            // 3. The enemy piece checks if the piece at the previous position (the players piece that the player moved at 1.) has bigger weight
+            // 4. The enemy piece can ONLY move to the previous position of the previously adjacent piece with bigger weight
+            // NOTE: Unlike push, you can skip during this move, because you don't know if the player is just moving his piece with bigger weight from an enemy piece, or if he is trying to pull
+            // if (currentPiece.getColor() != arimaa.getCurrentPlayer().getColor()) {
+            //     if(currentPiece != null && previousPiece != null && previousPiece.getPieceWeight() > currentPiece.getPieceWeight()) {
+            //         // Check if the pieces are adjacent
+            //         if(board.isOneStep(fromRow, fromCol, previousMoveFromRow, previousMoveFromCol)) {
+            //             // 4. The enemy piece can ONLY move to the previous position of the previously adjacent piece with bigger weight
+            //             if(previousMoveFromRow == fromRow && previousMoveFromCol == fromCol) {
+            //                 // ! DO THE MOVE
+
+            //             } else {
+            //                 logger.warning("You can pull the enemy piece only to the position of your previous piece!");
+            //                 throw new IllegalArgumentException("You can pull the enemy piece only to the position of your previous piece!");
+            //             }
+            //         }
+            //     }
+            // }
+    
+    
+            if (currentPiece.getColor() == arimaa.getCurrentPlayer().getColor()) {
+                if(isMoved == false) {
+                    performPushingMove(fromRow, fromCol, toRow, toCol, false);
+                    isMoved = true;
+                }
+            }
 
             // Decrement the current player's moves
-            arimaa.decrementCurrentPlayerMoves();
+            // arimaa.decrementCurrentPlayerMoves();
 
-            Player otherPlayer = arimaa.getOtherPlayer();
-
-            // Check if one of the players won the game
-            if(board.isGameWon(arimaa.getCurrentPlayer())) {
-                logger.info(arimaa.getCurrentPlayer() + " won the game!");
-                feedbackMessage.setText(arimaa.getCurrentPlayer() + " won the game!");
-                arimaa.setIsGameRunning(false);
-                return;
-            } 
-            if(board.isGameWon(otherPlayer)) {
-                logger.info(otherPlayer + " won the game!");
-                feedbackMessage.setText(otherPlayer + " won the game!");
-                arimaa.setIsGameRunning(false);
-                return;
-            }
-            
-            // Check if one of the players lost the game
-            if(board.isGameLost(arimaa.getCurrentPlayer())) {
-                logger.info(arimaa.getCurrentPlayer() + " lost the game!");
-                feedbackMessage.setText(arimaa.getCurrentPlayer() + " lost the game!");
-                arimaa.setIsGameRunning(false);
-                return;
-            }
-            if(board.isGameLost(otherPlayer)) {
-                logger.info(otherPlayer + " lost the game!");
-                feedbackMessage.setText(otherPlayer + " lost the game!");
-                arimaa.setIsGameRunning(false);
-                return;
-            }
+            // Check if one of the players won or lost the game
+            checkGameStatus(currentPlayer, "won");
+            checkGameStatus(otherPlayer, "won");
+            checkGameStatus(currentPlayer, "lost");
+            checkGameStatus(otherPlayer, "lost");
 
             // If the current player has no moves left, switch to the other player and reset their moves
             if (arimaa.isCurrentPlayerOutOfMoves()) {
@@ -254,19 +274,30 @@ public class ArimaaController {
                 arimaa.resetCurrentPlayerMoves();
             }
 
-            // Reset values
-            arimaa.setIsPulling(false);
-
             // Render the board
             boardController.displayBoard();
-
-            // Set a feedback message
-            // feedbackMessage.setText("The selected coordinates are: " + fromRowInputText + ", " + fromColInputText + ", " + toRowInputText + ", " + toColInputText);
         } catch (Exception e) {
             logger.severe("(!) Arimaa erorre: " + e.getMessage());
             feedbackMessage.setText("ERROR: " + e.getMessage());
         }
     }
+
+    private void performPushingMove(Integer fromRow, Integer fromCol, Integer toRow, Integer toCol, Boolean isPushingOrPulling ) {
+        logger.info("Pushing");
+        board.movePiece(fromRow, fromCol, toRow, toCol, isPushingOrPulling);
+        arimaa.setPreviousMove(fromRow, fromCol, toRow, toCol);
+        arimaa.decrementCurrentPlayerMoves();
+    }
+
+    private void checkGameStatus(Player player, String status) {
+        if ((status.equals("won") && board.isGameWon(player)) || (status.equals("lost") && board.isGameLost(player))) {
+            logger.info(player + " " + status + " the game!");
+            feedbackMessage.setText(player + " " + status + " the game!");
+            arimaa.setIsGameRunning(false);
+        }
+    }
+
+
 
 
     /**

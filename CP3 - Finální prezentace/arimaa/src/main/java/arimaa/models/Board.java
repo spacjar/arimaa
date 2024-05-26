@@ -305,7 +305,7 @@ public class Board {
      * @throws IllegalArgumentException if the piece doesn't exist at the specified location, if the piece is frozen, if the move is invalid (not one-step or rabbit moving backwards), or if there is already a piece at the new position
      * @throws IndexOutOfBoundsException if the specified row or column exceeds the board size
      */
-    public void movePiece(int fromRow, int fromCol, int toRow, int toCol, boolean isPushing, boolean isPulling) throws IllegalArgumentException, IndexOutOfBoundsException {
+    public void movePiece(int fromRow, int fromCol, int toRow, int toCol, boolean pushingOrPullingOverride) throws IllegalArgumentException, IndexOutOfBoundsException {
         logger.info("Attempting to move piece from row " + fromRow + ", column " + fromCol + " to row " + toRow + ", column " + toCol + ".");
 
         // Check if the piece exists
@@ -315,7 +315,7 @@ public class Board {
         }
 
         // Check if the piece is frozen
-        if (isFrozen(fromRow, fromCol) && isPushing != true) {
+        if (isFrozen(fromRow, fromCol) && pushingOrPullingOverride != true) {
             logger.warning("Piece is frozen.");
             throw new IllegalArgumentException("This piece is frozen!");
         }
@@ -327,7 +327,7 @@ public class Board {
         }
 
         // Check if the peice is a rabbit trying to move backwards
-        if(!isRabbitMoveValid(fromRow, fromCol, toRow, toCol) && isPushing != true) {
+        if(!isRabbitMoveValid(fromRow, fromCol, toRow, toCol) && pushingOrPullingOverride != true) {
             logger.warning("Invalid move, rabbits cannot move backwards.");
             throw new IllegalArgumentException("This move is invalid, a rabbit piece cannot move backwards!");
         }
