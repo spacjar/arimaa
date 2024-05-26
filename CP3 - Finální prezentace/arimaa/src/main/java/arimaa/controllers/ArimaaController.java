@@ -27,6 +27,12 @@ public class ArimaaController {
     private BoardController boardController;
     private Stage stage;
     private BorderPane root;
+
+    // Setting up the models
+    public ArimaaController(Arimaa arimaa, Board board) {
+        this.arimaa = arimaa;
+        this.board = board;
+    }
     
     // Logger
     private static final Logger logger = Logger.getLogger(ArimaaController.class.getName());
@@ -37,13 +43,13 @@ public class ArimaaController {
 
 
     // --- Getters and setters ---
-    public void setArimaa(Arimaa arimaa) {
-        this.arimaa = arimaa;
-    }
+    // public void setArimaa(Arimaa arimaa) {
+    //     this.arimaa = arimaa;
+    // }
 
-    public void setBoard(Board board) {
-        this.board = board;
-    }
+    // public void setBoard(Board board) {
+    //     this.board = board;
+    // }
 
     public void setBoardController(BoardController boardController) {
         this.boardController = boardController;
@@ -128,9 +134,9 @@ public class ArimaaController {
             // If the controller is an instance of ArimaaController, set the necessary properties
             if (controller instanceof ArimaaController) {
                 ArimaaController arimaaController = (ArimaaController) controller;
-                arimaaController.setBoard(board);
+                // arimaaController.setBoard(board);
                 arimaaController.setBoardController(boardController);
-                arimaaController.setArimaa(arimaa);
+                // arimaaController.setArimaa(arimaa);
                 arimaaController.setRoot(root);
                 arimaaController.setStage(stage);
                 if (!isInitialized) {

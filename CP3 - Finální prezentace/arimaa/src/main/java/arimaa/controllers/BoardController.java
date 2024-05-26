@@ -27,11 +27,15 @@ public class BoardController {
     private Pane selectedFromSquare;
     private Pane selectedToSquare;
 
-    // --- Getters and setters ---
-    public void setBoard(Board board) {
+    public BoardController(Board board) {
         this.board = board;
-        logger.info("Board set.");
     }
+
+    // --- Getters and setters ---
+    // public void setBoard(Board board) {
+    //     this.board = board;
+    //     logger.info("Board set.");
+    // }
 
     public void setArimaaController(ArimaaController arimaaController) {
         this.arimaaController = arimaaController;
