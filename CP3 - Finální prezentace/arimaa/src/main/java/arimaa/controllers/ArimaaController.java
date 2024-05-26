@@ -220,7 +220,7 @@ public class ArimaaController {
             if (currentPiece.getColor() != arimaa.getCurrentPlayer().getColor()) {
                 if(board.hasAdjacentEnemyPiecesWithHigherValue(fromRow, fromCol) && arimaa.getPlayersMoves(currentPlayer) >= 2) {
                     if(isMoved == false) {
-                        logger.info("Pushing");
+                        logger.info("---------------- Pushing ----------------");
                         arimaa.setIsPushing(true);
                         performPushingMove(fromRow, fromCol, toRow, toCol, true);
                         isMoved = true;
@@ -235,21 +235,24 @@ public class ArimaaController {
             // 3. The enemy piece checks if the piece at the previous position (the players piece that the player moved at 1.) has bigger weight
             // 4. The enemy piece can ONLY move to the previous position of the previously adjacent piece with bigger weight
             // NOTE: Unlike push, you can skip during this move, because you don't know if the player is just moving his piece with bigger weight from an enemy piece, or if he is trying to pull
-            // if (currentPiece.getColor() != arimaa.getCurrentPlayer().getColor()) {
-            //     if(currentPiece != null && previousPiece != null && previousPiece.getPieceWeight() > currentPiece.getPieceWeight()) {
-            //         // Check if the pieces are adjacent
-            //         if(board.isOneStep(fromRow, fromCol, previousMoveFromRow, previousMoveFromCol)) {
-            //             // 4. The enemy piece can ONLY move to the previous position of the previously adjacent piece with bigger weight
-            //             if(previousMoveFromRow == fromRow && previousMoveFromCol == fromCol) {
-            //                 // ! DO THE MOVE
-
-            //             } else {
-            //                 logger.warning("You can pull the enemy piece only to the position of your previous piece!");
-            //                 throw new IllegalArgumentException("You can pull the enemy piece only to the position of your previous piece!");
-            //             }
-            //         }
-            //     }
-            // }
+            if (!arimaa.getIsPushing() && currentPiece.getColor() != arimaa.getCurrentPlayer().getColor()) {
+                if(currentPiece != null && previousPiece != null && previousPiece.getPieceWeight() > currentPiece.getPieceWeight()) {
+                    // Check if the pieces are adjacent
+                    if(board.isOneStep(fromRow, fromCol, previousMoveFromRow, previousMoveFromCol)) {
+                        // 4. The enemy piece can ONLY move to the previous position of the previously adjacent piece with bigger weight
+                        if(previousMoveFromRow == toRow && previousMoveFromCol == toCol) {
+                            if(isMoved == false) {
+                                logger.info("---------------- Pulling ----------------");
+                                performPushingMove(fromRow, fromCol, toRow, toCol, true);
+                                isMoved = true;
+                            }
+                        } else {
+                            logger.warning("You can pull the enemy piece only to the position of your previous piece!");
+                            throw new IllegalArgumentException("You can pull the enemy piece only to the position of your previous piece!");
+                        }
+                    }
+                }
+            }
     
     
             if (currentPiece.getColor() == arimaa.getCurrentPlayer().getColor()) {
