@@ -42,8 +42,15 @@ public class Arimaa {
     private Integer pullingFromRow = null;
     private Integer pullingFromCol = null;
 
+    // Previous move
+    private Integer previousMoveFromRow = null;
+    private Integer previousMoveFromCol = null;
+    private Integer previousMoveToRow = null;
+    private Integer previousMoveToCol = null;
+
 
     // ----- Getters and setters -----
+    // --- Game logic ---
     public void setBoard(Board board) {
         this.board = board;
     }
@@ -64,6 +71,8 @@ public class Arimaa {
         this.isGameRunning = isGameRunning;
     }
     
+
+    // --- Players ---
     public Player getGoldenPlayer() {
         return goldenPlayer;
     }
@@ -71,13 +80,51 @@ public class Arimaa {
     public void setGoldenPlayer(Player goldenPlayer) {
         this.goldenPlayer = goldenPlayer;
     }
+
+    public Player getSilverPlayer() {
+        return silverPlayer;
+    }
     
+    public void setSilverPlayer(Player silverPlayer) {
+        this.silverPlayer = silverPlayer;
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public Player getOtherPlayer() {
+        return (currentPlayer == goldenPlayer) ? silverPlayer : goldenPlayer;
+    }
+
+    public void switchPlayers() {
+        this.currentPlayer = (currentPlayer == goldenPlayer) ? silverPlayer : goldenPlayer;
+    }
+
+    public void changePlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer.getColor() == PieceColor.GOLDEN ? silverPlayer : goldenPlayer;
+    }
+    
+
+    // --- Player moves ---
     public int getGoldenPlayerMoves() {
         return goldenPlayerMoves;
     }
-    
+
     public void setGoldenPlayerMoves(int goldenPlayerMoves) {
         this.goldenPlayerMoves = goldenPlayerMoves;
+    }
+
+    public int getSilverPlayerMoves() {
+        return silverPlayerMoves;
+    }
+
+    public void setSilverPlayerMoves(int silverPlayerMoves) {
+        this.silverPlayerMoves = silverPlayerMoves;
     }
 
     public int getPlayersMoves(Player player) {
@@ -92,42 +139,8 @@ public class Arimaa {
         throw new IllegalStateException("Current player is neither golden nor silver");
     }
     
-    public Player getSilverPlayer() {
-        return silverPlayer;
-    }
-    
-    public void setSilverPlayer(Player silverPlayer) {
-        this.silverPlayer = silverPlayer;
-    }
-    
-    public int getSilverPlayerMoves() {
-        return silverPlayerMoves;
-    }
-    
-    public void setSilverPlayerMoves(int silverPlayerMoves) {
-        this.silverPlayerMoves = silverPlayerMoves;
-    }
-    
-    public Player getCurrentPlayer() {
-        return currentPlayer;
-    }
-    
-    public void switchPlayers() {
-        this.currentPlayer = (currentPlayer == goldenPlayer) ? silverPlayer : goldenPlayer;
-    }
 
-    public void changePlayer(Player currentPlayer) {
-        this.currentPlayer = currentPlayer.getColor() == PieceColor.GOLDEN ? silverPlayer : goldenPlayer;
-    }
-    
-    public void setCurrentPlayer(Player currentPlayer) {
-        this.currentPlayer = currentPlayer;
-    }
-
-    public Player getOtherPlayer() {
-        return (currentPlayer == goldenPlayer) ? silverPlayer : goldenPlayer;
-    }
-
+    // -- Piece setup --
     public Map<PieceType, Integer> getCurrentPieces(Player player) {
         return currentPieces;
     }
@@ -136,6 +149,8 @@ public class Arimaa {
         this.currentPieces = getCurrentPieces(player);
     }
 
+
+    // -- Pushing --
     public boolean getIsPushing() {
         return isPushing;
     }
@@ -143,6 +158,29 @@ public class Arimaa {
     public void setIsPushing(boolean isPushing) {
         this.isPushing = isPushing;
     }
+
+    public Integer[] getPushingFromCoordinates() {
+        return new Integer[] {this.pushingFromRow, this.pushingFromCol};
+    }
+
+    public void setPushingFromCoordinates(Integer row, Integer col) {
+        this.pushingFromRow = row;
+        this.pushingFromCol = col;
+    }
+
+
+    // -- Previous moves (pulling) --
+    public Integer[] getPreviousMove() {
+        return new Integer[] {this.previousMoveFromRow, this.previousMoveFromCol, this.previousMoveToRow, this.previousMoveToCol};
+    }
+
+    public void setPreviousMove(Integer fromRow, Integer fromCol, Integer toRow, Integer toCol) {
+        this.previousMoveFromRow = fromRow;
+        this.previousMoveFromCol = fromCol;
+        this.previousMoveToRow = toRow;
+        this.previousMoveToCol = toCol;
+    }
+
 
     public boolean getIsPulling() {
         return isPulling;
@@ -152,13 +190,8 @@ public class Arimaa {
         this.isPulling = isPulling;
     }
 
-    public void setPushingFromCoordinates(Integer row, Integer col) {
-        this.pushingFromRow = row;
-        this.pushingFromCol = col;
-    }
-    
-    public Integer[] getPushingFromCoordinates() {
-        return new Integer[] {this.pushingFromRow, this.pushingFromCol};
+    public Integer[] getPullingFromCoordinates() {
+        return new Integer[] {this.pullingFromRow, this.pullingFromCol};
     }
 
     public void setPullingFromCoordinates(Integer row, Integer col) {
@@ -166,9 +199,7 @@ public class Arimaa {
         this.pushingFromCol = col;
     }
     
-    public Integer[] setPullingFromCoordinates() {
-        return new Integer[] {this.pullingFromRow, this.pullingFromCol};
-    }
+    
 
 
 
