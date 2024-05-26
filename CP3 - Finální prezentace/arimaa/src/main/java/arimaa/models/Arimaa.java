@@ -1,6 +1,10 @@
 package arimaa.models;
+
+import arimaa.Main;
 import arimaa.enums.PieceColor;
 import arimaa.enums.PieceType;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,11 +12,19 @@ import java.util.Map;
 
 public class Arimaa {
     // Game board (model)
+    // private Main main;
     private Board board;
 
+    // public Arimaa(Main main, Board board) {
+    public Arimaa(Board board) {
+        // this.main = main;
+        this.board = board;
+    }
+
     // Game state
-    private boolean isSetupFinished = false;
-    private boolean isGameRunning = false;
+    private BooleanProperty isGameStart = new SimpleBooleanProperty(false);
+    private BooleanProperty isGameSetup = new SimpleBooleanProperty(false);
+    private BooleanProperty isGameEnd = new SimpleBooleanProperty(false);
 
     // Golden player
     private Player goldenPlayer = new Player(PieceColor.GOLDEN);
@@ -51,24 +63,57 @@ public class Arimaa {
 
     // ----- Getters and setters -----
     // --- Game logic ---
-    public void setBoard(Board board) {
-        this.board = board;
+    // public boolean getIsSetupFinished() {
+    //     return isGameSetup;
+    // }
+    
+    // public void setIsSetupFinished(boolean isGameSetup) {
+    //     this.isGameSetup = isGameSetup;
+    // }
+    
+    // public boolean getIsGameRunning() {
+    //     return isGameStart;
+    // }
+    
+    // public void setIsGameRunning(boolean isGameStart) {
+    //     this.isGameStart = isGameStart;
+    // }
+
+    // Get game state
+    public boolean getIsGameStart() {
+        return isGameStart.get();
     }
 
-    public boolean getIsSetupFinished() {
-        return isSetupFinished;
+    public void setIsGameStart(boolean isGameStart) {
+        this.isGameStart.set(isGameStart);
     }
-    
-    public void setIsSetupFinished(boolean isSetupFinished) {
-        this.isSetupFinished = isSetupFinished;
+
+    public BooleanProperty isGameStartProperty() {
+        return isGameStart;
     }
-    
-    public boolean getIsGameRunning() {
-        return isGameRunning;
+
+    public boolean getIsGameSetup() {
+        return isGameSetup.get();
     }
-    
-    public void setIsGameRunning(boolean isGameRunning) {
-        this.isGameRunning = isGameRunning;
+
+    public void setIsGameSetup(boolean isGameSetup) {
+        this.isGameSetup.set(isGameSetup);
+    }
+
+    public BooleanProperty isGameSetupProperty() {
+        return isGameSetup;
+    }
+
+    public boolean getIsGameEnd() {
+        return isGameEnd.get();
+    }
+
+    public void setIsGameEnd(boolean isGameEnd) {
+        this.isGameEnd.set(isGameEnd);
+    }
+
+    public BooleanProperty isGameEndProperty() {
+        return isGameEnd;
     }
     
 

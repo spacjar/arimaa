@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
 
+<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx">
+    <!-- Big text -->
+    <Label text="Game end" style="-fx-font-size: 36px;"></Label>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx" fx:controller="arimaa.controllers.DummyController">
-    <!-- Current stats -->
-    <Label fx:id="helloEnd" text="Hello from end view" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
+    <!-- Buttons -->
+    <Button fx:id="returnToMenu" text="Return to menu" minWidth="200" onAction="#handleReturnToMenu"></Button>
 </VBox>

@@ -25,8 +25,6 @@ public class ArimaaController {
     private Arimaa arimaa;
     private Board board;
     private BoardController boardController;
-    private Stage stage;
-    private BorderPane root;
 
     // Setting up the models
     public ArimaaController(Arimaa arimaa, Board board) {
@@ -43,24 +41,9 @@ public class ArimaaController {
 
 
     // --- Getters and setters ---
-    // public void setArimaa(Arimaa arimaa) {
-    //     this.arimaa = arimaa;
-    // }
-
-    // public void setBoard(Board board) {
-    //     this.board = board;
-    // }
 
     public void setBoardController(BoardController boardController) {
         this.boardController = boardController;
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
-    public void setRoot(BorderPane root) {
-        this.root = root;
     }
 
     
@@ -83,25 +66,24 @@ public class ArimaaController {
 
     @FXML
     public void initialize() {
-        // currentPlayerLabel.textProperty().bind(currentPlayerProperty);
-
         // Check if the board is not null and if the game is not already initialized
         if (board != null && !isInitialized) {
             // If the setup is not finished, initialize the pieces
-            if(!arimaa.getIsSetupFinished()) {
+            // if(!arimaa.getIsSetupFinished()) {
+            if(!arimaa.getIsGameStart()) {
                 arimaa.initializePieces();
             }
             
             // Mark the game as initialized
             isInitialized = true;
             logger.info("Game initialized.");
-            
-            // Render the view
-            renderView();
         }
-
-        
     }
+
+
+
+
+
 
     /**
      * Renders the view based on the current state of the Arimaa game.
@@ -109,44 +91,44 @@ public class ArimaaController {
      * Otherwise, it loads the ArimaaView.
      * Sets the necessary properties and initializes the ArimaaController.
      */
-    public void renderView() {
-        try {
-            // Create a new FXMLLoader
-            FXMLLoader loader = new FXMLLoader();
-            Parent view;
+    // public void renderView() {
+    //     try {
+    //         // Create a new FXMLLoader
+    //         FXMLLoader loader = new FXMLLoader();
+    //         Parent view;
     
-            // Set the location of the FXML file to load based on whether the setup is finished
-            if (!arimaa.getIsSetupFinished()) {
-                loader.setLocation(getClass().getResource("../views/ArimaaSetupView.fxml"));
-            } else {
-                loader.setLocation(getClass().getResource("../views/ArimaaView.fxml"));
-            }
+    //         // Set the location of the FXML file to load based on whether the setup is finished
+    //         if (!arimaa.getIsSetupFinished()) {
+    //             loader.setLocation(getClass().getResource("../views/ArimaaSetupView.fxml"));
+    //         } else {
+    //             loader.setLocation(getClass().getResource("../views/ArimaaView.fxml"));
+    //         }
             
-            // Load the FXML file
-            view = loader.load();
+    //         // Load the FXML file
+    //         view = loader.load();
 
-            // Set the loaded view as the bottom of the root pane
-            root.setBottom(view);
+    //         // Set the loaded view as the bottom of the root pane
+    //         root.setBottom(view);
     
-            // Get the controller of the loaded view
-            Object controller = loader.getController();
+    //         // Get the controller of the loaded view
+    //         Object controller = loader.getController();
     
-            // If the controller is an instance of ArimaaController, set the necessary properties
-            if (controller instanceof ArimaaController) {
-                ArimaaController arimaaController = (ArimaaController) controller;
-                // arimaaController.setBoard(board);
-                arimaaController.setBoardController(boardController);
-                // arimaaController.setArimaa(arimaa);
-                arimaaController.setRoot(root);
-                arimaaController.setStage(stage);
-                if (!isInitialized) {
-                    arimaaController.initialize();
-                }
-            }
-        } catch (IOException e) {
-            logger.severe("(!) ERROR: " + e.getMessage());
-        }
-    }
+    //         // If the controller is an instance of ArimaaController, set the necessary properties
+    //         if (controller instanceof ArimaaController) {
+    //             ArimaaController arimaaController = (ArimaaController) controller;
+    //             // arimaaController.setBoard(board);
+    //             arimaaController.setBoardController(boardController);
+    //             // arimaaController.setArimaa(arimaa);
+    //             arimaaController.setRoot(root);
+    //             arimaaController.setStage(stage);
+    //             if (!isInitialized) {
+    //                 arimaaController.initialize();
+    //             }
+    //         }
+    //     } catch (IOException e) {
+    //         logger.severe("(!) ERROR: " + e.getMessage());
+    //     }
+    // }
 
 
 
@@ -302,7 +284,8 @@ public class ArimaaController {
         if ((status.equals("won") && board.isGameWon(player)) || (status.equals("lost") && board.isGameLost(player))) {
             logger.info(player + " " + status + " the game!");
             feedbackMessage.setText(player + " " + status + " the game!");
-            arimaa.setIsGameRunning(false);
+            // arimaa.setIsGameRunning(false);
+            arimaa.setIsGameEnd(true);
         }
     }
 
@@ -382,8 +365,8 @@ public class ArimaaController {
     @FXML
     public void devSetup() {
         boardController.setupBoardDev();
-        arimaa.setIsSetupFinished(true);
-        renderView();
+        // arimaa.setIsSetupFinished(true);
+        arimaa.setIsGameSetup(true);
     }
     
 
@@ -427,10 +410,11 @@ public class ArimaaController {
     
             // If all pieces are placed, finish the setup and change the player
             if (arimaa.areAllPiecesPlaced()) {
-                arimaa.setIsSetupFinished(true);
+                // arimaa.setIsSetupFinished(true);
+                arimaa.setIsGameSetup(true);
                 arimaa.changePlayer(currentPlayer);
                 logger.info("All pieces are placed. Setup is finished.");
-                renderView();
+                // renderView();
             }
     
             // If no pieces are left, change the player

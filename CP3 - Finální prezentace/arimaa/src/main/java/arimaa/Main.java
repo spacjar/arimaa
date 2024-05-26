@@ -1,33 +1,41 @@
 package arimaa;
 
 import javafx.application.Application;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import java.util.logging.Logger;
-
-import arimaa.controllers.ArimaaController;
-import arimaa.controllers.ArimaaStartController;
-import arimaa.controllers.BoardController;
-import arimaa.controllers.DummyController;
-import arimaa.models.Arimaa;
-import arimaa.models.Board;
-
-import java.io.IOException;
 import java.util.logging.Level;
 import javafx.scene.Node;
 
+import arimaa.controllers.ArimaaController;
+import arimaa.controllers.ArimaaEndController;
+import arimaa.controllers.ArimaaStartController;
+import arimaa.controllers.BoardController;
+import arimaa.controllers.DummyController;
+
+import arimaa.models.Arimaa;
+import arimaa.models.Board;
 
 
 public class Main extends Application {
     ArimaaStartController arimaaStartController;
+    ArimaaEndController arimaaEndController;
     ArimaaController arimaaController;
     BoardController boardController;
     DummyController dummyController;
 
     private static final Logger logger = Logger.getLogger(Main.class.getName());
+
+    private BooleanProperty isGameStart;
+    private BooleanProperty isGameSetup;
+    private BooleanProperty isGameEnd;
+
+    private VBox rootContainer = null;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -36,7 +44,8 @@ public class Main extends Application {
         Arimaa arimaa = new Arimaa(board);
 
         // Controllers
-        arimaaStartController = new ArimaaStartController(arimaa);
+        arimaaStartController = new ArimaaStartController(arimaa, board);
+        arimaaEndController = new ArimaaEndController(arimaa, board);
         arimaaController = new ArimaaController(arimaa, board);
         boardController = new BoardController(board);
         dummyController = new DummyController();
@@ -45,32 +54,50 @@ public class Main extends Application {
         boardController.setArimaaController(arimaaController);
 
         // Game state
-        boolean isGameRunning = arimaa.getIsGameStart();
-        boolean isGameSetup = arimaa.getIsGameSetup();
-        boolean isGameEnd = arimaa.getIsGameEnd();
-    
-        VBox rootContainer;
-        try {
-            if (!isGameRunning && !isGameSetup && !isGameEnd) {
-                Pair<Node, Object> content = loadFXML("./views/StartView.fxml", arimaaStartController);
-                rootContainer = new VBox(content.getKey());
-            } else if (isGameRunning && !isGameSetup && !isGameEnd) {
-                Pair<Node, Object> content1 = loadFXML("./views/EndView.fxml", dummyController);
-                Pair<Node, Object> content2 = loadFXML("./views/EndView.fxml", dummyController);
-                // Pair<Node, Object> content1 = loadFXML("./views/BoardView.fxml", boardController);
-                // Pair<Node, Object> content2 = loadFXML("./views/ArimaaSetupView.fxml", arimaaController);
-                rootContainer = new VBox(content1.getKey(), content2.getKey());  
-            } else if (isGameRunning && isGameSetup && !isGameEnd) {
-                Pair<Node, Object> content1 = loadFXML("./views/EndView.fxml", dummyController);
-                Pair<Node, Object> content2 = loadFXML("./views/EndView.fxml", dummyController);
-                // Pair<Node, Object> content1 = loadFXML("./views/BoardView.fxml", boardController);
-                // Pair<Node, Object> content2 = loadFXML("./views/ArimaaView.fxml", arimaaController);
-                rootContainer = new VBox(content1.getKey(), content2.getKey());
-            } else {
-                Pair<Node, Object> content = loadFXML("./views/EndView.fxml", dummyController);
-                rootContainer = new VBox(content.getKey());
+        isGameStart = new SimpleBooleanProperty();
+        isGameSetup = new SimpleBooleanProperty();
+        isGameEnd = new SimpleBooleanProperty();
+
+        // Bind game state to arimaa state
+        isGameStart.bind(arimaa.isGameStartProperty());
+        isGameSetup.bind(arimaa.isGameSetupProperty());
+        isGameEnd.bind(arimaa.isGameEndProperty());
+
+        // Add listeners to game state
+        isGameStart.addListener((observable, oldValue, newValue) -> {
+            logger.info("isGameStart changed from " + oldValue + " to " + newValue);
+            try {
+                loadView();
+            } catch (Exception e) {
+                logger.severe("Error while updating the UI (isGameStart): " + e.getMessage());
             }
-        } catch (IOException e) {
+        });
+
+        isGameSetup.addListener((observable, oldValue, newValue) -> {
+            logger.info("isGameSetup changed from " + oldValue + " to " + newValue);
+            try {
+                loadView();
+            } catch (Exception e) {
+                logger.severe("Error while updating the UI (isGameSetup): " + e.getMessage());
+            }
+        });
+
+        isGameEnd.addListener((observable, oldValue, newValue) -> {
+            logger.info("isGameEnd changed from " + oldValue + " to " + newValue);
+            try {
+                loadView();
+            } catch (Exception e) {
+                logger.severe("Error while updating the UI (isGameSetup): " + e.getMessage());
+            }
+
+        });
+            
+        // Genera a placeholder VBox
+        rootContainer = new VBox();
+
+        try {
+            loadView();
+        } catch (Exception e) {
             logger.severe("Error loading FXML file: " + e.getMessage());
             return;
         }
@@ -82,29 +109,52 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+
+    public void loadView() throws Exception {
+        rootContainer.getChildren().clear();
+
+        if (!isGameStart.get() && !isGameSetup.get() && !isGameEnd.get()) {
+            Pair<Node, Object> content = loadFXML("./views/StartView.fxml", arimaaStartController);
+            rootContainer.getChildren().add(content.getKey());
+        } else if (isGameStart.get() && !isGameSetup.get() && !isGameEnd.get()) {
+            Pair<Node, Object> content1 = loadFXML("./views/EndView.fxml", dummyController);
+            Pair<Node, Object> content2 = loadFXML("./views/EndView.fxml", dummyController);
+            rootContainer.getChildren().addAll(content1.getKey(), content2.getKey());  
+        } else if (isGameStart.get() && isGameSetup.get() && !isGameEnd.get()) {
+            Pair<Node, Object> content1 = loadFXML("./views/EndView.fxml", dummyController);
+            Pair<Node, Object> content2 = loadFXML("./views/EndView.fxml", dummyController);
+            rootContainer.getChildren().addAll(content1.getKey(), content2.getKey());
+        } else {
+            Pair<Node, Object> content = loadFXML("./views/EndView.fxml", arimaaEndController);
+            rootContainer.getChildren().add(content.getKey());
+        }
+    }
+
+
     private Pair<Node, Object> loadFXML(String fxmlPath, Object controller) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
         loader.setControllerFactory(c -> {
-            System.out.println("FXMLLoader requested controller of type: " + c.getName());
+            logger.info("FXMLLoader requested controller of type: " + c.getName());
             return controller;
         });
         loader.setController(controller);
     
         if (controller == null) {
-            System.out.println("Controller is null before loading.");
+            logger.warning("Controller is null before loading.");
         }
     
         Node root = (Node) loader.load();
     
         Object usedController = loader.getController();
         if (usedController == controller) {
-            System.out.println("The controller was set correctly.");
+            logger.info("The controller was set correctly.");
         } else {
-            System.out.println("The controller was not set correctly.");
+            logger.warning("The controller was not set correctly.");
         }
     
         return new Pair<>(root, controller);
     }
+
 
     public static void main(String[] args) {
         // Set the log level based on a startup parameter

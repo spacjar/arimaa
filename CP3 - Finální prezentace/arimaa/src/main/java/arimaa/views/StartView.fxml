@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
 
+<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx">
+    <!-- Big text -->
+    <Label text="Arimaa" style="-fx-font-size: 36px;"></Label>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx" fx:controller="arimaa.controllers.DummyController">
-    <!-- Current stats -->
-    <Label fx:id="helloStart" text="Hello from start view" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
+    <!-- Buttons -->
+    <!-- <Button fx:id="playerVsPlayerButton" text="Player vs Player" minWidth="200"></Button> -->
+    <Button fx:id="playerVsPlayerButton" text="Player vs Player" minWidth="200" onAction="#handleStartPlayerVsPlayer"></Button>
+    <!-- <Button fx:id="playerVsComputerButton" text="Player vs Computer" minWidth="200"></Button> -->
+    <Button fx:id="playerVsComputerButton" text="Player vs Computer" minWidth="200" onAction="#handleStartPlayerVsComputer"></Button>
+    <!-- <Button fx:id="loadGameButton" text="Load game" onAction="#loadGame"></Button> -->
 </VBox>
