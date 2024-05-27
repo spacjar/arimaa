@@ -1,6 +1,8 @@
 package arimaa.controllers;
 
 import java.io.IOException;
+
+import arimaa.enums.PieceColor;
 import arimaa.models.Arimaa;
 import arimaa.models.Board;
 import arimaa.models.Piece;
@@ -20,6 +22,7 @@ public class ArimaaGameController {
     private Arimaa arimaa;
     private Board board;
     private BoardController boardController;
+    private PlayerTimerController playerTimerController;
 
     // Setting up the models
     public ArimaaGameController(Arimaa arimaa, Board board) {
@@ -40,6 +43,10 @@ public class ArimaaGameController {
     // --- Getters and setters ---
     public void setBoardController(BoardController boardController) {
         this.boardController = boardController;
+    }
+
+    public void setPlayerTimerController(PlayerTimerController playerTimerController) {
+        this.playerTimerController = playerTimerController;
     }
 
 
@@ -66,8 +73,8 @@ public class ArimaaGameController {
             arimaa.setCurrentPlayer(arimaa.getGoldenPlayer());
         }
 
-        logger.info("Golden Player moves: " + arimaa.getGoldenPlayerMoves());
-        logger.info("Silver Player moves: " + arimaa.getSilverPlayerMoves());
+        playerTimerController.startGoldenPlayerTimer();
+        playerTimerController.stopSilverPlayerTimer();
         updatePlayerInfo();
     }
 
@@ -79,10 +86,6 @@ public class ArimaaGameController {
      */
     public void submitGameMove(Integer fromRow, Integer fromCol, Integer toRow, Integer toCol) {
         logger.info("Submitting a game move.");
-
-        logger.info("Is game uploaded: " + arimaa.getIsGameUploaded());
-        logger.info("Golder moves: " + arimaa.getGoldenPlayerMoves());
-        logger.info("Silver moves: " + arimaa.getSilverPlayerMoves());
 
         try {
             // Reset the values
@@ -200,6 +203,16 @@ public class ArimaaGameController {
             if (arimaa.isCurrentPlayerOutOfMoves()) {
                 arimaa.changePlayer(arimaa.getCurrentPlayer());
                 arimaa.resetCurrentPlayerMoves();
+
+
+                if (arimaa.getCurrentPlayer().getColor() == PieceColor.GOLDEN) {
+                    playerTimerController.stopSilverPlayerTimer();
+                    playerTimerController.startGoldenPlayerTimer();
+                } else {
+                    playerTimerController.stopGoldenPlayerTimer();
+                    playerTimerController.startSilverPlayerTimer();
+                }
+
             }
 
             // Update the game info
@@ -232,11 +245,15 @@ public class ArimaaGameController {
     private void checkGameStatus(Player player) {
         if (board.isGameWon(player)) {
             logger.info(player + " won the game!");
+            playerTimerController.stopGoldenPlayerTimer();
+            playerTimerController.stopSilverPlayerTimer();
             arimaa.setWinner(player);
             arimaa.setIsGameEnd(true);
         } else if (board.isGameLost(player)) {
             Player otherPlayer = arimaa.getOtherPlayer(player);
             logger.info(otherPlayer + " won the game!");
+            playerTimerController.stopGoldenPlayerTimer();
+            playerTimerController.stopSilverPlayerTimer();
             arimaa.setWinner(otherPlayer);
             arimaa.setIsGameEnd(true);
         }
@@ -265,12 +282,16 @@ public class ArimaaGameController {
             if (arimaa.getCurrentPlayer().equals(arimaa.getGoldenPlayer()) && arimaa.getGoldenPlayerMoves() < 4) {
                 arimaa.changePlayer(arimaa.getCurrentPlayer());
                 arimaa.resetCurrentPlayerMoves();
+                playerTimerController.stopGoldenPlayerTimer();
+                playerTimerController.startSilverPlayerTimer();
                 updatePlayerInfo();
                 logger.info("Turn skipped!");
                 feedbackMessage.setText("Turn skipped!");
             } else if (arimaa.getCurrentPlayer().equals(arimaa.getSilverPlayer()) && arimaa.getSilverPlayerMoves() < 4) {
                 arimaa.changePlayer(arimaa.getCurrentPlayer());
                 arimaa.resetCurrentPlayerMoves();
+                playerTimerController.stopSilverPlayerTimer();
+                playerTimerController.startGoldenPlayerTimer();
                 updatePlayerInfo();
                 logger.info("Turn skipped!");
                 feedbackMessage.setText("Turn skipped!");

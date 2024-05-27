@@ -17,9 +17,11 @@ import arimaa.controllers.ArimaaSetupController;
 import arimaa.controllers.ArimaaEndController;
 import arimaa.controllers.ArimaaStartController;
 import arimaa.controllers.BoardController;
+import arimaa.controllers.PlayerTimerController;
 
 import arimaa.models.Arimaa;
 import arimaa.models.Board;
+import arimaa.models.PlayerTimer;
 
 
 public class Main extends Application {
@@ -28,6 +30,7 @@ public class Main extends Application {
     ArimaaGameController arimaaGameController;
     ArimaaEndController arimaaEndController;
     BoardController boardController;
+    PlayerTimerController playerTimerController;
 
     private static final Logger logger = Logger.getLogger(Main.class.getName());
 
@@ -42,6 +45,8 @@ public class Main extends Application {
         // Models
         Board board = new Board();
         Arimaa arimaa = new Arimaa(board);
+        PlayerTimer goldenPlayerTimer = new PlayerTimer();
+        PlayerTimer silverPlayerTimer = new PlayerTimer();
 
         // Controllers
         arimaaStartController = new ArimaaStartController(arimaa, board);
@@ -49,9 +54,11 @@ public class Main extends Application {
         arimaaGameController = new ArimaaGameController(arimaa, board);
         arimaaEndController = new ArimaaEndController(arimaa);
         boardController = new BoardController(arimaa, board);
+        playerTimerController = new PlayerTimerController(goldenPlayerTimer, silverPlayerTimer);
 
         arimaaSetupController.setBoardController(boardController);
         arimaaGameController.setBoardController(boardController);
+        arimaaGameController.setPlayerTimerController(playerTimerController);
         boardController.setArimaaSetupController(arimaaSetupController);
         boardController.setArimaaGameController(arimaaGameController);
 
@@ -116,19 +123,20 @@ public class Main extends Application {
         rootContainer.getChildren().clear();
 
         if (!isGameStart.get() && !isGameSetup.get() && !isGameEnd.get()) {
-            Pair<Node, Object> content = loadFXML("./views/ArimaaStartView.fxml", arimaaStartController);
-            rootContainer.getChildren().add(content.getKey());
-        } else if (isGameStart.get() && !isGameSetup.get() && !isGameEnd.get()) {
-            Pair<Node, Object> content1 = loadFXML("./views/BoardView.fxml", boardController);
-            Pair<Node, Object> content2 = loadFXML("./views/ArimaaSetupView.fxml", arimaaSetupController);
-            rootContainer.getChildren().addAll(content1.getKey(), content2.getKey());  
+            Pair<Node, Object> startView = loadFXML("./views/ArimaaStartView.fxml", arimaaStartController);
+            rootContainer.getChildren().add(startView.getKey());
+        } else if (isGameStart.get() && !isGameSetup.get() && !isGameEnd.get()) {    
+            Pair<Node, Object> boardView = loadFXML("./views/BoardView.fxml", boardController);
+            Pair<Node, Object> setupView = loadFXML("./views/ArimaaSetupView.fxml", arimaaSetupController);
+            rootContainer.getChildren().addAll(boardView.getKey(), setupView.getKey());  
         } else if (isGameStart.get() && isGameSetup.get() && !isGameEnd.get()) {
-            Pair<Node, Object> content1 = loadFXML("./views/BoardView.fxml", boardController);
-            Pair<Node, Object> content2 = loadFXML("./views/ArimaaGameView.fxml", arimaaGameController);
-            rootContainer.getChildren().addAll(content1.getKey(), content2.getKey());
+            Pair<Node, Object> boardView = loadFXML("./views/BoardView.fxml", boardController);
+            Pair<Node, Object> timerView = loadFXML("./views/PlayerTimerView.fxml", playerTimerController);
+            Pair<Node, Object> gameView = loadFXML("./views/ArimaaGameView.fxml", arimaaGameController);
+            rootContainer.getChildren().addAll(boardView.getKey(), timerView.getKey(), gameView.getKey());
         } else {
-            Pair<Node, Object> content = loadFXML("./views/ArimaaEndView.fxml", arimaaEndController);
-            rootContainer.getChildren().add(content.getKey());
+            Pair<Node, Object> endView = loadFXML("./views/ArimaaEndView.fxml", arimaaEndController);
+            rootContainer.getChildren().add(endView.getKey());
         }
     }
 
