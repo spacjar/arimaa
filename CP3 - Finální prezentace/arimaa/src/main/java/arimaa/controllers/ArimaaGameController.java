@@ -1,12 +1,21 @@
 package arimaa.controllers;
 
 import java.io.IOException;
+
+import arimaa.enums.PieceColor;
 import arimaa.models.Arimaa;
 import arimaa.models.Board;
+// import arimaa.models.ComputerPlayer;
 import arimaa.models.Piece;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import arimaa.models.Player;
+import arimaa.utils.FileUtils;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class ArimaaGameController {
@@ -14,6 +23,7 @@ public class ArimaaGameController {
     private Arimaa arimaa;
     private Board board;
     private BoardController boardController;
+    private PlayerTimerController playerTimerController;
 
     // Setting up the models
     public ArimaaGameController(Arimaa arimaa, Board board) {
@@ -27,10 +37,17 @@ public class ArimaaGameController {
     // State
     private boolean isMoved = false;
 
+    // File utils
+    FileUtils fileUtils = new FileUtils();
+
     
     // --- Getters and setters ---
     public void setBoardController(BoardController boardController) {
         this.boardController = boardController;
+    }
+
+    public void setPlayerTimerController(PlayerTimerController playerTimerController) {
+        this.playerTimerController = playerTimerController;
     }
 
 
@@ -51,11 +68,15 @@ public class ArimaaGameController {
     // UI init
     @FXML
     public void initialize() {
-        arimaa.setGoldenPlayerMoves(4);
-        arimaa.setSilverPlayerMoves(4);
-        arimaa.setCurrentPlayer(arimaa.getGoldenPlayer());
+        if(!arimaa.getIsGameUploaded()) {
+            arimaa.setGoldenPlayerMoves(4);
+            arimaa.setSilverPlayerMoves(4);
+            arimaa.setCurrentPlayer(arimaa.getGoldenPlayer());
+        }
+
+        playerTimerController.startGoldenPlayerTimer();
+        playerTimerController.stopSilverPlayerTimer();
         updatePlayerInfo();
-        logger.info("Game controller initialized");
     }
 
 
@@ -183,6 +204,26 @@ public class ArimaaGameController {
             if (arimaa.isCurrentPlayerOutOfMoves()) {
                 arimaa.changePlayer(arimaa.getCurrentPlayer());
                 arimaa.resetCurrentPlayerMoves();
+
+                // If the current player is a computer player, generate its moves
+                // if (arimaa.getCurrentPlayer().getColor() == PieceColor.SILVER && arimaa.getIsPlayingAgainstComputer()) {
+                //     logger.info("----------- COMPUTER 1 -----------");
+                //     if (arimaa.getCurrentPlayer() instanceof ComputerPlayer) {
+                //         logger.info("----------- COMPUTER 2 -----------");
+                //         ((ComputerPlayer) arimaa.getCurrentPlayer()).generateMoves();
+                //         arimaa.changePlayer(arimaa.getCurrentPlayer());
+                //         arimaa.resetCurrentPlayerMoves();
+                //     }
+                // }
+
+                if (arimaa.getCurrentPlayer().getColor() == PieceColor.GOLDEN) {
+                    playerTimerController.stopSilverPlayerTimer();
+                    playerTimerController.startGoldenPlayerTimer();
+                } else {
+                    playerTimerController.stopGoldenPlayerTimer();
+                    playerTimerController.startSilverPlayerTimer();
+                }
+
             }
 
             // Update the game info
@@ -215,11 +256,15 @@ public class ArimaaGameController {
     private void checkGameStatus(Player player) {
         if (board.isGameWon(player)) {
             logger.info(player + " won the game!");
+            playerTimerController.stopGoldenPlayerTimer();
+            playerTimerController.stopSilverPlayerTimer();
             arimaa.setWinner(player);
             arimaa.setIsGameEnd(true);
         } else if (board.isGameLost(player)) {
             Player otherPlayer = arimaa.getOtherPlayer(player);
             logger.info(otherPlayer + " won the game!");
+            playerTimerController.stopGoldenPlayerTimer();
+            playerTimerController.stopSilverPlayerTimer();
             arimaa.setWinner(otherPlayer);
             arimaa.setIsGameEnd(true);
         }
@@ -238,22 +283,26 @@ public class ArimaaGameController {
      * @throws IllegalArgumentException if the current player tries to skip their move without making any moves with their pieces.
      */
     @FXML
-    private void skipTurn() throws IOException, IllegalArgumentException {
+    public void handleSkipTurn(ActionEvent event) throws IOException, IllegalArgumentException {
         try {
-            if (arimaa.getIsPushing() || arimaa.getIsPulling()) {
+            if (arimaa.getIsPushing()) {
                 logger.warning("Cannot skip turn while you are pushing or pulling!");
                 throw new IllegalArgumentException("Cannot skip turn while you are pushing or pulling!");
             }
 
-            if (arimaa.getCurrentPlayer() == arimaa.getGoldenPlayer() && arimaa.getGoldenPlayerMoves() < 4) {
+            if (arimaa.getCurrentPlayer().equals(arimaa.getGoldenPlayer()) && arimaa.getGoldenPlayerMoves() < 4) {
                 arimaa.changePlayer(arimaa.getCurrentPlayer());
                 arimaa.resetCurrentPlayerMoves();
+                playerTimerController.stopGoldenPlayerTimer();
+                playerTimerController.startSilverPlayerTimer();
                 updatePlayerInfo();
                 logger.info("Turn skipped!");
                 feedbackMessage.setText("Turn skipped!");
-            } else if (arimaa.getCurrentPlayer() == arimaa.getSilverPlayer() && arimaa.getSilverPlayerMoves() < 4) {
+            } else if (arimaa.getCurrentPlayer().equals(arimaa.getSilverPlayer()) && arimaa.getSilverPlayerMoves() < 4) {
                 arimaa.changePlayer(arimaa.getCurrentPlayer());
                 arimaa.resetCurrentPlayerMoves();
+                playerTimerController.stopSilverPlayerTimer();
+                playerTimerController.startGoldenPlayerTimer();
                 updatePlayerInfo();
                 logger.info("Turn skipped!");
                 feedbackMessage.setText("Turn skipped!");
@@ -264,6 +313,30 @@ public class ArimaaGameController {
         } catch (Exception e) {
             feedbackMessage.setText(e.getMessage());
             logger.severe(e.getMessage());
+        }
+    }
+
+    @FXML
+    public void handleSaveGame(ActionEvent event) {
+        Map<String, Object> gameState = new HashMap<>();
+        gameState.put("isGameStart", arimaa.getIsGameStart());
+        gameState.put("isGameSetup", arimaa.getIsGameSetup());
+        gameState.put("isGameEnd", arimaa.getIsGameEnd());
+        gameState.put("isPlayerPlayingAgainstHuman", arimaa.getIsPlayingAgainstHuman());
+        gameState.put("isPlayerPlayingAgainstComputer", arimaa.getIsPlayingAgainstComputer());
+        gameState.put("currentPlayer", arimaa.getCurrentPlayer());
+        gameState.put("goldenPlayerMoves", arimaa.getGoldenPlayerMoves());
+        gameState.put("silverPlayerMoves", arimaa.getSilverPlayerMoves());
+        gameState.put("isPushing", arimaa.getIsPushing());
+        gameState.put("previousMove", arimaa.getPreviousMove());
+        gameState.put("board", board.getBoard());
+
+        try {
+            String filenameWithUUID = "arimaaGameState_" + UUID.randomUUID().toString() + ".json";
+            fileUtils.saveGame(filenameWithUUID, gameState);
+        } catch (Exception e) {
+            feedbackMessage.setText("Error while saving file: " + e.getMessage());
+            logger.severe("(!) Error while saving: " + e.getMessage());
         }
     }
 }
