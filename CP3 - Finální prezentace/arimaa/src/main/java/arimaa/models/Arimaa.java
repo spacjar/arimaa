@@ -26,6 +26,10 @@ public class Arimaa {
     private BooleanProperty isGameSetup = new SimpleBooleanProperty(false);
     private BooleanProperty isGameEnd = new SimpleBooleanProperty(false);
 
+    // Player playing against a robot or a human
+    private boolean isPlayerPlayingAgainstHuman = false;
+    private boolean isPlayerPlayingAgainstComputer = false;
+
     // Golden player
     private Player goldenPlayer = new Player(PieceColor.GOLDEN);
     private int goldenPlayerMoves = 4;
@@ -59,6 +63,10 @@ public class Arimaa {
     private Integer previousMoveFromCol = null;
     private Integer previousMoveToRow = null;
     private Integer previousMoveToCol = null;
+
+    // End game (winner)
+    private Player winner;
+
 
 
     // ----- Getters and setters -----
@@ -115,6 +123,23 @@ public class Arimaa {
     public BooleanProperty isGameEndProperty() {
         return isGameEnd;
     }
+
+    // --- Is playing against player or robot ---
+    public boolean getIsPlayingAgainstHuman() {
+        return isPlayerPlayingAgainstHuman;
+    }
+
+    public void setIsPlayingAgainstHuman(boolean isPlayerPlayingAgainstHuman) {
+        this.isPlayerPlayingAgainstHuman = isPlayerPlayingAgainstHuman;
+    }
+
+    public boolean getIsPlayingAgainstComputer() {
+        return isPlayerPlayingAgainstComputer;
+    }
+
+    public void setIsPlayingAgainstComputer(boolean isPlayerPlayingAgainstComputer) {
+        this.isPlayerPlayingAgainstComputer = isPlayerPlayingAgainstComputer;
+    }
     
 
     // --- Players ---
@@ -142,7 +167,7 @@ public class Arimaa {
         this.currentPlayer = currentPlayer;
     }
 
-    public Player getOtherPlayer() {
+    public Player getOtherPlayer(Player currentPlayer) {
         return (currentPlayer == goldenPlayer) ? silverPlayer : goldenPlayer;
     }
 
@@ -242,6 +267,15 @@ public class Arimaa {
     public void setPullingFromCoordinates(Integer row, Integer col) {
         this.pushingFromRow = row;
         this.pushingFromCol = col;
+    }
+
+    // End game (winner)
+    public void setWinner(Player player) {
+        this.winner = player;
+    }
+
+    public Player getWinner() {
+        return this.winner;
     }
     
     
@@ -376,22 +410,4 @@ public class Arimaa {
         board.setPiece(piece, row, col);
         piecesCount.put(chosenPieceType, piecesCount.get(chosenPieceType) - 1);
     }
-
-
-    // public void saveGame(String filename) {
-    //     try (FileWriter writer = new FileWriter(filename)) {
-    //         // TODO: Implement
-    //     } catch (IOException e) {
-    //         System.err.println("\n----------\n(!) ERROR: " + e.getMessage() + "\n----------\n");
-    //     }
-    // }
-
-
-    // public void loadGame(String filename) {
-    //     try (FileReader reader = new FileReader(filename)) {
-    //         // TODO: Implement
-    //     } catch (IOException e) {
-    //         System.err.println("\n----------\n(!) ERROR: " + e.getMessage() + "\n----------\n");
-    //     }
-    // }
 }

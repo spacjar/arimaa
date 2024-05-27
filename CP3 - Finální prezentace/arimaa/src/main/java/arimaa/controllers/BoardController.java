@@ -1,8 +1,10 @@
 package arimaa.controllers;
 import arimaa.enums.PieceColor;
 import arimaa.enums.PieceType;
+import arimaa.models.Arimaa;
 import arimaa.models.Board;
 import arimaa.models.Piece;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -16,10 +18,13 @@ import java.util.logging.Logger;
 
 
 public class BoardController {
+    private Arimaa arimaa;
     private Board board;
-    private ArimaaGameController arimaaController;
+    private ArimaaSetupController arimaaSetupController;
+    private ArimaaGameController arimaaGameController;
 
-    public BoardController(Board board) {
+    public BoardController(Arimaa arimaa, Board board) {
+        this.arimaa = arimaa;
         this.board = board;
     }
 
@@ -30,13 +35,17 @@ public class BoardController {
     private Integer toRow = null;
     private Integer toCol = null;
     private Pane selectedFromSquare;
-    private Pane selectedToSquare;
 
 
     // --- Getters and setters ---
-    public void setArimaaController(ArimaaGameController arimaaController) {
-        this.arimaaController = arimaaController;
+    public void setArimaaSetupController(ArimaaSetupController arimaaSetupController) {
+        this.arimaaSetupController = arimaaSetupController;
     }
+
+    public void setArimaaGameController(ArimaaGameController arimaaGameController) {
+        this.arimaaGameController = arimaaGameController;
+    }
+
 
     
     @FXML
@@ -51,8 +60,6 @@ public class BoardController {
     public void initialize() {
         if (board != null) {            
             logger.info("Initializing board.");
-            board.clearBoard();
-            setupBoardDev();
             displayBoard();
         } else {
             logger.warning("Board is null during initialization.");
@@ -81,6 +88,8 @@ public class BoardController {
                 // Add a click event handler to the square
                 final int selectedRow = row;
                 final int selectedCol = col;
+
+
                 square.setOnMouseClicked(event -> {
                     if (fromRow == null && fromCol == null) {
                         handleFirstSelection(selectedRow, selectedCol, square);
@@ -153,15 +162,17 @@ public class BoardController {
         logger.info("Finished displaying board.");
     }
 
+
     private void handleFirstSelection(int selectedRow, int selectedCol, Pane square) {
-        if(!board.isOccupied(selectedRow, selectedCol)) {
-            throw new IndexOutOfBoundsException("You cannot select");
+        if(!board.isOccupied(selectedRow, selectedCol) && arimaa.getIsGameSetup()) {
+            throw new IndexOutOfBoundsException("You cannot select select piece that is not occupied");
         }
         fromRow = selectedRow;
         fromCol = selectedCol;
         selectedFromSquare = square;
         selectedFromSquare.setStyle("-fx-border-color: red;");
     }
+
 
     private void handleDeselection() {
         selectedFromSquare.setStyle("-fx-border-color: #1C1212;");
@@ -171,13 +182,18 @@ public class BoardController {
         fromCol = null;
     }
 
+
     private void handleMove(int selectedRow, int selectedCol) {
         toRow = selectedRow;
         toCol = selectedCol;
     
         selectedFromSquare.setStyle("-fx-border-color: #1C1212;");
         logger.info("Arimaa move: (" + fromRow + ", " + fromCol + " -> " + toRow + ", " + toCol + ")");
-        arimaaController.submitGameMove(fromRow, fromCol, toRow, toCol);
+        if(arimaa.getIsGameStart() && !arimaa.getIsGameSetup()) {
+            arimaaSetupController.swapPieces(fromRow, fromCol, toRow, toCol);
+        } else {
+            arimaaGameController.submitGameMove(fromRow, fromCol, toRow, toCol);
+        }
         displayBoard();
     
         selectedFromSquare = null;
@@ -193,7 +209,7 @@ public class BoardController {
      * Sets up the board with predefined piece positions for development purposes.
      * Automatically places and displays pieces on the board according to the specified positions.
      */
-    public void setupBoardDev() {
+    public void generateBoardPieceSetup() {
         logger.info("Automatically placing pieces.");
 
         board.setPiece(new Piece(PieceType.CAT, PieceColor.GOLDEN), 0, 0);

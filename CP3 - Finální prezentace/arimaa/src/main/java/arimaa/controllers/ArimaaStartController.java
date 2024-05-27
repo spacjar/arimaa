@@ -11,9 +11,11 @@ public class ArimaaStartController {
     public ArimaaStartController(Arimaa arimaa) {
         this.arimaa = arimaa;
     }
+    
 
     @FXML
     public void initialize() {}
+
 
     @FXML
     private Button playerVsPlayerButton;
@@ -22,14 +24,26 @@ public class ArimaaStartController {
     private Button playerVsComputerButton;
 
     @FXML
+    private Button loadGameButton;
+
+    
+    @FXML
     public void handleStartPlayerVsPlayer(ActionEvent event) {
-        System.out.println("Clicked");
+        System.out.println("Start game player vs player");
+        arimaa.setIsPlayingAgainstHuman(true);
         arimaa.setIsGameStart(true);
     }
 
     @FXML
     public void handleStartPlayerVsComputer(ActionEvent event) {
-        System.out.println("Clicked");
+        System.out.println("Start game player vs robot");
+        arimaa.setIsPlayingAgainstComputer(true);
         arimaa.setIsGameStart(true);
+    }
+
+    @FXML
+    public void handleLoadGame(ActionEvent event) {
+        System.out.println("Handle game load");
+        // TODO: Load logic
     }
 }

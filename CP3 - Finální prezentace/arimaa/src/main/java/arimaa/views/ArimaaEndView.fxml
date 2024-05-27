@@ -6,7 +6,7 @@
 
 <VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx">
     <!-- Big text -->
-    <Label text="Game end" style="-fx-font-size: 36px;"></Label>
+    <Label fx:id="endGameResultLabel" style="-fx-font-size: 36px;"></Label>
 
     <!-- Buttons -->
     <Button fx:id="returnToMenu" text="Return to menu" minWidth="200" onAction="#handleReturnToMenu"></Button>

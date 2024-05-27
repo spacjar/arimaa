@@ -47,14 +47,16 @@ public class Main extends Application {
 
         // Controllers
         arimaaStartController = new ArimaaStartController(arimaa);
-        arimaaSetupController = new ArimaaSetupController(arimaa);
+        arimaaSetupController = new ArimaaSetupController(arimaa, board);
         arimaaGameController = new ArimaaGameController(arimaa, board);
         arimaaEndController = new ArimaaEndController(arimaa);
-        boardController = new BoardController(board);
+        boardController = new BoardController(arimaa, board);
         dummyController = new DummyController();
 
         arimaaGameController.setBoardController(boardController);
-        boardController.setArimaaController(arimaaGameController);
+        arimaaSetupController.setBoardController(boardController);
+        boardController.setArimaaGameController(arimaaGameController);
+        boardController.setArimaaSetupController(arimaaSetupController);
 
         // Game state
         isGameStart = new SimpleBooleanProperty();

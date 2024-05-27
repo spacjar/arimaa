@@ -9,9 +9,8 @@
     <Label text="Arimaa" style="-fx-font-size: 36px;"></Label>
 
     <!-- Buttons -->
-    <!-- <Button fx:id="playerVsPlayerButton" text="Player vs Player" minWidth="200"></Button> -->
     <Button fx:id="playerVsPlayerButton" text="Player vs Player" minWidth="200" onAction="#handleStartPlayerVsPlayer"></Button>
-    <!-- <Button fx:id="playerVsComputerButton" text="Player vs Computer" minWidth="200"></Button> -->
     <Button fx:id="playerVsComputerButton" text="Player vs Computer" minWidth="200" onAction="#handleStartPlayerVsComputer"></Button>
-    <!-- <Button fx:id="loadGameButton" text="Load game" onAction="#loadGame"></Button> -->
+    
+    <Button fx:id="loadGameButton" text="Load game" onAction="#handleLoadGame"></Button>
 </VBox>

@@ -25,32 +25,16 @@ public class ArimaaGameController {
     private static final Logger logger = Logger.getLogger(ArimaaGameController.class.getName());
     
     // State
-    private boolean isInitialized = false;
     private boolean isMoved = false;
 
+    
     // --- Getters and setters ---
     public void setBoardController(BoardController boardController) {
         this.boardController = boardController;
     }
 
-    @FXML
-    public void initialize() {
-        // Check if the board is not null and if the game is not already initialized
-        if (board != null && !isInitialized) {
-            // If the setup is not finished, initialize the pieces
-            // if(!arimaa.getIsSetupFinished()) {
-            if(!arimaa.getIsGameStart()) {
-                arimaa.initializePieces();
-            }
-            
-            // Mark the game as initialized
-            isInitialized = true;
-            logger.info("Game initialized.");
-        }
-    }
 
-
-
+    // UI elements
     @FXML
     private Label currentPlayerLabel;
 
@@ -59,10 +43,19 @@ public class ArimaaGameController {
 
     @FXML
     private Label silverPlayerMovesLabel;
-
-    // ---------- Game ----------    
+   
     @FXML
     private Label feedbackMessage;
+
+
+    // UI init
+    @FXML
+    public void initialize() {
+        arimaa.setGoldenPlayerMoves(4);
+        arimaa.setSilverPlayerMoves(4);
+        arimaa.setCurrentPlayer(arimaa.getGoldenPlayer());
+        logger.info("Game controller initialized");
+    }
 
 
     /**
@@ -89,7 +82,7 @@ public class ArimaaGameController {
 
             // Get the players
             Player currentPlayer = arimaa.getCurrentPlayer();
-            Player otherPlayer = arimaa.getOtherPlayer();
+            Player otherPlayer = arimaa.getOtherPlayer(currentPlayer);
     
             // Get the piece at the currently selected position
             Piece currentPiece = board.getPieceAt(fromRow, fromCol);
@@ -182,10 +175,8 @@ public class ArimaaGameController {
             // arimaa.decrementCurrentPlayerMoves();
 
             // Check if one of the players won or lost the game
-            checkGameStatus(currentPlayer, "won");
-            checkGameStatus(otherPlayer, "won");
-            checkGameStatus(currentPlayer, "lost");
-            checkGameStatus(otherPlayer, "lost");
+            checkGameStatus(currentPlayer);
+            checkGameStatus(otherPlayer);
 
             // If the current player has no moves left, switch to the other player and reset their moves
             if (arimaa.isCurrentPlayerOutOfMoves()) {
@@ -201,6 +192,7 @@ public class ArimaaGameController {
         }
     }
 
+
     private void performPushingMove(Integer fromRow, Integer fromCol, Integer toRow, Integer toCol, Boolean isPushingOrPulling ) {
         logger.info("Pushing");
         board.movePiece(fromRow, fromCol, toRow, toCol, isPushingOrPulling);
@@ -208,11 +200,16 @@ public class ArimaaGameController {
         arimaa.decrementCurrentPlayerMoves();
     }
 
-    private void checkGameStatus(Player player, String status) {
-        if ((status.equals("won") && board.isGameWon(player)) || (status.equals("lost") && board.isGameLost(player))) {
-            logger.info(player + " " + status + " the game!");
-            // feedbackMessage.setText(player + " " + status + " the game!");
-            // arimaa.setIsGameRunning(false);
+
+    private void checkGameStatus(Player player) {
+        if (board.isGameWon(player)) {
+            logger.info(player + " won the game!");
+            arimaa.setWinner(player);
+            arimaa.setIsGameEnd(true);
+        } else if (board.isGameLost(player)) {
+            Player otherPlayer = arimaa.getOtherPlayer(player);
+            logger.info(otherPlayer + " won the game!");
+            arimaa.setWinner(otherPlayer);
             arimaa.setIsGameEnd(true);
         }
     }
