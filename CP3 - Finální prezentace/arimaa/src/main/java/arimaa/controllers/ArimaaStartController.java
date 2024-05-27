@@ -82,8 +82,21 @@ public class ArimaaStartController {
             // Set the players moves
             arimaa.setGoldenPlayerMoves((Integer) gameState.get("goldenPlayerMoves"));
             arimaa.setSilverPlayerMoves((Integer) gameState.get("silverPlayerMoves"));
-            // arimaa.setGoldenPlayerMoves(1);
-            // arimaa.setSilverPlayerMoves(2);
+
+            // Is pushing
+            arimaa.setIsPushing((Boolean) gameState.get("isPushing"));
+
+            // Previous positions
+            List<Integer> previousMoveList = (List<Integer>) gameState.get("previousMove");
+
+            // Extract the previous move data from the list
+            Integer fromRow = previousMoveList.get(0);
+            Integer fromCol = previousMoveList.get(1);
+            Integer toRow = previousMoveList.get(2);
+            Integer toCol = previousMoveList.get(3);
+
+            // Set the previous move in your game state
+            arimaa.setPreviousMove(fromRow, fromCol, toRow, toCol);
 
             // Set if the users is playing against human or a computer
             arimaa.setIsPlayingAgainstHuman((Boolean) gameState.get("isPlayerPlayingAgainstHuman"));

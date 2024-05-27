@@ -295,6 +295,8 @@ public class ArimaaGameController {
         gameState.put("currentPlayer", arimaa.getCurrentPlayer());
         gameState.put("goldenPlayerMoves", arimaa.getGoldenPlayerMoves());
         gameState.put("silverPlayerMoves", arimaa.getSilverPlayerMoves());
+        gameState.put("isPushing", arimaa.getIsPushing());
+        gameState.put("previousMove", arimaa.getPreviousMove());
         gameState.put("board", board.getBoard());
 
         try {

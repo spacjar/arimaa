@@ -241,15 +241,6 @@ public class Arimaa {
         this.isPushing = isPushing;
     }
 
-    public Integer[] getPushingFromCoordinates() {
-        return new Integer[] {this.pushingFromRow, this.pushingFromCol};
-    }
-
-    public void setPushingFromCoordinates(Integer row, Integer col) {
-        this.pushingFromRow = row;
-        this.pushingFromCol = col;
-    }
-
 
     // -- Previous moves (pulling) --
     public Integer[] getPreviousMove() {
