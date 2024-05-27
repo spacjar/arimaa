@@ -97,9 +97,10 @@ public class Arimaa {
     }
 
     // Silver player
-    private Player silverPlayer = isPlayerPlayingAgainstComputer ? new ComputerPlayer(PieceColor.SILVER, this, board) : new Player(PieceColor.SILVER);
+    // private Player silverPlayer = isPlayerPlayingAgainstComputer ? new ComputerPlayer(PieceColor.SILVER, this, board) : new Player(PieceColor.SILVER);
+    private Player silverPlayer = new Player(PieceColor.SILVER);
     private int silverPlayerMoves = 4;
-
+    
     public Player getSilverPlayer() {
         return silverPlayer;
     }

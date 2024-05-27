@@ -5,6 +5,7 @@ import java.io.IOException;
 import arimaa.enums.PieceColor;
 import arimaa.models.Arimaa;
 import arimaa.models.Board;
+// import arimaa.models.ComputerPlayer;
 import arimaa.models.Piece;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -204,6 +205,16 @@ public class ArimaaGameController {
                 arimaa.changePlayer(arimaa.getCurrentPlayer());
                 arimaa.resetCurrentPlayerMoves();
 
+                // If the current player is a computer player, generate its moves
+                // if (arimaa.getCurrentPlayer().getColor() == PieceColor.SILVER && arimaa.getIsPlayingAgainstComputer()) {
+                //     logger.info("----------- COMPUTER 1 -----------");
+                //     if (arimaa.getCurrentPlayer() instanceof ComputerPlayer) {
+                //         logger.info("----------- COMPUTER 2 -----------");
+                //         ((ComputerPlayer) arimaa.getCurrentPlayer()).generateMoves();
+                //         arimaa.changePlayer(arimaa.getCurrentPlayer());
+                //         arimaa.resetCurrentPlayerMoves();
+                //     }
+                // }
 
                 if (arimaa.getCurrentPlayer().getColor() == PieceColor.GOLDEN) {
                     playerTimerController.stopSilverPlayerTimer();
@@ -274,7 +285,7 @@ public class ArimaaGameController {
     @FXML
     public void handleSkipTurn(ActionEvent event) throws IOException, IllegalArgumentException {
         try {
-            if (arimaa.getIsPushing() || arimaa.getIsPulling()) {
+            if (arimaa.getIsPushing()) {
                 logger.warning("Cannot skip turn while you are pushing or pulling!");
                 throw new IllegalArgumentException("Cannot skip turn while you are pushing or pulling!");
             }
