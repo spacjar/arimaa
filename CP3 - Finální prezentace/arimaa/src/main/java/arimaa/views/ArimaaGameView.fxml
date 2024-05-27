@@ -16,12 +16,12 @@
     <Label fx:id="silverPlayerMovesLabel" text="Silver player moves: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
 
     <!-- Actions -->
-    <Button mnemonicParsing="false" text="Skip turn" onAction="#skipTurn" />
+    <Button mnemonicParsing="false" text="Skip turn" onAction="#handleSkipTurn" />
     
     <!-- Feedback message -->
     <Label fx:id="feedbackMessage" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx">
     </Label>
 
     <!-- Save and load -->
-    <!-- <Button mnemonicParsing="false" text="Save game" onAction="#saveGame" /> -->
+    <Button mnemonicParsing="false" text="Save game" onAction="#handleSaveGame" />
 </VBox>

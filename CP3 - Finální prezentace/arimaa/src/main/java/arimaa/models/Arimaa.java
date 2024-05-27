@@ -67,6 +67,18 @@ public class Arimaa {
     // End game (winner)
     private Player winner;
 
+    // File upload
+    private boolean isGameUploaded = false;
+
+    public boolean getIsGameUploaded() {
+        return isGameUploaded;
+    }
+
+    public void setIsGameUploaded(boolean isGameUploaded) {
+        this.isGameUploaded = isGameUploaded;
+    }
+
+
 
 
     // ----- Getters and setters -----

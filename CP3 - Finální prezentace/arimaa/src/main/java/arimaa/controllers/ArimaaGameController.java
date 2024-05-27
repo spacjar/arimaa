@@ -4,9 +4,15 @@ import java.io.IOException;
 import arimaa.models.Arimaa;
 import arimaa.models.Board;
 import arimaa.models.Piece;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import arimaa.models.Player;
+import arimaa.utils.FileUtils;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class ArimaaGameController {
@@ -26,6 +32,9 @@ public class ArimaaGameController {
     
     // State
     private boolean isMoved = false;
+
+    // File utils
+    FileUtils fileUtils = new FileUtils();
 
     
     // --- Getters and setters ---
@@ -51,11 +60,15 @@ public class ArimaaGameController {
     // UI init
     @FXML
     public void initialize() {
-        arimaa.setGoldenPlayerMoves(4);
-        arimaa.setSilverPlayerMoves(4);
-        arimaa.setCurrentPlayer(arimaa.getGoldenPlayer());
+        if(!arimaa.getIsGameUploaded()) {
+            arimaa.setGoldenPlayerMoves(4);
+            arimaa.setSilverPlayerMoves(4);
+            arimaa.setCurrentPlayer(arimaa.getGoldenPlayer());
+        }
+
+        logger.info("Golden Player moves: " + arimaa.getGoldenPlayerMoves());
+        logger.info("Silver Player moves: " + arimaa.getSilverPlayerMoves());
         updatePlayerInfo();
-        logger.info("Game controller initialized");
     }
 
 
@@ -66,6 +79,10 @@ public class ArimaaGameController {
      */
     public void submitGameMove(Integer fromRow, Integer fromCol, Integer toRow, Integer toCol) {
         logger.info("Submitting a game move.");
+
+        logger.info("Is game uploaded: " + arimaa.getIsGameUploaded());
+        logger.info("Golder moves: " + arimaa.getGoldenPlayerMoves());
+        logger.info("Silver moves: " + arimaa.getSilverPlayerMoves());
 
         try {
             // Reset the values
@@ -238,20 +255,20 @@ public class ArimaaGameController {
      * @throws IllegalArgumentException if the current player tries to skip their move without making any moves with their pieces.
      */
     @FXML
-    private void skipTurn() throws IOException, IllegalArgumentException {
+    public void handleSkipTurn(ActionEvent event) throws IOException, IllegalArgumentException {
         try {
             if (arimaa.getIsPushing() || arimaa.getIsPulling()) {
                 logger.warning("Cannot skip turn while you are pushing or pulling!");
                 throw new IllegalArgumentException("Cannot skip turn while you are pushing or pulling!");
             }
 
-            if (arimaa.getCurrentPlayer() == arimaa.getGoldenPlayer() && arimaa.getGoldenPlayerMoves() < 4) {
+            if (arimaa.getCurrentPlayer().equals(arimaa.getGoldenPlayer()) && arimaa.getGoldenPlayerMoves() < 4) {
                 arimaa.changePlayer(arimaa.getCurrentPlayer());
                 arimaa.resetCurrentPlayerMoves();
                 updatePlayerInfo();
                 logger.info("Turn skipped!");
                 feedbackMessage.setText("Turn skipped!");
-            } else if (arimaa.getCurrentPlayer() == arimaa.getSilverPlayer() && arimaa.getSilverPlayerMoves() < 4) {
+            } else if (arimaa.getCurrentPlayer().equals(arimaa.getSilverPlayer()) && arimaa.getSilverPlayerMoves() < 4) {
                 arimaa.changePlayer(arimaa.getCurrentPlayer());
                 arimaa.resetCurrentPlayerMoves();
                 updatePlayerInfo();
@@ -264,6 +281,28 @@ public class ArimaaGameController {
         } catch (Exception e) {
             feedbackMessage.setText(e.getMessage());
             logger.severe(e.getMessage());
+        }
+    }
+
+    @FXML
+    public void handleSaveGame(ActionEvent event) {
+        Map<String, Object> gameState = new HashMap<>();
+        gameState.put("isGameStart", arimaa.getIsGameStart());
+        gameState.put("isGameSetup", arimaa.getIsGameSetup());
+        gameState.put("isGameEnd", arimaa.getIsGameEnd());
+        gameState.put("isPlayerPlayingAgainstHuman", arimaa.getIsPlayingAgainstHuman());
+        gameState.put("isPlayerPlayingAgainstComputer", arimaa.getIsPlayingAgainstComputer());
+        gameState.put("currentPlayer", arimaa.getCurrentPlayer());
+        gameState.put("goldenPlayerMoves", arimaa.getGoldenPlayerMoves());
+        gameState.put("silverPlayerMoves", arimaa.getSilverPlayerMoves());
+        gameState.put("board", board.getBoard());
+
+        try {
+            String filenameWithUUID = "arimaaGameState_" + UUID.randomUUID().toString() + ".json";
+            fileUtils.saveGame(filenameWithUUID, gameState);
+        } catch (Exception e) {
+            feedbackMessage.setText("Error while saving file: " + e.getMessage());
+            logger.severe("(!) Error while saving: " + e.getMessage());
         }
     }
 }

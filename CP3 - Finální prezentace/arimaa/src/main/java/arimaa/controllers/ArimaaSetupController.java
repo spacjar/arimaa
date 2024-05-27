@@ -53,15 +53,17 @@ public class ArimaaSetupController {
     @FXML
     public void initialize() {
         logger.info("Setup controller initialized");
-        isGoldenPlayerSetupReady = false;
-        isSilverPlayerSetupReady = false;
-        setupGoldenPlayerReadyButton.setDisable(false);
-        setupSilverPlayerReadyButton.setDisable(false);
-        board.clearBoard();
-        boardController.generateBoardPieceSetup();
-        boardController.displayBoard();
-        arimaa.setCurrentPlayer(arimaa.getGoldenPlayer());
-        displayCurrentPlayer();
+        if(!arimaa.getIsGameUploaded()) {
+            isGoldenPlayerSetupReady = false;
+            isSilverPlayerSetupReady = false;
+            setupGoldenPlayerReadyButton.setDisable(false);
+            setupSilverPlayerReadyButton.setDisable(false);
+            board.clearBoard();
+            boardController.generateBoardPieceSetup();
+            boardController.displayBoard();
+            arimaa.setCurrentPlayer(arimaa.getGoldenPlayer());
+            displayCurrentPlayer();
+        }
     }
 
 

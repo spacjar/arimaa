@@ -528,6 +528,15 @@ public class Board {
 
 
     // ----- Utils -----
+    public Piece[][] getBoard() {
+        return this.board;
+    }
+
+
+    public void setBoard(Piece[][] newBoard) {
+        this.board = newBoard;
+    }
+
     /**
      * Clears the entire board by setting all positions to null.
      */
