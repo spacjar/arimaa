@@ -54,6 +54,7 @@ public class ArimaaGameController {
         arimaa.setGoldenPlayerMoves(4);
         arimaa.setSilverPlayerMoves(4);
         arimaa.setCurrentPlayer(arimaa.getGoldenPlayer());
+        updatePlayerInfo();
         logger.info("Game controller initialized");
     }
 
@@ -184,12 +185,22 @@ public class ArimaaGameController {
                 arimaa.resetCurrentPlayerMoves();
             }
 
+            // Update the game info
+            updatePlayerInfo();
+
             // Render the board
             boardController.displayBoard();
         } catch (Exception e) {
             logger.severe("(!) Arimaa erorre: " + e.getMessage());
             feedbackMessage.setText("ERROR: " + e.getMessage());
         }
+    }
+
+
+    private void updatePlayerInfo() {
+        currentPlayerLabel.setText("Current player: " + arimaa.getCurrentPlayer().toString());
+        goldenPlayerMovesLabel.setText("Golden player moves: " + String.valueOf(arimaa.getGoldenPlayerMoves()));
+        silverPlayerMovesLabel.setText("Silver player moves: " + String.valueOf(arimaa.getSilverPlayerMoves()));
     }
 
 
@@ -237,11 +248,13 @@ public class ArimaaGameController {
             if (arimaa.getCurrentPlayer() == arimaa.getGoldenPlayer() && arimaa.getGoldenPlayerMoves() < 4) {
                 arimaa.changePlayer(arimaa.getCurrentPlayer());
                 arimaa.resetCurrentPlayerMoves();
+                updatePlayerInfo();
                 logger.info("Turn skipped!");
                 feedbackMessage.setText("Turn skipped!");
             } else if (arimaa.getCurrentPlayer() == arimaa.getSilverPlayer() && arimaa.getSilverPlayerMoves() < 4) {
                 arimaa.changePlayer(arimaa.getCurrentPlayer());
                 arimaa.resetCurrentPlayerMoves();
+                updatePlayerInfo();
                 logger.info("Turn skipped!");
                 feedbackMessage.setText("Turn skipped!");
             } else {

@@ -13,7 +13,7 @@
     <!-- Current stats -->
     <Label fx:id="currentPlayerLabel" text="Current player: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
     <Label fx:id="goldenPlayerMovesLabel" text="Golden player moves: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
-    <Label fx:id="silverPlayeMovesrLabel" text="Silver player moves: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
+    <Label fx:id="silverPlayerMovesLabel" text="Silver player moves: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
 
     <!-- Actions -->
     <Button mnemonicParsing="false" text="Skip turn" onAction="#skipTurn" />
