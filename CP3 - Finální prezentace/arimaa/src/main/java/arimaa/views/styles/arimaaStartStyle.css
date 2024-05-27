@@ -1,0 +1,33 @@
+.start-game {
+    -fx-min-height: 800px;
+    -fx-min-width: 800px;
+    -fx-background-color: #000000;
+    -fx-alignment: center;
+}
+
+.start-game__heading-label {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 80px;
+    -fx-font-weight: 800;
+}
+
+.start-game__description-label {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 24px;
+}
+
+.start-game__btn-container {
+    -fx-translate-y: 40px;
+    -fx-alignment: center;
+}
+
+.start-game__menu-button {
+    -fx-padding: 8px 16px;
+    -fx-text-fill: #000000;
+    -fx-background-color: #ffffff;
+    -fx-cursor: hand;
+}
+
+.start-game__menu-button:hover {
+    -fx-background-color: #d8d8d8;
+}

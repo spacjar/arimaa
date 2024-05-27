@@ -1,0 +1,30 @@
+/* Style for the VBox */
+.end-game {
+    -fx-min-height: 800px;
+    -fx-min-width: 800px;
+    -fx-background-color: #000000;
+    -fx-alignment: center;
+}
+
+/* Style for the Label */
+.end-game__heading-label {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 80px;
+    -fx-font-weight: 800;
+}
+
+.end-game__btn-container {
+    -fx-translate-y: 40px;
+    -fx-alignment: center;
+}
+
+.end-game__btn {
+    -fx-padding: 8px 16px;
+    -fx-text-fill: #000000;
+    -fx-background-color: #ffffff;
+    -fx-cursor: hand;
+}
+
+.end-game__btn:hover {
+    -fx-background-color: #d8d8d8;
+}

@@ -4,7 +4,9 @@ import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -13,6 +15,7 @@ import java.util.logging.Level;
 import javafx.scene.Node;
 
 import arimaa.controllers.ArimaaGameController;
+import arimaa.controllers.ArimaaGameRecorderController;
 import arimaa.controllers.ArimaaSetupController;
 import arimaa.controllers.ArimaaEndController;
 import arimaa.controllers.ArimaaStartController;
@@ -30,6 +33,7 @@ public class Main extends Application {
     ArimaaGameController arimaaGameController;
     ArimaaEndController arimaaEndController;
     BoardController boardController;
+    ArimaaGameRecorderController arimaaGameRecorderController;
     PlayerTimerController playerTimerController;
 
     private static final Logger logger = Logger.getLogger(Main.class.getName());
@@ -38,7 +42,7 @@ public class Main extends Application {
     private BooleanProperty isGameSetup;
     private BooleanProperty isGameEnd;
 
-    private VBox rootContainer = null;
+    private HBox rootContainer = null;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -54,6 +58,7 @@ public class Main extends Application {
         arimaaGameController = new ArimaaGameController(arimaa, board);
         arimaaEndController = new ArimaaEndController(arimaa);
         boardController = new BoardController(arimaa, board);
+        arimaaGameRecorderController = new ArimaaGameRecorderController();
         playerTimerController = new PlayerTimerController(goldenPlayerTimer, silverPlayerTimer);
 
         arimaaSetupController.setBoardController(boardController);
@@ -102,7 +107,9 @@ public class Main extends Application {
         });
             
         // Genera a placeholder VBox
-        rootContainer = new VBox();
+        rootContainer = new HBox();
+        rootContainer.setAlignment(Pos.CENTER);
+        rootContainer.setStyle("-fx-background-color: #000000; -fx-text-fill: #ffffff;");
 
         try {
             loadView();
@@ -113,8 +120,8 @@ public class Main extends Application {
     
         Scene scene = new Scene(rootContainer);
         primaryStage.setScene(scene);
-        primaryStage.setMinWidth(800);
-        primaryStage.setMinHeight(880);
+        primaryStage.setMinWidth(1600);
+        primaryStage.setMinHeight(1200);
         primaryStage.show();
     }
 
@@ -124,19 +131,33 @@ public class Main extends Application {
 
         if (!isGameStart.get() && !isGameSetup.get() && !isGameEnd.get()) {
             Pair<Node, Object> startView = loadFXML("./views/ArimaaStartView.fxml", arimaaStartController);
-            rootContainer.getChildren().add(startView.getKey());
+            VBox layoutBox = new VBox();
+            layoutBox.getChildren().addAll(startView.getKey());
+            rootContainer.getChildren().addAll(layoutBox);
         } else if (isGameStart.get() && !isGameSetup.get() && !isGameEnd.get()) {    
             Pair<Node, Object> boardView = loadFXML("./views/BoardView.fxml", boardController);
             Pair<Node, Object> setupView = loadFXML("./views/ArimaaSetupView.fxml", arimaaSetupController);
-            rootContainer.getChildren().addAll(boardView.getKey(), setupView.getKey());  
+            VBox layoutBox = new VBox();
+            layoutBox.getChildren().addAll(boardView.getKey(), setupView.getKey());
+            rootContainer.getChildren().addAll(layoutBox);  
         } else if (isGameStart.get() && isGameSetup.get() && !isGameEnd.get()) {
             Pair<Node, Object> boardView = loadFXML("./views/BoardView.fxml", boardController);
+            Pair<Node, Object> gameRecorder = loadFXML("./views/ArimaaGameRecorderView.fxml", arimaaGameRecorderController);
+            
+            HBox boardViewAndGameRecorder = new HBox();
+            boardViewAndGameRecorder.getChildren().addAll(boardView.getKey(), gameRecorder.getKey());
+            
             Pair<Node, Object> timerView = loadFXML("./views/PlayerTimerView.fxml", playerTimerController);
             Pair<Node, Object> gameView = loadFXML("./views/ArimaaGameView.fxml", arimaaGameController);
-            rootContainer.getChildren().addAll(boardView.getKey(), timerView.getKey(), gameView.getKey());
+
+            VBox layoutBox = new VBox();
+            layoutBox.getChildren().addAll(boardViewAndGameRecorder, timerView.getKey(), gameView.getKey());
+            rootContainer.getChildren().addAll(layoutBox);
         } else {
             Pair<Node, Object> endView = loadFXML("./views/ArimaaEndView.fxml", arimaaEndController);
-            rootContainer.getChildren().add(endView.getKey());
+            VBox layoutBox = new VBox();
+            layoutBox.getChildren().addAll(endView.getKey());
+            rootContainer.getChildren().addAll(layoutBox);
         }
     }
 

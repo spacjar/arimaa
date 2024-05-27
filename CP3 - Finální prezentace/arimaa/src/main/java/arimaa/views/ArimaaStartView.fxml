@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Button?>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx">
+<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx" styleClass="start-game" stylesheets="@styles/arimaaStartStyle.css">
     <!-- Big text -->
-    <Label text="Arimaa" style="-fx-font-size: 36px;"></Label>
+    <Label text="Arimaa" styleClass="start-game__heading-label"></Label>
+    <Label text="The game" styleClass="start-game__description-label"></Label>
 
     <!-- Buttons -->
-    <Button fx:id="playerVsPlayerButton" text="Player vs Player" minWidth="200" onAction="#handleStartPlayerVsPlayer"></Button>
-    <Button fx:id="playerVsComputerButton" text="Player vs Computer" minWidth="200" onAction="#handleStartPlayerVsComputer"></Button>
-    
-    <Button fx:id="loadGameButton" text="Load game" onAction="#handleLoadGame"></Button>
+    <HBox spacing="16" styleClass="start-game__btn-container">
+        <Button fx:id="playerVsPlayerButton" text="Player vs Player" styleClass="start-game__menu-button" onAction="#handleStartPlayerVsPlayer"></Button>
+        <Button fx:id="playerVsComputerButton" text="Player vs Computer" styleClass="start-game__menu-button" onAction="#handleStartPlayerVsComputer"></Button>
+        <Button fx:id="loadGameButton" text="Load game" styleClass="start-game__menu-button" onAction="#handleLoadGame"></Button>
+    </HBox>
 </VBox>

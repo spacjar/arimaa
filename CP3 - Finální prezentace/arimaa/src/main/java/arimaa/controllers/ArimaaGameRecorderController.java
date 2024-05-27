@@ -3,6 +3,9 @@ package arimaa.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.fxml.FXML;
+import javafx.scene.control.ListView;;
+
 public class ArimaaGameRecorderController {
     private List<String> moves;
     private int moveNumber;
@@ -10,6 +13,25 @@ public class ArimaaGameRecorderController {
     public ArimaaGameRecorderController() {
         this.moves = new ArrayList<>();
         this.moveNumber = 1;
+    }
+
+    @FXML
+    private ListView<String> movesListView;
+
+    public void initialize() { 
+
+        // Record some moves
+        recordPiecePlacement("Ra", "2");
+        recordPiecePlacement("Rb", "2");
+        recordMove("Ra", "2", "n");
+        recordMove("Ra", "3", "e");
+
+        // Get the game record and split it into individual moves
+        String gameRecord = getGameRecord();
+        String[] moves = gameRecord.split("\n");
+
+        // Add the moves to the ListView
+        movesListView.getItems().addAll(moves);
     }
 
     public void recordMove(String piece, String from, String direction) {
