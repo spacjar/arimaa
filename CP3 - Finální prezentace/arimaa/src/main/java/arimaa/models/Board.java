@@ -224,6 +224,44 @@ public class Board {
 
 
     /**
+     * Returns a list of free adjacent positions for a given row and column.
+     * 
+     * @param row the row index
+     * @param col the column index
+     * @return a list of int arrays representing the free adjacent positions
+     * @throws IndexOutOfBoundsException if the selected row or column exceeds the board size
+     */
+    public List<int[]> getFreeAdjacentPositions(int row, int col) throws IndexOutOfBoundsException {
+        // logger.info("Getting adjacent piece positions for row " + row + ", column " + col + ".");
+        List<int[]> adjacentFreeSpacePositions = new ArrayList<int[]>();
+
+        if(row < 0 || col < 0 || row >= ROW_SIZE || col >= COL_SIZE) {
+            logger.warning("The selected row or column exceeds board size.");
+            throw new IndexOutOfBoundsException("The selected row or column exceeds board size.");
+        }
+
+        // Check above
+        if(row+1 < ROW_SIZE && !isOccupied(row+1, col)) {
+            adjacentFreeSpacePositions.add(new int[]{row+1, col});
+        }
+        // Check below
+        if(row-1 >= 0 && !isOccupied(row-1, col)) {
+            adjacentFreeSpacePositions.add(new int[]{row-1, col});
+        }
+        // Check right
+        if(col+1 < COL_SIZE && !isOccupied(row, col+1)) {
+            adjacentFreeSpacePositions.add(new int[]{row, col+1});
+        }
+        // Check left
+        if(col-1 >= 0 && !isOccupied(row, col-1)) {
+            adjacentFreeSpacePositions.add(new int[]{row, col-1});
+        }
+    
+        return adjacentFreeSpacePositions;
+    }
+
+
+    /**
      * Checks if there are adjacent friendly pieces to the piece at the specified position on the board.
      *
      * @param row the row index of the position
