@@ -17,7 +17,6 @@ import arimaa.controllers.ArimaaSetupController;
 import arimaa.controllers.ArimaaEndController;
 import arimaa.controllers.ArimaaStartController;
 import arimaa.controllers.BoardController;
-import arimaa.controllers.DummyController;
 
 import arimaa.models.Arimaa;
 import arimaa.models.Board;
@@ -29,7 +28,6 @@ public class Main extends Application {
     ArimaaGameController arimaaGameController;
     ArimaaEndController arimaaEndController;
     BoardController boardController;
-    DummyController dummyController;
 
     private static final Logger logger = Logger.getLogger(Main.class.getName());
 
@@ -51,7 +49,6 @@ public class Main extends Application {
         arimaaGameController = new ArimaaGameController(arimaa, board);
         arimaaEndController = new ArimaaEndController(arimaa);
         boardController = new BoardController(arimaa, board);
-        dummyController = new DummyController();
 
         arimaaGameController.setBoardController(boardController);
         arimaaSetupController.setBoardController(boardController);

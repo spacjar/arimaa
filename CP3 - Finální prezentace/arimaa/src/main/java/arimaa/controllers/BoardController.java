@@ -4,7 +4,6 @@ import arimaa.enums.PieceType;
 import arimaa.models.Arimaa;
 import arimaa.models.Board;
 import arimaa.models.Piece;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
