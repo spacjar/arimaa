@@ -6,19 +6,34 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx">
+<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx" styleClass="setup-game" stylesheets="@styles/arimaaSetupStyle.css">
     <!-- Current stats -->
-    <Label fx:id="setupCurrentPlayerLabel" text="Current player: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
+    <HBox>
+        <Label fx:id="setupCurrentPlayerLabel" styleClass="setup-game__description-label" text="Current player: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
+    </HBox>
 
     <!-- Submit button -->
-    <Button mnemonicParsing="false" fx:id="setupGoldenPlayerReadyButton" text="Is golden player ready?" onAction="#handleGoldenPlayerReady"/>
-    <Button mnemonicParsing="false" fx:id="setupSilverPlayerReadyButton" text="Is silver player ready?" onAction="#handleSilverPlayerReady"/>
-    <Button mnemonicParsing="false" fx:id="setupAllPlayersReadyButton" text="Start game!" onAction="#handleStartGame"/>
+    <HBox spacing="16">
+        <VBox>
+            <!-- <Label styleClass="setup-game__description-label">Is golden player ready:</Label> -->
+            <Button mnemonicParsing="false" styleClass="setup-game__btn" fx:id="setupGoldenPlayerReadyButton" text="Golden ready" onAction="#handleGoldenPlayerReady"/>
+        </VBox>
+        <VBox>
+            <!-- <Label styleClass="setup-game__description-label">Is silver player ready:</Label> -->
+            <Button mnemonicParsing="false" styleClass="setup-game__btn" fx:id="setupSilverPlayerReadyButton" text="Silver ready" onAction="#handleSilverPlayerReady"/>
+        </VBox>
+        <VBox>
+            <!-- <Label styleClass="setup-game__description-label">Start the game:</Label> -->
+            <Button mnemonicParsing="false" styleClass="setup-game__btn" fx:id="setupAllPlayersReadyButton" text="Start game" onAction="#handleStartGame"/>
+        </VBox>
+    </HBox>
 
     <!-- Feedback message -->
-    <Label fx:id="setupfeedbackMessage" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx">
-    </Label>
+    <HBox>
+        <Label fx:id="setupfeedbackMessage" styleClass="setup-game__description-label" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
+    </HBox>
 </VBox>

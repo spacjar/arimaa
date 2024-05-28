@@ -3,7 +3,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="timerContainer" xmlns:fx="http://javafx.com/fxml">
-    <Label fx:id="goldenTimerLabel"/>
-    <Label fx:id="silverTimerLabel"/>
+<VBox fx:id="timerContainer" xmlns:fx="http://javafx.com/fxml" stylesheets="@styles/arimaaGameStyle.css" styleClass="game-timer">
+    <Label fx:id="goldenTimerLabel" styleClass="game-view__description-label"/>
+    <Label fx:id="silverTimerLabel" styleClass="game-view__description-label"/>
 </VBox>

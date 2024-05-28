@@ -9,19 +9,30 @@
 <?import javafx.scene.text.Font?>
 
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx">
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx" styleClass="game-view" stylesheets="@styles/arimaaGameStyle.css" spacing="16">
     <!-- Current stats -->
-    <Label fx:id="currentPlayerLabel" text="Current player: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
-    <Label fx:id="goldenPlayerMovesLabel" text="Golden player moves: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
-    <Label fx:id="silverPlayerMovesLabel" text="Silver player moves: " xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
+    <VBox>
+        <Label fx:id="currentPlayerLabel" text="Current player: " styleClass="game-view__description-label" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
+        <Label fx:id="goldenPlayerMovesLabel" text="Golden player moves: " styleClass="game-view__description-label" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
+        <Label fx:id="silverPlayerMovesLabel" text="Silver player moves: " styleClass="game-view__description-label" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
+    </VBox>
 
     <!-- Actions -->
-    <Button mnemonicParsing="false" text="Skip turn" onAction="#handleSkipTurn" />
+    <VBox>
+        <!-- <Label text="Skip you turn" styleClass="game-view__description-label"></Label> -->
+        <Button mnemonicParsing="false" text="Skip turn" styleClass="game-view__btn" onAction="#handleSkipTurn" />
+    </VBox>
     
     <!-- Feedback message -->
-    <Label fx:id="feedbackMessage" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx">
-    </Label>
+    <VBox>    
+        <Label text="Feedback message:" styleClass="game-view__description-label"></Label>
+        <Label fx:id="feedbackMessage" styleClass="game-view__description-label" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx"></Label>
+    </VBox>
 
     <!-- Save and load -->
-    <Button mnemonicParsing="false" text="Save game" onAction="#handleSaveGame" />
+        <VBox>
+        <!-- <Label text="Save you game" styleClass="game-view__description-label"></Label> -->
+        <Button mnemonicParsing="false" text="Save game" styleClass="game-view__btn" onAction="#handleSaveGame" />
+    </VBox>
 </VBox>

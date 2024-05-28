@@ -1,0 +1,20 @@
+.game-view {
+    -fx-background-color: #000000;
+    -fx-alignment: center;
+}
+
+.game-view__description-label {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 16px;
+}
+
+.game-view__btn {
+    -fx-padding: 8px 16px;
+    -fx-text-fill: #000000;
+    -fx-background-color: #ffffff;
+    -fx-cursor: hand;
+}
+
+.game-view__btn:hover {
+    -fx-background-color: #d8d8d8;
+}
