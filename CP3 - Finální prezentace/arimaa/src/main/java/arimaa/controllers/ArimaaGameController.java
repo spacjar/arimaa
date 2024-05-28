@@ -5,7 +5,7 @@ import java.io.IOException;
 import arimaa.enums.PieceColor;
 import arimaa.models.Arimaa;
 import arimaa.models.Board;
-// import arimaa.models.ComputerPlayer;
+import arimaa.models.ComputerPlayer;
 import arimaa.models.Piece;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -332,7 +332,8 @@ public class ArimaaGameController {
         gameState.put("board", board.getBoard());
 
         try {
-            String filenameWithUUID = "arimaaGameState_" + UUID.randomUUID().toString() + ".json";
+            // String filenameWithUUID = "arimaaGameState_" + UUID.randomUUID().toString() + ".json";
+            String filenameWithUUID = "arimaaGameState.json";
             fileUtils.saveGame(filenameWithUUID, gameState);
         } catch (Exception e) {
             feedbackMessage.setText("Error while saving file: " + e.getMessage());

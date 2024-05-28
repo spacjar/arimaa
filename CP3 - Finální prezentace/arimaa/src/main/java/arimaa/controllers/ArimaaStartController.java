@@ -71,7 +71,7 @@ public class ArimaaStartController {
     public void handleLoadGame(ActionEvent event) {
         System.out.println("Handle game load");
         
-        String filename = "arimaaGameState_d1776cbb-89be-4612-a5a7-801b8caef73c.json"; // replace with your filename
+        String filename = "arimaaGameState.json"; // replace with your filename
 
         try {
             Map<String, Object> gameState = fileUtils.loadGame(filename);
