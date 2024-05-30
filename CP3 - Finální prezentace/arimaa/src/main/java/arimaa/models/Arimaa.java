@@ -7,9 +7,13 @@ import javafx.beans.property.SimpleBooleanProperty;
 
 public class Arimaa {
     private Board board;
+    private Player silverPlayer;
+    private Player goldenPlayer;
 
     public Arimaa(Board board) {
         this.board = board;
+        this.goldenPlayer = new Player(PieceColor.GOLDEN);
+        this.silverPlayer = new ComputerPlayer(PieceColor.SILVER, board);
     }
 
     // Game state
@@ -55,16 +59,7 @@ public class Arimaa {
 
 
     // Player playing against a robot or a human
-    private boolean isPlayerPlayingAgainstHuman = false;
     private boolean isPlayerPlayingAgainstComputer = false;
-
-    public boolean getIsPlayingAgainstHuman() {
-        return isPlayerPlayingAgainstHuman;
-    }
-
-    public void setIsPlayingAgainstHuman(boolean isPlayerPlayingAgainstHuman) {
-        this.isPlayerPlayingAgainstHuman = isPlayerPlayingAgainstHuman;
-    }
 
     public boolean getIsPlayingAgainstComputer() {
         return isPlayerPlayingAgainstComputer;
@@ -77,7 +72,6 @@ public class Arimaa {
     
     // Players
     // Golden player
-    private Player goldenPlayer = new Player(PieceColor.GOLDEN);
     private int goldenPlayerMoves = 4;
 
     public Player getGoldenPlayer() {
@@ -93,16 +87,21 @@ public class Arimaa {
     }
 
     public void setGoldenPlayerMoves(int goldenPlayerMoves) {
-        this.goldenPlayerMoves = goldenPlayerMoves;
+        this.goldenPlayerMoves = goldenPlayerMoves; 
     }
 
     // Silver player
     // private Player silverPlayer = isPlayerPlayingAgainstComputer ? new ComputerPlayer(PieceColor.SILVER, this, board) : new Player(PieceColor.SILVER);
-    private Player silverPlayer = new Player(PieceColor.SILVER);
+    // private Player silverPlayer = new ComputerPlayer(PieceColor.SILVER, board);
+    // private Player silverPlayer = new Player(PieceColor.SILVER);
     private int silverPlayerMoves = 4;
     
     public Player getSilverPlayer() {
-        return silverPlayer;
+        if (isPlayerPlayingAgainstComputer) {
+            return (ComputerPlayer) silverPlayer;
+        } else {
+            return silverPlayer;
+        }
     }
     
     public void setSilverPlayer(Player silverPlayer) {

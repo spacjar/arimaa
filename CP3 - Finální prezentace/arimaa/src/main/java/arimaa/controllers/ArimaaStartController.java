@@ -54,7 +54,6 @@ public class ArimaaStartController {
     @FXML
     public void handleStartPlayerVsPlayer(ActionEvent event) {
         System.out.println("Start game player vs player");
-        arimaa.setIsPlayingAgainstHuman(true);
         arimaa.setIsGameUploaded(false);
         arimaa.setIsGameStart(true);
     }
@@ -99,7 +98,6 @@ public class ArimaaStartController {
             arimaa.setPreviousMove(fromRow, fromCol, toRow, toCol);
 
             // Set if the users is playing against human or a computer
-            arimaa.setIsPlayingAgainstHuman((Boolean) gameState.get("isPlayerPlayingAgainstHuman"));
             arimaa.setIsPlayingAgainstComputer((Boolean) gameState.get("isPlayerPlayingAgainstComputer"));
 
             // Set the current player

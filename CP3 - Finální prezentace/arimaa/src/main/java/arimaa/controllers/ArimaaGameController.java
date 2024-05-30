@@ -15,7 +15,7 @@ import arimaa.utils.FileUtils;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Random;
 import java.util.logging.Logger;
 
 public class ArimaaGameController {
@@ -36,6 +36,7 @@ public class ArimaaGameController {
     
     // State
     private boolean isMoved = false;
+    private Random random = new Random();
 
     // File utils
     FileUtils fileUtils = new FileUtils();
@@ -91,6 +92,9 @@ public class ArimaaGameController {
         try {
             // Reset the values
             isMoved = false;
+
+            // Cleanup the feedback message
+            feedbackMessage.setText("");
 
             // Check if there is a piece at the selected "from" position
             if(!board.isOccupied(fromRow, fromCol)) {
@@ -202,28 +206,20 @@ public class ArimaaGameController {
 
             // If the current player has no moves left, switch to the other player and reset their moves
             if (arimaa.isCurrentPlayerOutOfMoves()) {
+                if (arimaa.getCurrentPlayer().getColor() == PieceColor.GOLDEN) {
+                    playerTimerController.stopGoldenPlayerTimer();
+                    playerTimerController.startSilverPlayerTimer();
+                } else {
+                    playerTimerController.stopSilverPlayerTimer();
+                    playerTimerController.startGoldenPlayerTimer();
+                }
+
                 arimaa.changePlayer(arimaa.getCurrentPlayer());
                 arimaa.resetCurrentPlayerMoves();
 
-                // If the current player is a computer player, generate its moves
-                // if (arimaa.getCurrentPlayer().getColor() == PieceColor.SILVER && arimaa.getIsPlayingAgainstComputer()) {
-                //     logger.info("----------- COMPUTER 1 -----------");
-                //     if (arimaa.getCurrentPlayer() instanceof ComputerPlayer) {
-                //         logger.info("----------- COMPUTER 2 -----------");
-                //         ((ComputerPlayer) arimaa.getCurrentPlayer()).generateMoves();
-                //         arimaa.changePlayer(arimaa.getCurrentPlayer());
-                //         arimaa.resetCurrentPlayerMoves();
-                //     }
-                // }
-
-                if (arimaa.getCurrentPlayer().getColor() == PieceColor.GOLDEN) {
-                    playerTimerController.stopSilverPlayerTimer();
-                    playerTimerController.startGoldenPlayerTimer();
-                } else {
-                    playerTimerController.stopGoldenPlayerTimer();
-                    playerTimerController.startSilverPlayerTimer();
+                if(arimaa.getCurrentPlayer().equals(arimaa.getSilverPlayer()) && arimaa.getIsPlayingAgainstComputer()) {
+                    handleComputerMove();
                 }
-
             }
 
             // Update the game info
@@ -271,6 +267,28 @@ public class ArimaaGameController {
     }
 
 
+    private void handleComputerMove() throws Exception {
+        int movesCount = random.nextInt(4) + 1;
+
+        for (int i = 0; i < movesCount; i++) {
+            try {
+                ((ComputerPlayer) arimaa.getSilverPlayer()).generateMove();
+                playerTimerController.stopSilverPlayerTimer();
+                playerTimerController.startGoldenPlayerTimer();
+                checkGameStatus(arimaa.getSilverPlayer());
+                checkGameStatus(arimaa.getGoldenPlayer());
+                boardController.displayBoard();
+            } catch(Exception e) {
+                throw new Exception("Error while generating computer move: " + e.getMessage());
+            } 
+        }
+
+        arimaa.changePlayer(arimaa.getCurrentPlayer());
+        arimaa.resetCurrentPlayerMoves();
+        updatePlayerInfo();
+    }
+
+
 
 
     /**
@@ -295,10 +313,15 @@ public class ArimaaGameController {
                 arimaa.resetCurrentPlayerMoves();
                 playerTimerController.stopGoldenPlayerTimer();
                 playerTimerController.startSilverPlayerTimer();
+
+                if(arimaa.getCurrentPlayer().equals(arimaa.getSilverPlayer()) && arimaa.getIsPlayingAgainstComputer()) {
+                    handleComputerMove();
+                }
+
                 updatePlayerInfo();
                 logger.info("Turn skipped!");
                 feedbackMessage.setText("Turn skipped!");
-            } else if (arimaa.getCurrentPlayer().equals(arimaa.getSilverPlayer()) && arimaa.getSilverPlayerMoves() < 4) {
+            } else if (arimaa.getCurrentPlayer().equals(arimaa.getSilverPlayer()) && arimaa.getSilverPlayerMoves() < 4 && !arimaa.getIsPlayingAgainstComputer()) {
                 arimaa.changePlayer(arimaa.getCurrentPlayer());
                 arimaa.resetCurrentPlayerMoves();
                 playerTimerController.stopSilverPlayerTimer();
@@ -322,7 +345,6 @@ public class ArimaaGameController {
         gameState.put("isGameStart", arimaa.getIsGameStart());
         gameState.put("isGameSetup", arimaa.getIsGameSetup());
         gameState.put("isGameEnd", arimaa.getIsGameEnd());
-        gameState.put("isPlayerPlayingAgainstHuman", arimaa.getIsPlayingAgainstHuman());
         gameState.put("isPlayerPlayingAgainstComputer", arimaa.getIsPlayingAgainstComputer());
         gameState.put("currentPlayer", arimaa.getCurrentPlayer());
         gameState.put("goldenPlayerMoves", arimaa.getGoldenPlayerMoves());
