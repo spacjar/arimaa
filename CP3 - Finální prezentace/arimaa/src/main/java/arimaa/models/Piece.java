@@ -61,22 +61,31 @@ public class Piece {
      * @throws IllegalArgumentException if the piece type is unexpected
      */
     public String getPiecePrefix() throws IllegalArgumentException {
+        String prefix;
         switch(this.type) {
             case RABBIT:
-                return "R";
+                prefix = "R";
+                break;
             case CAT:
-                return "C";
+                prefix = "C";
+                break;
             case DOG:
-                return "D";
+                prefix = "D";
+                break;
             case HORSE: 
-                return "H";
+                prefix = "H";
+                break;
             case CAMEL:
-                return "M";
+                prefix = "M";
+                break;
             case ELEPHANT:
-                return "E";
+                prefix = "E";
+                break;
             default:
                 throw new IllegalArgumentException("Unexpected value: " + this.type);
         }
-    }
+
+        return this.color == PieceColor.GOLDEN ? prefix : prefix.toLowerCase();
+    }   
 }
 
