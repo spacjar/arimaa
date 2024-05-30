@@ -24,6 +24,7 @@ public class ArimaaGameRecorder {
     }
 
     public void clearMoves() {
+        this.moveNumber = 1;
         this.moves.clear();
     }
 
