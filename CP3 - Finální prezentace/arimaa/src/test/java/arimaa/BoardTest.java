@@ -2,6 +2,7 @@ package arimaa;
 
 import arimaa.enums.PieceColor;
 import arimaa.enums.PieceType;
+import arimaa.models.ArimaaGameRecorder;
 import arimaa.models.Board;
 import arimaa.models.Piece;
 import arimaa.models.Player;
@@ -14,11 +15,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class BoardTest {
     private Board board;
+    private ArimaaGameRecorder arimaaGameRecorder;
     private Piece piece;
 
     @BeforeEach
     public void setUp() {
-        board = new Board();
+        arimaaGameRecorder = new ArimaaGameRecorder();
+        board = new Board(arimaaGameRecorder);
         piece = Mockito.mock(Piece.class);
     }
 
@@ -124,7 +127,6 @@ public class BoardTest {
 
     @Test
     void testMovePiece() {
-        Board board = new Board();
         Piece piece = new Piece(PieceType.RABBIT, PieceColor.GOLDEN);
         board.setPiece(piece, 0, 0);
         assertThrows(IllegalArgumentException.class, () -> board.movePiece(0, 0, 2, 2, false));
@@ -133,7 +135,6 @@ public class BoardTest {
 
     @Test
     void testIsGameWon() {
-        Board board = new Board();
         Player player = new Player(PieceColor.GOLDEN);
         assertFalse(board.isGameWon(player));
         Piece piece = new Piece(PieceType.RABBIT, PieceColor.GOLDEN);
@@ -143,7 +144,6 @@ public class BoardTest {
 
     @Test
     void testIsGameLost() {
-        Board board = new Board();
         Player player = new Player(PieceColor.GOLDEN);
         assertTrue(board.isGameLost(player));
         for (int i = 0; i < 8; i++) {
@@ -157,7 +157,6 @@ public class BoardTest {
 
     @Test
     void testIsRabbitOnTheOtherSide() {
-        Board board = new Board();
         Player player = new Player(PieceColor.GOLDEN);
         assertFalse(board.isRabbitOnTheOtherSide(player));
         Piece piece = new Piece(PieceType.RABBIT, PieceColor.GOLDEN);
@@ -167,7 +166,6 @@ public class BoardTest {
 
     @Test
     void testIsEveryPieceFrozen() {
-        Board board = new Board();
         Player player = new Player(PieceColor.GOLDEN);
         assertTrue(board.isEveryPieceFrozen(player));
         for (int i = 0; i < 8; i++) {
@@ -179,7 +177,6 @@ public class BoardTest {
 
     @Test
     void testIsPlayerUnableToMove() {
-        Board board = new Board();
         Player player = new Player(PieceColor.GOLDEN);
         assertTrue(board.isPlayerUnableToMove(player));
         for (int i = 0; i < 8; i++) {
@@ -191,7 +188,6 @@ public class BoardTest {
 
     @Test
     void testIsPlayerWithoutAllRabbits() {
-        Board board = new Board();
         Player player = new Player(PieceColor.GOLDEN);
         assertTrue(board.isPlayerWithoutAllRabbits(player));
         for (int i = 0; i < 8; i++) {
@@ -203,7 +199,6 @@ public class BoardTest {
 
     @Test
     void testClearBoard() {
-        Board board = new Board();
         Piece piece = new Piece(PieceType.RABBIT, PieceColor.GOLDEN);
         board.setPiece(piece, 0, 0);
         board.clearBoard();

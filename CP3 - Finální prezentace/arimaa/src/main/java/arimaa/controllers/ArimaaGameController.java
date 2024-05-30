@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import arimaa.enums.PieceColor;
 import arimaa.models.Arimaa;
+import arimaa.models.ArimaaGameRecorder;
 import arimaa.models.Board;
 import arimaa.models.ComputerPlayer;
 import arimaa.models.Piece;
@@ -24,11 +25,13 @@ public class ArimaaGameController {
     private Board board;
     private BoardController boardController;
     private PlayerTimerController playerTimerController;
+    private ArimaaGameRecorder arimaaGameRecorder;
 
     // Setting up the models
-    public ArimaaGameController(Arimaa arimaa, Board board) {
+    public ArimaaGameController(Arimaa arimaa, Board board, ArimaaGameRecorder arimaaGameRecorder) {
         this.arimaa = arimaa;
         this.board = board;
+        this.arimaaGameRecorder = arimaaGameRecorder;
     }
     
     // Logger
@@ -207,9 +210,12 @@ public class ArimaaGameController {
             // If the current player has no moves left, switch to the other player and reset their moves
             if (arimaa.isCurrentPlayerOutOfMoves()) {
                 if (arimaa.getCurrentPlayer().getColor() == PieceColor.GOLDEN) {
+                    arimaaGameRecorder.endTurn();
                     playerTimerController.stopGoldenPlayerTimer();
                     playerTimerController.startSilverPlayerTimer();
                 } else {
+                    // arimaa.incrementGameRound();
+                    arimaaGameRecorder.endTurn();
                     playerTimerController.stopSilverPlayerTimer();
                     playerTimerController.startGoldenPlayerTimer();
                 }
@@ -285,6 +291,7 @@ public class ArimaaGameController {
 
         arimaa.changePlayer(arimaa.getCurrentPlayer());
         arimaa.resetCurrentPlayerMoves();
+        arimaaGameRecorder.endTurn();
         updatePlayerInfo();
     }
 
@@ -311,11 +318,13 @@ public class ArimaaGameController {
             if (arimaa.getCurrentPlayer().equals(arimaa.getGoldenPlayer()) && arimaa.getGoldenPlayerMoves() < 4) {
                 arimaa.changePlayer(arimaa.getCurrentPlayer());
                 arimaa.resetCurrentPlayerMoves();
+                arimaaGameRecorder.endTurn();
                 playerTimerController.stopGoldenPlayerTimer();
                 playerTimerController.startSilverPlayerTimer();
 
                 if(arimaa.getCurrentPlayer().equals(arimaa.getSilverPlayer()) && arimaa.getIsPlayingAgainstComputer()) {
                     handleComputerMove();
+                    arimaa.incrementGameRound();
                 }
 
                 updatePlayerInfo();
@@ -324,8 +333,10 @@ public class ArimaaGameController {
             } else if (arimaa.getCurrentPlayer().equals(arimaa.getSilverPlayer()) && arimaa.getSilverPlayerMoves() < 4 && !arimaa.getIsPlayingAgainstComputer()) {
                 arimaa.changePlayer(arimaa.getCurrentPlayer());
                 arimaa.resetCurrentPlayerMoves();
+                arimaaGameRecorder.endTurn();
                 playerTimerController.stopSilverPlayerTimer();
                 playerTimerController.startGoldenPlayerTimer();
+                arimaa.incrementGameRound();
                 updatePlayerInfo();
                 logger.info("Turn skipped!");
                 feedbackMessage.setText("Turn skipped!");

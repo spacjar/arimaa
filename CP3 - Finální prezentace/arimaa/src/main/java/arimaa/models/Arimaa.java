@@ -57,6 +57,22 @@ public class Arimaa {
         return isGameEnd;
     }
 
+    
+    // Game round
+    private int gameRound = 0;
+
+    public int getGameRound() {
+        return gameRound;
+    }
+
+    public void incrementGameRound() {
+        this.gameRound = this.gameRound + 1;
+    }
+
+    public void resetGameRound() {
+        this.gameRound = 0;
+    }
+    
 
     // Player playing against a robot or a human
     private boolean isPlayerPlayingAgainstComputer = false;

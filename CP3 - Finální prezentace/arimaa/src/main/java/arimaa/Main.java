@@ -23,6 +23,7 @@ import arimaa.controllers.BoardController;
 import arimaa.controllers.PlayerTimerController;
 
 import arimaa.models.Arimaa;
+import arimaa.models.ArimaaGameRecorder;
 import arimaa.models.Board;
 import arimaa.models.PlayerTimer;
 
@@ -47,19 +48,20 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // Models
-        Board board = new Board();
+        ArimaaGameRecorder arimaaGameRecorder = new ArimaaGameRecorder();
+        Board board = new Board(arimaaGameRecorder);
         Arimaa arimaa = new Arimaa(board);
         PlayerTimer goldenPlayerTimer = new PlayerTimer();
         PlayerTimer silverPlayerTimer = new PlayerTimer();
 
         // Controllers
         arimaaStartController = new ArimaaStartController(arimaa, board);
-        arimaaSetupController = new ArimaaSetupController(arimaa, board);
-        arimaaGameController = new ArimaaGameController(arimaa, board);
+        arimaaSetupController = new ArimaaSetupController(arimaa, board, arimaaGameRecorder);
+        arimaaGameController = new ArimaaGameController(arimaa, board, arimaaGameRecorder);
         arimaaEndController = new ArimaaEndController(arimaa);
         boardController = new BoardController(arimaa, board);
-        arimaaGameRecorderController = new ArimaaGameRecorderController();
         playerTimerController = new PlayerTimerController(goldenPlayerTimer, silverPlayerTimer);
+        arimaaGameRecorderController = new ArimaaGameRecorderController(arimaaGameRecorder);
 
         arimaaSetupController.setBoardController(boardController);
         arimaaGameController.setBoardController(boardController);

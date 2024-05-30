@@ -4,6 +4,7 @@ import java.util.logging.Logger;
 
 import arimaa.enums.PieceColor;
 import arimaa.models.Arimaa;
+import arimaa.models.ArimaaGameRecorder;
 import arimaa.models.Board;
 import arimaa.models.Piece;
 import arimaa.models.Player;
@@ -17,10 +18,12 @@ public class ArimaaSetupController {
     private Arimaa arimaa;
     private Board board;
     private BoardController boardController;
+    private ArimaaGameRecorder arimaaGameRecorder;
     
-    public ArimaaSetupController(Arimaa arimaa, Board board) {
+    public ArimaaSetupController(Arimaa arimaa, Board board, ArimaaGameRecorder arimaaGameRecorder) {
         this.arimaa = arimaa;
         this.board = board;
+        this.arimaaGameRecorder = arimaaGameRecorder;
     }
 
     // Logger
@@ -34,6 +37,10 @@ public class ArimaaSetupController {
     // --- Getters and setters ---
     public void setBoardController(BoardController boardController) {
         this.boardController = boardController;
+    }
+
+    public void setArimaaGameRecorderController(ArimaaGameRecorder arimaaGameRecorder) {
+        this.arimaaGameRecorder = arimaaGameRecorder;
     }
 
     // UI Elements
@@ -58,6 +65,7 @@ public class ArimaaSetupController {
             isSilverPlayerSetupReady = false;
             setupGoldenPlayerReadyButton.setDisable(false);
             setupSilverPlayerReadyButton.setDisable(false);
+            arimaaGameRecorder.clearMoves();
             board.clearBoard();
             boardController.generateBoardPieceSetup();
             boardController.displayBoard();
@@ -94,6 +102,7 @@ public class ArimaaSetupController {
     public void handleStartGame(ActionEvent event) {
         if(isGoldenPlayerSetupReady && isSilverPlayerSetupReady) {
             logger.info("Ready to start!");
+            recordInitialPiecePlacements();
             arimaa.setIsGameSetup(true);
         }
     }
@@ -160,5 +169,33 @@ public class ArimaaSetupController {
             logger.severe("(!) Setup Error: " + e.getMessage());
             setupfeedbackMessage.setText("(!) Error: " + e.getMessage());
         }
+    }
+
+
+    private void recordInitialPiecePlacements() {
+        // Rows for the golden player
+        for (int row = 0; row <= 1; row++) {
+            for (int col = 0; col < 7; col++) {
+                Piece piece = board.getPieceAt(row, col);
+                if (piece != null && piece.getColor() == PieceColor.GOLDEN) {
+                    arimaaGameRecorder.recordPiecePlacement(piece, row, col);
+                }
+            }
+        }
+    
+        arimaaGameRecorder.endTurn();
+
+
+        // Rows for the silver player
+        for (int row = 6; row <= 7; row++) {
+            for (int col = 0; col < 7; col++) {
+                Piece piece = board.getPieceAt(row, col);
+                if (piece != null && piece.getColor() == PieceColor.SILVER) {
+                    arimaaGameRecorder.recordPiecePlacement(piece, row, col);
+                }
+            }
+        }
+
+        arimaaGameRecorder.endTurn();
     }
 }

@@ -31,6 +31,7 @@ public class ArimaaEndController {
 
     @FXML
     public void handleReturnToMenu(ActionEvent event) {
+        arimaa.resetGameRound();
         arimaa.setIsPushing(false);
         arimaa.setIsPlayingAgainstComputer(false);
         arimaa.setIsGameStart(false);

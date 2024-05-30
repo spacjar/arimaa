@@ -12,12 +12,16 @@ public class Board {
     private static final int ROW_SIZE = 8;
     private static final int COL_SIZE = 8;
 
+    // Models
+    ArimaaGameRecorder arimaaGameRecorder;
+
     // Logger
     private static final Logger logger = Logger.getLogger(Board.class.getName());
 
     // Create the board
-    public Board() {
+    public Board(ArimaaGameRecorder arimaaGameRecorder) {
         board = new Piece[ROW_SIZE][COL_SIZE];
+        this.arimaaGameRecorder = arimaaGameRecorder;
     }
 
 
@@ -377,6 +381,7 @@ public class Board {
             logger.info("New position is not occupied. Moving piece.");
             removePiece(fromRow, fromCol);
             setPiece(piece, toRow, toCol);
+            arimaaGameRecorder.recordMove(piece, fromRow, fromCol, toRow, toCol);
         } else {
             logger.warning("New position is occupied.");
             throw new IllegalArgumentException("There is already a piece at the new position!");
@@ -392,6 +397,7 @@ public class Board {
             if(isInTrap(positionFromRow, positionFromCol) && !hasAdjacentFriendlyPieces(positionFromRow, positionFromCol)) {
                 // logger.info("Adjacent piece at previous position is in trap and not protected. Removing piece.");
                 removePiece(positionFromRow, positionFromCol);
+                arimaaGameRecorder.recordRemoval(piece, positionFromRow, positionFromCol);
                 return;
             }
         }
@@ -400,6 +406,7 @@ public class Board {
         if(isInTrap(toRow, toCol) && !hasAdjacentFriendlyPieces(toRow, toCol)) {
             // logger.info("Moved piece is in trap and not protected. Removing piece.");
             removePiece(toRow, toCol);
+            arimaaGameRecorder.recordRemoval(piece, toRow, toCol);
             return;
         }
 
@@ -413,6 +420,7 @@ public class Board {
             if(isInTrap(positionToRow, positionToCol) && !hasAdjacentFriendlyPieces(positionToRow, positionToCol)) {
                 // logger.info("Adjacent piece at new position is in trap and not protected. Removing piece.");
                 removePiece(positionToRow, positionToCol);
+                arimaaGameRecorder.recordRemoval(piece, positionToRow, positionToCol);
                 return;
             }
         }
