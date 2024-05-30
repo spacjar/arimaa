@@ -19,7 +19,6 @@ public class ArimaaGameRecorder {
     }
 
     public ObservableList<String> getMoves() {
-        System.out.println(moves);
         return moves;
     }
 
@@ -31,19 +30,16 @@ public class ArimaaGameRecorder {
     public void recordPiecePlacement(Piece piece, int row, int col) {
         String move = piece.getPiecePrefix() + getColumnLetter(col) + (row+1);
         appendMove(move);
-        System.out.println(moves);
     }
 
     public void recordMove(Piece piece, int fromRow, int fromCol, int toRow, int toCol) {
         String move = piece.getPiecePrefix() + getColumnLetter(fromCol) + (fromRow+1) + getDirection(fromRow, fromCol, toRow, toCol);
         appendMove(move);
-        System.out.println(moves);
     }
 
     public void recordRemoval(Piece piece, int row, int col) {
         String move = piece.getPiecePrefix() + getColumnLetter(col) + (row+1) + "x";
         appendMove(move);
-        System.out.println(moves);
     }
 
     public void recordResignation() {
